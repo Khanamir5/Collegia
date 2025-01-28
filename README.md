@@ -37,7 +37,7 @@ Collegia is an all-in-one platform designed to enhance the overall student exper
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/collegia.git
+   https://github.com/K-Nishant-18/collegia.git
    ```
 2. Navigate to the project directory:
    ```bash
