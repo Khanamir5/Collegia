@@ -66,15 +66,15 @@ This will create a `build` folder with the production-ready files.
 
 ## Contributing
 
-Contributions are welcome! Please read the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines on how to contribute to this project.
+Contributions are welcome! Please read the [CONTRIBUTING.md](CONTRIBUTING.md) (In progress) file for guidelines on how to contribute to this project.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) (In progress) file for details.
 
 ## Contact
 
-For any questions or feedback, please contact us at [support@collegia.com](mailto:support@collegia.com).
+For any questions or feedback, please contact us at [me.knishant@gmail.com](me.knishant@gmail.com).
 
 ```
 
