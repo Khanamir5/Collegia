@@ -20,6 +20,17 @@ const NavbarContainer = styled.nav`
   @media (max-width: 768px) {
     padding: 10px;
   }
+
+.notification-text {
+  display: none; /* Hidden on large screens */
+}
+
+@media (max-width: 768px) {
+  .notification-text {
+    display: inline; /* Shown only on small screens */
+  }
+}
+
 `;
 
 const Logo = styled.div`
@@ -55,7 +66,7 @@ const Menu = styled.ul`
     width: 100%;
     
     border-radius: 0 0 18px 18px;
-    background-color: #1A4870;
+    background-color:rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(20px);
     padding: 20px;
   }
@@ -109,8 +120,8 @@ const Dropdown = styled.ul`
   left: -50px;
   background-color: rgba(0, 0, 0, 1);
   backdrop-filter: blur(105px);
-  padding: 10px 0;
-  border-radius: 8px;
+  padding: 50px 0px;
+  border-radius: 18px;
   list-style: none;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 
@@ -119,7 +130,7 @@ const Dropdown = styled.ul`
     top: 0;
     padding: 0;
     left: 3px;
-     background: #295F98;
+     background:rgba(26, 25, 25, 0.81);
   }
 `;
 
@@ -307,12 +318,12 @@ const Navbar = () => {
         </MenuItem> */}
 
         <MenuItem>
-        <a href="/about">About Us</a>
+          <a href="/about">About Us</a>
         </MenuItem>
 
 
         <MenuItem>
-        <a href="/blogs">Blogs</a>
+          <a href="/blogs">Blogs</a>
         </MenuItem>
 
 
@@ -343,20 +354,20 @@ const Navbar = () => {
           </Dropdown>
         </MenuItem> */}
 
-        
 
-<MenuItem>
-  <a href="#notifications" style={{ marginTop: "-10px", display: "flex", alignItems: "center" }}>
-    <FaBell style={{ fontSize: "27px", marginLeft: "0px", color: "#f75c7e", transition: "color 0.3s ease-in-out" }} />
-  </a>
-</MenuItem>
+
+        <MenuItem>
+          <a href="#notifications" style={{ marginTop: "-1px", display: "flex", alignItems: "center" }}>
+            <FaBell style={{ fontSize: "27px", marginLeft: "0px", marginTop: "-10px", color: "#f75c7e", transition: "color 0.3s ease-in-out" }} /><span className="notification-text">Notification</span>
+          </a>
+        </MenuItem>
 
 
 
         <MenuItem>
-        <a href="#notifications" style={{ marginTop: "-7px", display: "flex", alignItems: "center" }}>
-    <FaUserCircle style={{ fontSize: "27px", marginLeft: "0px", marginTop: "-7px", color: "#f75c7e", transition: "color 0.3s ease-in-out" }} /> Profile
-  </a>
+          <a href="#Profile" style={{ marginTop: "-7px", display: "flex", alignItems: "center" }}>
+            <FaUserCircle style={{ fontSize: "27px", marginLeft: "0px", marginTop: "-10px", color: "#f75c7e", transition: "color 0.3s ease-in-out" }} /> Profile
+          </a>
           <Dropdown>
 
             <ProfileItem><a href="/UserProfilePage">User Profile</a></ProfileItem>

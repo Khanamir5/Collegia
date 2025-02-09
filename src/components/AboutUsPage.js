@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const AboutUsContainer = styled.div`
   padding: 60px 20px;
-  background: #f5f5f5;
+  background:rgb(230, 228, 228);
   text-align: center;
 `;
 
