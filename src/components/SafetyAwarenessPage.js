@@ -73,7 +73,7 @@ const HeroSubtitle = styled.p`
 `;
 
 const PanicButton = styled.button`
-  background:rgb(233, 5, 5);
+  background: rgb(233, 5, 5);
   color: white;
   padding: 20px 40px;
   border: none;
@@ -86,7 +86,7 @@ const PanicButton = styled.button`
   transition: background 0.3s ease;
 
   &:hover {
-    background:rgb(3, 150, 38);
+    background: rgb(3, 150, 38);
     animation: none;
   }
 `;
@@ -142,12 +142,12 @@ const Safety = () => {
               <div key={index} style={styles.contactCard}>
                 <h3 style={styles.contactName}>{contact.name}</h3>
                 <p style={styles.contactNumber}>{contact.number}</p>
-                <button
+                <a
+                  href={`tel:${contact.number}`}
                   style={styles.callButton}
-                  onClick={() => alert(`Calling ${contact.number}`)}
                 >
                   Call Now
-                </button>
+                </a>
               </div>
             ))}
           </div>
@@ -156,12 +156,13 @@ const Safety = () => {
         {/* Safety Tips Section */}
         <div style={styles.section}>
           <h2 style={styles.sectionTitle}>Safety Tips</h2>
-          <ul style={styles.tipsList}>{safetyTips.map((tip, index) => (
-            <li key={index} style={styles.tipItem}>
-              <span style={styles.tipIcon}>{['👀   -  ', '🚶‍♂️  -  ', '🎒  -  ', '🚨  -  ', '📱  -  '][index]}</span>
-              {tip}
-            </li>
-          ))}
+          <ul style={styles.tipsList}>
+            {safetyTips.map((tip, index) => (
+              <li key={index} style={styles.tipItem}>
+                <span style={styles.tipIcon}>{['👀   -  ', '🚶‍♂️  -  ', '🎒  -  ', '🚨  -  ', '📱  -  '][index]}</span>
+                {tip}
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -239,6 +240,8 @@ const styles = {
     fontSize: '1rem',
     marginTop: '10px',
     transition: 'background 0.3s ease',
+    textDecoration: 'none',
+    display: 'inline-block',
   },
   tipsList: {
     listStyleType: 'none',
