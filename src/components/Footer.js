@@ -6,6 +6,7 @@ const FooterContainer = styled.footer`
   background-color: #000;
   color: #fff;
   padding: 50px 0;
+  padding-bottom: 80px;
   position: relative;
 `;
 
@@ -132,7 +133,7 @@ const Footer = () => {
             <li><a href="/about">Our Story</a></li>
             <li><a href="/team">Team</a></li>
             <li><a href="/careers">Careers</a></li>
-            <li><a href="/contact">Contact</a></li>
+            <li><a href="/ContactUs">Contact Us</a></li>
           </ul>
         </FooterColumn>
 

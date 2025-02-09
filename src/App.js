@@ -24,6 +24,7 @@ import ContactUsPage from './components/ContactUsPage';
 import StudyMaterialsPage from './components/StudyMaterialsPage';
 import Settings from './components/Settings';
 import Help from './components/Help';
+import MobileNavigation from './components/MobileNavigation';
 
 
 
@@ -32,11 +33,11 @@ import Help from './components/Help';
 const App = () => {
   return (
     <div className="App">
-<Navbar />
+      <Navbar />
       <Router>
-      <ScrollToTop />
+        <ScrollToTop />
         <Routes>
-        <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginSignupPage />} />
           <Route path="/about" element={<AboutUsPage />} />
           <Route path="/ResearchCollaboration" element={<ResearchCollaborationPage />} />
@@ -47,27 +48,29 @@ const App = () => {
           <Route path="/CampusJobBoard" element={<CampusJobBoard />} />
           <Route path="/EventManagement" element={<EventManagement />} />
           <Route path="/AIPage" element={<AIPage />} />
-          <Route path="/UserProfilePage" element={<UserProfilePage/>} />
-          <Route path="/Leaderboard" element={<Leaderboard/>} />
-          <Route path="/TimelinePage" element={<TimelinePage/>} />
-          <Route path="/chat" element={<ChatPage/>} />
-          <Route path="/blogs" element={<BlogPage/>} />
-          <Route path="/ContactUs" element={<ContactUsPage/>} />
-          <Route path="/StudyMaterials" element={<StudyMaterialsPage/>} />
-          <Route path="/Settings" element={<Settings/>} />   
-          <Route path="/Help" element={<Help/>} />   
+          <Route path="/UserProfilePage" element={<UserProfilePage />} />
+          <Route path="/Leaderboard" element={<Leaderboard />} />
+          <Route path="/TimelinePage" element={<TimelinePage />} />
+          <Route path="/chat" element={<ChatPage />} />
+          <Route path="/blogs" element={<BlogPage />} />
+          <Route path="/ContactUs" element={<ContactUsPage />} />
+          <Route path="/StudyMaterials" element={<StudyMaterialsPage />} />
+          <Route path="/Settings" element={<Settings />} />
+          <Route path="/Help" element={<Help />} />
+          
 
           {/* Add other routes here */}
 
 
 
-          
+
         </Routes>
 
         <Footer />
+        <MobileNavigation />
       </Router>
-      
-      
+
+
 
 
     </div>

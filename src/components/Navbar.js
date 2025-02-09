@@ -63,7 +63,7 @@ const Menu = styled.ul`
 
 const MenuItem = styled.li`
   position: relative;
-  margin-left: 20px;
+  margin-left: 10px;
 
   a {
     color: #fff;
@@ -144,16 +144,19 @@ const SearchContainer = styled.div`
   align-items: center;
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 50px;
+  margin-left: 10px;
+  margin-top: 5px;
   padding: 5px 10px;
   color: #fff;
+  height: 80%;
 
   input {
     background: none;
     border: none;
     color: #fff;
     outline: none;
-    font-size: 1rem;
-    margin-right: 10px;
+    font-size: .4rem;
+    
 
     &::placeholder {
       color: rgba(255, 255, 255, 0.7);
@@ -165,6 +168,7 @@ const SearchContainer = styled.div`
     margin-left: 10px;
     cursor: pointer;
     transition: color 0.3s ease;
+    font-size: .8rem;
 
     &:hover {
       color: #f75c7e;
@@ -185,7 +189,7 @@ const NotificationIcon = styled(FaBell)`
   transition: color 0.3s ease;
 
   &:hover {
-    color: #f75c7e;
+    color:rgb(16, 173, 29);
   }
 
   @media (max-width: 768px) {
@@ -204,7 +208,7 @@ const ProfileIcon = styled(FaUserCircle)`
   }
 
   @media (max-width: 768px) {
-    font-size: 2rem; /* Larger size on small screens */
+    font-size: 4rem; /* Larger size on small screens */
   }
 `;
 
@@ -272,46 +276,7 @@ const Navbar = () => {
       </HamburgerIcon>
 
       <Menu open={menuOpen}>
-        <MenuItem >
-          <a href="#features" >Features <FaChevronDown /></a>
-          <Dropdown>
-            <DropdownItem><a href="StudentSocial">Social Network</a></DropdownItem>
-            <DropdownItem><a href="CampusJobBoard">Job/Internship Board</a></DropdownItem>
-            <DropdownItem><a href="EventManagement">Event Management</a></DropdownItem>
-            <DropdownItem><a href="StudentBudgeting">Student Budgeting</a></DropdownItem>
-            <DropdownItem><a href="ResearchCollaboration">Research Collaboration</a></DropdownItem>
-            <DropdownItem><a href="SafetyAwareness">Safety Awareness</a></DropdownItem>
-            <DropdownItem><a href="PeerMentorship">Peer Mentorship</a></DropdownItem>
-            <DropdownItem><a href="AIPage">AI-driven Insights</a></DropdownItem>
-          </Dropdown>
-        </MenuItem>
 
-        <MenuItem>
-          <a href="#pages">Pages <FaChevronDown /></a>
-          <Dropdown>
-            <DropdownItem><a href="/about">About Us</a></DropdownItem>
-            <DropdownItem><a href="/ContactUs">Contact Us</a></DropdownItem>
-          </Dropdown>
-        </MenuItem>
-
-        <MenuItem>
-          <a href="#extras">Extras <FaChevronDown /></a>
-          <Dropdown>
-            <DropdownItem><a href="/StudyMaterials"><MdBook /> Study Material</a></DropdownItem>
-            <DropdownItem><a href="/download"><MdFileDownload /> Download</a></DropdownItem>
-            <DropdownItem><a href="/chat"><MdChat /> Chat</a></DropdownItem>
-            <DropdownItem><a href="/blogs"><MdLibraryBooks />Blogs</a></DropdownItem>
-          </Dropdown>
-        </MenuItem>
-
-        <MenuItem>
-          <a href="#login">Login <FaChevronDown /></a>
-          <Dropdown>
-            <DropdownItem><a href="/login">Student</a></DropdownItem>
-            <DropdownItem><a href="/login/faculty">Faculty</a></DropdownItem>
-            <DropdownItem><a href="/login/admin">Admin</a></DropdownItem>
-          </Dropdown>
-        </MenuItem>
 
         {/* Search, Notification, Profile Menu inside Hamburger on small screens */}
         <SearchContainer>
@@ -325,19 +290,80 @@ const Navbar = () => {
           <FaMicrophone />
         </SearchContainer>
 
-        <MenuItem>
-          <a href="#notifications"><FaBell />Notice</a>
-        </MenuItem>
+
+
+        {/* <MenuItem >
+          <a href="#features" >Features <FaChevronDown /></a>
+          <Dropdown>
+            <DropdownItem><a href="StudentSocial">Social Network</a></DropdownItem>
+            <DropdownItem><a href="CampusJobBoard">Job/Internship Board</a></DropdownItem>
+            <DropdownItem><a href="EventManagement">Event Management</a></DropdownItem>
+            <DropdownItem><a href="StudentBudgeting">Student Budgeting</a></DropdownItem>
+            <DropdownItem><a href="ResearchCollaboration">Research Collaboration</a></DropdownItem>
+            <DropdownItem><a href="SafetyAwareness">Safety Awareness</a></DropdownItem>
+            <DropdownItem><a href="PeerMentorship">Peer Mentorship</a></DropdownItem>
+            <DropdownItem><a href="AIPage">AI-driven Insights</a></DropdownItem>
+          </Dropdown>
+        </MenuItem> */}
 
         <MenuItem>
-          <a href="#profile"><FaUserCircle /> Profile</a>
+        <a href="/about">About Us</a>
+        </MenuItem>
+
+
+        <MenuItem>
+        <a href="/blogs">Blogs</a>
+        </MenuItem>
+
+
+        {/* <MenuItem>
+          <a href="#pages">Pages <FaChevronDown /></a>
           <Dropdown>
-            
+            <DropdownItem><a href="/about">About Us</a></DropdownItem>
+            <DropdownItem><a href="/ContactUs">Contact Us</a></DropdownItem>
+          </Dropdown>
+        </MenuItem> */}
+
+        {/* <MenuItem>
+          <a href="#extras">Extras <FaChevronDown /></a>
+          <Dropdown>
+            <DropdownItem><a href="/StudyMaterials"><MdBook /> Study Material</a></DropdownItem>
+            <DropdownItem><a href="/download"><MdFileDownload /> Download</a></DropdownItem>
+            <DropdownItem><a href="/chat"><MdChat /> Chat</a></DropdownItem>
+            <DropdownItem><a href="/blogs"><MdLibraryBooks />Blogs</a></DropdownItem>
+          </Dropdown>
+        </MenuItem> */}
+
+        {/* <MenuItem>
+          <a href="#login">Login <FaChevronDown /></a>
+          <Dropdown>
+            <DropdownItem><a href="/login">Student</a></DropdownItem>
+            <DropdownItem><a href="/login/faculty">Faculty</a></DropdownItem>
+            <DropdownItem><a href="/login/admin">Admin</a></DropdownItem>
+          </Dropdown>
+        </MenuItem> */}
+
+        
+
+<MenuItem>
+  <a href="#notifications" style={{ marginTop: "-10px", display: "flex", alignItems: "center" }}>
+    <FaBell style={{ fontSize: "27px", marginLeft: "0px", color: "#f75c7e", transition: "color 0.3s ease-in-out" }} />
+  </a>
+</MenuItem>
+
+
+
+        <MenuItem>
+        <a href="#notifications" style={{ marginTop: "-7px", display: "flex", alignItems: "center" }}>
+    <FaUserCircle style={{ fontSize: "27px", marginLeft: "0px", marginTop: "-7px", color: "#f75c7e", transition: "color 0.3s ease-in-out" }} /> Profile
+  </a>
+          <Dropdown>
+
             <ProfileItem><a href="/UserProfilePage">User Profile</a></ProfileItem>
-          <ProfileItem><a href="/Leaderboard">Leaderboard</a></ProfileItem>
-          <ProfileItem><a href="/Settings">Settings</a></ProfileItem>
-          <ProfileItem><a href="/Help">Help</a></ProfileItem>
-          <DropdownItem><a href="/logout">Logout</a></DropdownItem>
+            <ProfileItem><a href="/Leaderboard">Leaderboard</a></ProfileItem>
+            <ProfileItem><a href="/Settings">Settings</a></ProfileItem>
+            <ProfileItem><a href="/Help">Help</a></ProfileItem>
+            <DropdownItem><a href="/logout">Login/Logout</a></DropdownItem>
           </Dropdown>
         </MenuItem>
       </Menu>
