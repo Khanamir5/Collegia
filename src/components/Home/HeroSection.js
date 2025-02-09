@@ -12,11 +12,11 @@ const HeroSection = () => {
   return (
     <HeroContainer>
       <HeroContent data-aos="fade-up">
-      <HeroTitle>
-    <h1 className="rubik-glitch-pop-regular"> Collegia.</h1>
-  </HeroTitle>
+        <HeroTitle>
+          <h1 className="rubik-glitch-pop-regular"> Collegia.</h1>
+        </HeroTitle>
         <HeroSubTitle>
-            <h2>Revolutionize Your Student Experience</h2>
+          <h2>Revolutionize Your Student Experience</h2>
           Connect, Collaborate, and Succeed with <span>Collegia</span>
         </HeroSubTitle>
         <HeroButton href="#about">
@@ -32,7 +32,7 @@ export default HeroSection;
 const HeroContainer = styled.section`
   background: url('/images/hero-bg.jpg') no-repeat center center/cover;
   background-attachment: fixed; /* This creates the parallax effect */
-  height: 100vh;
+  height: 90vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,6 +54,7 @@ const HeroContainer = styled.section`
 
 const HeroContent = styled.div`
   position: relative;
+  top: -50px;
   z-index: 2;
   padding: 20px;
   max-width: 800px;

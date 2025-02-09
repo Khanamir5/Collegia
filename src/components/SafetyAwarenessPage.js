@@ -1,20 +1,33 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import styled, { keyframes } from 'styled-components';
 
-// Helper for responsive font sizes
-const responsiveFontSize = (size) => `
-  font-size: ${size};
-  @media (max-width: 768px) {
-    font-size: calc(${size} * 0.9);
+// Keyframes for animations
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  @media (max-width: 480px) {
-    font-size: calc(${size} * 0.8);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 `;
 
-// Hero Section
+const pulse = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+`;
+
+// Hero Section Styles
 const HeroSection = styled.section`
-  background-image: url('https://images.unsplash.com/photo-1571260899304-425eee4c7efc?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); // Add your background image URL
+  background-image: url('https://images.unsplash.com/photo-1571260899304-425eee4c7efc?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
   background-size: cover;
   background-position: center;
   padding: 120px 20px;
@@ -22,7 +35,6 @@ const HeroSection = styled.section`
   color: #fff;
   position: relative;
   overflow: hidden;
-
 
   &::before {
     content: "";
@@ -37,361 +49,237 @@ const HeroSection = styled.section`
 `;
 
 const HeroTitle = styled.h1`
-  ${responsiveFontSize('4rem')};
+  font-size: 4rem;
   margin-bottom: 20px;
   position: relative;
   z-index: 1;
+  animation: ${fadeIn} 1s ease-out;
+
+  @media (max-width: 768px) {
+    font-size: 3rem;
+  }
 `;
 
 const HeroSubtitle = styled.p`
-  ${responsiveFontSize('1.5rem')};
+  font-size: 1.5rem;
   margin-bottom: 40px;
   position: relative;
   z-index: 1;
+  animation: ${fadeIn} 1.5s ease-out;
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
 `;
 
-const CallToAction = styled.a`
-  padding: 15px 30px;
-  background-color: #ff6f61;
-  color: #fff;
-  text-decoration: none;
-  ${responsiveFontSize('1.2rem')};
-  border-radius: 30px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+const PanicButton = styled.button`
+  background:rgb(233, 5, 5);
+  color: white;
+  padding: 20px 40px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.5rem;
+  cursor: pointer;
   position: relative;
   z-index: 1;
+  animation: ${pulse} 2s infinite;
+  transition: background 0.3s ease;
 
   &:hover {
-    background-color: #ff8a65;
-    transform: scale(1.05);
+    background:rgb(3, 150, 38);
+    animation: none;
   }
 `;
 
-// Resources Section
-const ResourcesSection = styled.section`
-  padding: 60px 20px;
-  background-color: #f1f1f1;
-  text-align: center;
-`;
+// Main Safety Component
+const Safety = () => {
+  const [report, setReport] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
-const ResourcesTitle = styled.h2`
-  ${responsiveFontSize('2.5rem')};
-  color: #333;
-  margin-bottom: 40px;
-`;
+  // Mock emergency contacts
+  const emergencyContacts = [
+    { name: 'Campus Security', number: '123-456-7890' },
+    { name: 'Local Police', number: '911' },
+    { name: 'Health Center', number: '987-654-3210' },
+    { name: 'Counseling Services', number: '555-123-4567' },
+  ];
 
-const ResourcesGrid = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-  @media (min-width: 768px) {
-    flex-direction: row;
-    justify-content: space-around;
-  }
-`;
+  // Mock safety tips
+  const safetyTips = [
+    'Always be aware of your surroundings.',
+    'Avoid walking alone at night. Use the campus shuttle service.',
+    'Keep your personal belongings secure at all times.',
+    'Report any suspicious activity to campus security immediately.',
+    'Save emergency contacts on your phone for quick access.',
+  ];
 
-const ResourceItem = styled.div`
-  flex: 1;
-  max-width: 320px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 15px;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-  text-align: left;
-  position: relative;
-  overflow: hidden;
+  // Handle report submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Simulate report submission (you can replace this with an API call)
+    setTimeout(() => {
+      setSubmitted(true);
+      setReport('');
+    }, 1000);
+  };
 
-  h3 {
-    ${responsiveFontSize('1.5rem')};
-    color: #ff6f61;
-    margin-bottom: 15px;
-  }
+  return (
+    <div>
+      {/* Hero Section */}
+      <HeroSection>
+        <HeroTitle>Your Safety is Our Priority</HeroTitle>
+        <HeroSubtitle>Comprehensive resources and tools to ensure a safer campus experience.</HeroSubtitle>
+        <PanicButton onClick={() => alert('Help is on the way!')}>Panic Button</PanicButton>
+      </HeroSection>
 
-  p {
-    ${responsiveFontSize('1rem')};
-    color: #666;
-  }
-`;
+      {/* Main Content */}
+      <div style={styles.container}>
+        {/* Emergency Contacts Section */}
+        <div style={styles.section}>
+          <h2 style={styles.sectionTitle}>Emergency Contacts</h2>
+          <div style={styles.contactsGrid}>
+            {emergencyContacts.map((contact, index) => (
+              <div key={index} style={styles.contactCard}>
+                <h3 style={styles.contactName}>{contact.name}</h3>
+                <p style={styles.contactNumber}>{contact.number}</p>
+                <button
+                  style={styles.callButton}
+                  onClick={() => alert(`Calling ${contact.number}`)}
+                >
+                  Call Now
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
 
-// Reporting Tools Section
-const ReportingSection = styled.section`
-  padding: 60px 20px;
-  background-color: #fff;
-  text-align: center;
-`;
+        {/* Safety Tips Section */}
+        <div style={styles.section}>
+          <h2 style={styles.sectionTitle}>Safety Tips</h2>
+          <ul style={styles.tipsList}>{safetyTips.map((tip, index) => (
+            <li key={index} style={styles.tipItem}>
+              <span style={styles.tipIcon}>{['👀   -  ', '🚶‍♂️  -  ', '🎒  -  ', '🚨  -  ', '📱  -  '][index]}</span>
+              {tip}
+            </li>
+          ))}
+          </ul>
+        </div>
 
-const ReportingTitle = styled.h2`
-  ${responsiveFontSize('2.5rem')};
-  color: #333;
-  margin-bottom: 40px;
-`;
+        {/* Report Incident Section */}
+        <div style={styles.section}>
+          <h2 style={styles.sectionTitle}>Report an Incident</h2>
+          <form onSubmit={handleSubmit} style={styles.reportForm}>
+            <textarea
+              value={report}
+              onChange={(e) => setReport(e.target.value)}
+              placeholder="Describe the incident..."
+              style={styles.reportTextarea}
+              required
+            />
+            <button type="submit" style={styles.submitButton}>
+              {submitted ? 'Report Submitted!' : 'Submit Report'}
+            </button>
+          </form>
+          {submitted && (
+            <p style={styles.successMessage}>Thank you for reporting. We will take appropriate action.</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
-const ReportingGrid = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-  @media (min-width: 768px) {
-    flex-direction: row;
-    justify-content: space-around;
-  }
-`;
+// Inline CSS Styles
+const styles = {
+  container: {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    padding: '40px 20px',
+    fontFamily: 'Arial, sans-serif',
+    color: '#333',
+  },
+  section: {
+    marginBottom: '60px',
+  },
+  sectionTitle: {
+    fontSize: '2rem',
+    color: 'rgba(242, 58, 16, 0.86)',
+    marginBottom: '30px',
+    textAlign: 'center',
+  },
+  contactsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+    gap: '20px',
+  },
+  contactCard: {
+    background: 'rgba(65, 65, 65, 0.52)',
+    padding: '20px',
+    borderRadius: '10px',
+    textAlign: 'center',
+    boxShadow: '0 4px 6px rgba(248, 248, 248, 0.35)',
+    transition: 'transform 0.3s ease',
+  },
+  contactName: {
+    fontSize: '1.2rem',
+    marginBottom: '10px',
+    color: '#fff',
+  },
+  contactNumber: {
+    fontSize: '1rem',
+    color: 'rgba(154, 153, 153, 0.85)',
+  },
+  callButton: {
+    background: '#3498db',
+    color: 'white',
+    border: 'none',
+    padding: '10px 20px',
+    borderRadius: '15px',
+    cursor: 'pointer',
+    fontSize: '1rem',
+    marginTop: '10px',
+    transition: 'background 0.3s ease',
+  },
+  tipsList: {
+    listStyleType: 'none',
+    paddingLeft: '20px',
+  },
+  tipItem: {
+    fontSize: '1.2rem',
+    marginBottom: '10px',
+    color: '#fff',
+  },
+  reportForm: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20px',
+    maxWidth: '600px',
+    margin: '0 auto',
+  },
+  reportTextarea: {
+    width: '100%',
+    height: '150px',
+    padding: '10px',
+    border: '1px solid #bdc3c7',
+    borderRadius: '5px',
+    fontSize: '1rem',
+    resize: 'vertical',
+  },
+  submitButton: {
+    background: '#27ae60',
+    color: 'white',
+    border: 'none',
+    padding: '12px 24px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    fontSize: '1rem',
+    transition: 'background 0.3s ease',
+  },
+  successMessage: {
+    color: '#27ae60',
+    textAlign: 'center',
+    marginTop: '10px',
+  },
+};
 
-const ReportingItem = styled.div`
-  flex: 1;
-  max-width: 320px;
-  padding: 20px;
-  background-color: #f1f1f1;
-  border-radius: 15px;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-  text-align: left;
-  position: relative;
-  overflow: hidden;
-
-  h3 {
-    ${responsiveFontSize('1.5rem')};
-    color: #ff6f61;
-    margin-bottom: 15px;
-  }
-
-  p {
-    ${responsiveFontSize('1rem')};
-    color: #666;
-  }
-`;
-
-// Security System Integration Section
-const SecuritySection = styled.section`
-  padding: 60px 20px;
-  background-color: #f1f1f1;
-  text-align: center;
-`;
-
-const SecurityTitle = styled.h2`
-  ${responsiveFontSize('2.5rem')};
-  color: #333;
-  margin-bottom: 40px;
-`;
-
-const SecurityGrid = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-  @media (min-width: 768px) {
-    flex-direction: row;
-    justify-content: space-around;
-  }
-`;
-
-const SecurityItem = styled.div`
-  flex: 1;
-  max-width: 320px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 15px;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-  text-align: left;
-  position: relative;
-  overflow: hidden;
-
-  h3 {
-    ${responsiveFontSize('1.5rem')};
-    color: #ff6f61;
-    margin-bottom: 15px;
-  }
-
-  p {
-    ${responsiveFontSize('1rem')};
-    color: #666;
-  }
-`;
-
-// Support Services Section
-const SupportSection = styled.section`
-  padding: 60px 20px;
-  background-color: #fff;
-  text-align: center;
-`;
-
-const SupportTitle = styled.h2`
-  ${responsiveFontSize('2.5rem')};
-  color: #333;
-  margin-bottom: 40px;
-`;
-
-const SupportGrid = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-  @media (min-width: 768px) {
-    flex-direction: row;
-    justify-content: space-around;
-  }
-`;
-
-const SupportItem = styled.div`
-  flex: 1;
-  max-width: 320px;
-  padding: 20px;
-  background-color: #f1f1f1;
-  border-radius: 15px;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-  text-align: left;
-  position: relative;
-  overflow: hidden;
-
-  h3 {
-    ${responsiveFontSize('1.5rem')};
-    color: #ff6f61;
-    margin-bottom: 15px;
-  }
-
-  p {
-    ${responsiveFontSize('1rem')};
-    color: #666;
-  }
-`;
-
-// Call to Action Section
-const ContactSection = styled.section`
-  padding: 60px 20px;
-  text-align: center;
-  background-color: #ff6f61;
-  color: #fff;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.2);
-    z-index: 0;
-  }
-`;
-
-const ContactTitle = styled.h2`
-  ${responsiveFontSize('2.5rem')};
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 1;
-`;
-
-const ContactButton = styled.a`
-  padding: 15px 30px;
-  background-color: #fff;
-  color: #ff6f61;
-  text-decoration: none;
-  ${responsiveFontSize('1.2rem')};
-  border-radius: 30px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  position: relative;
-  z-index: 1;
-
-  &:hover {
-    background-color: #ff8a65;
-    transform: scale(1.05);
-  }
-`;
-
-// Safety Awareness Page Component
-const SafetyAwarenessPage = () => (
-  <div>
-    {/* Hero Section */}
-    <HeroSection>
-      <HeroTitle>Your Safety is Our Priority</HeroTitle>
-      <HeroSubtitle>Comprehensive resources and tools to ensure a safer campus experience.</HeroSubtitle>
-      <CallToAction href="#resources">Learn More</CallToAction>
-    </HeroSection>
-
-    {/* Comprehensive Safety Resources Section */}
-    <ResourcesSection id="resources">
-      <ResourcesTitle>Comprehensive Safety Resources</ResourcesTitle>
-      <ResourcesGrid>
-        <ResourceItem>
-          <h3>Interactive Campus Map</h3>
-          <p>Find safe routes and emergency phone locations across campus with real-time updates.</p>
-        </ResourceItem>
-        <ResourceItem>
-          <h3>Video Tutorials</h3>
-          <p>Watch tutorials on personal safety, emergency procedures, and reporting suspicious activities.</p>
-        </ResourceItem>
-        <ResourceItem>
-          <h3>Safety Guidelines</h3>
-          <p>Read up-to-date guidelines and safety tips for maintaining personal security in various scenarios.</p>
-        </ResourceItem>
-      </ResourcesGrid>
-    </ResourcesSection>
-
-    {/* Reporting Tools Section */}
-    <ReportingSection>
-      <ReportingTitle>Effective Reporting Tools</ReportingTitle>
-      <ReportingGrid>
-        <ReportingItem>
-          <h3>Incident Report Form</h3>
-          <p>Submit detailed reports on any safety incidents or concerns with ease and confidentiality.</p>
-        </ReportingItem>
-        <ReportingItem>
-          <h3>Emergency Contacts</h3>
-          <p>Quick access to emergency contacts including campus security and local authorities.</p>
-        </ReportingItem>
-        <ReportingItem>
-          <h3>Feedback System</h3>
-          <p>Provide feedback on safety measures and suggest improvements for a safer environment.</p>
-        </ReportingItem>
-      </ReportingGrid>
-    </ReportingSection>
-
-    {/* Security System Integration Section */}
-    <SecuritySection>
-      <SecurityTitle>Advanced Security System Integration</SecurityTitle>
-      <SecurityGrid>
-        <SecurityItem>
-          <h3>Real-time Alerts</h3>
-          <p>Receive immediate notifications for any safety threats or emergency situations.</p>
-        </SecurityItem>
-        <SecurityItem>
-          <h3>Integration with Local Authorities</h3>
-          <p>Seamless connection with local authorities for quicker response and coordination.</p>
-        </SecurityItem>
-        <SecurityItem>
-          <h3>Campus Security Cameras</h3>
-          <p>Access live feeds and security footage from various locations around the campus.</p>
-        </SecurityItem>
-      </SecurityGrid>
-    </SecuritySection>
-
-    {/* Support Services Section */}
-    <SupportSection>
-      <SupportTitle>24/7 Support Services</SupportTitle>
-      <SupportGrid>
-        <SupportItem>
-          <h3>Emergency Help Line</h3>
-          <p>Round-the-clock assistance available through our dedicated emergency help line.</p>
-        </SupportItem>
-        <SupportItem>
-          <h3>Counseling Services</h3>
-          <p>Professional counseling services to help you manage stress and personal safety concerns.</p>
-        </SupportItem>
-        <SupportItem>
-          <h3>Safety Workshops</h3>
-          <p>Participate in workshops to enhance your personal safety skills and awareness.</p>
-        </SupportItem>
-      </SupportGrid>
-    </SupportSection>
-
-    {/* Contact Section */}
-    <ContactSection>
-      <ContactTitle>Get In Touch With Us</ContactTitle>
-      <ContactButton href="mailto:support@safetyawareness.com">Contact Us</ContactButton>
-    </ContactSection>
-  </div>
-);
-
-export default SafetyAwarenessPage;
+export default Safety;

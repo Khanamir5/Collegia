@@ -1,19 +1,19 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
+import { Parallax } from 'react-parallax'; // Import Parallax component
 
 const slide = keyframes`
   0% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
 `;
 
-const ParallaxBackground = styled.div`
+const ParallaxBackground = styled(Parallax)` // Use Parallax component here
   background-image: url('./images/abc.jpg');
   background-size: cover;
-  background-attachment: fixed;
   background-position: center;
   min-height: 500px;
   display: flex;
@@ -23,7 +23,6 @@ const ParallaxBackground = styled.div`
   overflow: hidden;
 
   @media (max-width: 768px) {
-    background-attachment: scroll;
     min-height: 400px;
   }
 `;
@@ -115,16 +114,56 @@ const testimonials = [
     name: 'Amit Sharma',
     testimonial: 'The platform has been instrumental in advancing my career. The networking opportunities are exceptional!',
   },
-  // ... (other testimonials remain the same)
+  {
+    id: 2,
+    name: 'Priya Patel',
+    testimonial: 'I love how intuitive and user-friendly the platform is. It has made my learning journey so much easier!',
+  },
+  {
+    id: 3,
+    name: 'Rahul Singh',
+    testimonial: 'The AI-powered features are a game-changer. They provide insights that are incredibly valuable.',
+  },
+  {
+    id: 4,
+    name: 'Neha Gupta',
+    testimonial: 'The community is amazing! I’ve connected with so many like-minded individuals and learned a lot.',
+  },
+  {
+    id: 5,
+    name: 'Suresh Kumar',
+    testimonial: 'The platform has helped me stay organized and focused on my goals. Highly recommend it!',
+  },
+  {
+    id: 6,
+    name: 'Anjali Mehta',
+    testimonial: 'The automated summaries are a lifesaver. They save me so much time and effort!',
+  },
+  {
+    id: 7,
+    name: 'Vikram Joshi',
+    testimonial: 'The dynamic insights feature is fantastic. It helps me track my progress and make better decisions.',
+  },
+  {
+    id: 8,
+    name: 'Deepika Reddy',
+    testimonial: 'The personalized recommendations are spot on. They always suggest exactly what I need!',
+  },
 ];
 
 const TestimonialsSection = () => {
+  // Duplicate the testimonials array to create a seamless loop
+  const duplicatedTestimonials = [...testimonials, ...testimonials];
+
   return (
-    <ParallaxBackground>
+    <ParallaxBackground
+      bgImage="./images/abc.jpg" // Set the background image
+      strength={0} // Set strength to 0 to keep the image static
+    >
       <SliderContainer>
         <Heading>What People Are Saying</Heading>
         <SliderTrack>
-          {testimonials.concat(testimonials).map((testimonial, index) => (
+          {duplicatedTestimonials.map((testimonial, index) => (
             <TestimonialCard key={`${testimonial.id}-${index}`}>
               <h3>{testimonial.name}</h3>
               <p>"{testimonial.testimonial}"</p>

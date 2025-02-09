@@ -10,7 +10,7 @@ AOS.init(); // Initialize AOS for scroll animations
 const AISectionWrapper = styled.section`
   position: relative;
   color: #fff;
-  padding: 80px 20px;
+  padding: 0px 0px;
   background: rgba(0, 0, 0, 0.2); /* Optional dark overlay */
   z-index: 1;
 `;
@@ -28,6 +28,10 @@ const ParallaxContainer = styled(Parallax)`
   /* Make the background image fixed */
   background-image: url('./images/abc.jpg');
   background-attachment: fixed;
+
+  @media (max-width: 768px) {
+    height: 1100px; /* Adjust height for smaller screens */
+  }
 `;
 
 const SectionTitle = styled.h2`
@@ -38,6 +42,10 @@ const SectionTitle = styled.h2`
   margin-bottom: 20px;
   z-index: 1;
   text-align: center;
+
+  @media (max-width: 768px) {
+    font-size: 2rem; /* Adjust font size for smaller screens */
+  }
 `;
 
 const SectionDescription = styled.p`
@@ -49,6 +57,11 @@ const SectionDescription = styled.p`
   color: #ddd;
   font-family: 'Poppins', sans-serif;
   z-index: 1;
+
+  @media (max-width: 768px) {
+    font-size: 1rem; /* Adjust font size for smaller screens */
+    padding: 0 20px; /* Add padding for better readability */
+  }
 `;
 
 const FeatureGrid = styled.div`
@@ -59,6 +72,11 @@ const FeatureGrid = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   z-index: 1;
+
+  @media (max-width: 768px) {
+    flex-direction: column; /* Stack cards vertically on smaller screens */
+    align-items: center;
+  }
 `;
 
 const FeatureCard = styled.div`
@@ -77,6 +95,11 @@ const FeatureCard = styled.div`
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
   }
+
+  @media (max-width: 768px) {
+    width: 100%; /* Make cards full width on smaller screens */
+    max-width: 300px; /* Limit max width for better readability */
+  }
 `;
 
 const FeatureIcon = styled.div`
@@ -90,12 +113,20 @@ const FeatureTitle = styled.h3`
   margin-bottom: 10px;
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
+
+  @media (max-width: 768px) {
+    font-size: 1.4rem; /* Adjust font size for smaller screens */
+  }
 `;
 
 const FeatureDescription = styled.p`
   font-size: 0.8rem;
   line-height: 1.6;
   font-family: 'Poppins', sans-serif;
+
+  @media (max-width: 768px) {
+    font-size: 0.7rem; /* Adjust font size for smaller screens */
+  }
 `;
 
 const AISection = () => {

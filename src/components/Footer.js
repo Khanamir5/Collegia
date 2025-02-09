@@ -132,7 +132,6 @@ const Footer = () => {
           <ul>
             <li><a href="/about">Our Story</a></li>
             <li><a href="/team">Team</a></li>
-            <li><a href="/careers">Careers</a></li>
             <li><a href="/ContactUs">Contact Us</a></li>
           </ul>
         </FooterColumn>
@@ -140,7 +139,6 @@ const Footer = () => {
         <FooterColumn>
           <h4>Support</h4>
           <ul>
-            <li><a href="/faq">FAQ</a></li>
             <li><a href="/help">Help Center</a></li>
             <li><a href="/privacy-policy">Privacy Policy</a></li>
             <li><a href="/terms-of-service">Terms of Service</a></li>
