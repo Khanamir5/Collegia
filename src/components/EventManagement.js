@@ -1,321 +1,470 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import { FaCalendarAlt, FaTicketAlt, FaTools, FaBell } from 'react-icons/fa';
+import styled, { keyframes } from 'styled-components';
 
-// Theme and Color Definitions
-const theme = {
-  background: '#f0f4f8',
-  sectionBackground: '#ffffff',
-  cardBackground: '#ffffff',
-  primaryColor: '#3498db',
-  secondaryColor: '#2ecc71',
-  textColor: '#333333',
-  borderColor: '#e0e0e0',
-};
-
-// Styled Components
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem;
-  background-color: ${theme.background};
-  min-height: 100vh;
-  font-family: 'Roboto', sans-serif;
+// Keyframes for animations
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
-const Banner = styled.div`
-  width: 100%;
-  height: 300px;
-  background-image: url('https://images.unsplash.com/photo-1521334726092-b509a19597c6?q=80&w=2701&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+const pulse = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+`;
+
+// Styled Components
+const HeroSection = styled.section`
+  background-image: url('https://images.unsplash.com/photo-1477281765962-ef34e8bb0967?q=80&w=2533&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
   background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
+  background-position: bottom;
+  padding: 120px 20px;
   text-align: center;
-  font-size: 2.5rem;
-  font-weight: bold;
-  border-radius: 0 0 15px 15px;
-  margin-bottom: 2rem;
+  color: #fff;
   position: relative;
+  overflow: hidden;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: 0 0 15px 15px;
-  }
-
-  h1 {
-    position: relative;
-    z-index: 1;
-    font-size: 2rem;
-  }
-
-  @media (max-width: 768px) {
-    height: 200px;
-    font-size: 1.8rem;
-    h1 {
-      font-size: 1.6rem;
-    }
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 0;
   }
 `;
 
-const Section = styled.section`
-  width: 90%;
-  max-width: 900px;
-  margin: 1rem 0;
-  background-color: ${theme.sectionBackground};
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
+const HeroTitle = styled.h1`
+  font-size: 4rem;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+  animation: ${fadeIn} 1s ease-out;
+
+  @media (max-width: 768px) {
+    font-size: 3rem;
+  }
+`;
+
+const HeroSubtitle = styled.p`
+  font-size: 1.5rem;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
+  animation: ${fadeIn} 1.5s ease-out;
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
+`;
+
+const EventContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+`;
+
+const EventGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+`;
+
+const EventCard = styled.div`
+  background: #2c3e50;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-
-  @media (max-width: 768px) {
-    padding: 1rem;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   }
 `;
 
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
+const EventImage = styled.img`
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 15px;
 `;
 
-const IconWrapper = styled.div`
-  background-color: ${theme.primaryColor};
-  border-radius: 50%;
-  padding: 1rem;
-  margin-right: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-
-  @media (max-width: 768px) {
-    padding: 0.75rem;
-  }
+const EventTitle = styled.h3`
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color:rgb(255, 255, 255);
 `;
 
-const Info = styled.div`
-  h2 {
-    margin: 0;
-    font-size: 1.6rem;
-    color: ${theme.primaryColor};
-  }
-
-  p {
-    margin: 0;
-    font-size: 1rem;
-    color: ${theme.textColor};
-  }
-
-  @media (max-width: 768px) {
-    h2 {
-      font-size: 1.4rem;
-    }
-
-    p {
-      font-size: 0.9rem;
-    }
-  }
+const EventDate = styled.p`
+  font-size: 1rem;
+  color: #7f8c8d;
+  margin-bottom: 10px;
 `;
 
-const Button = styled.button`
-  background-color: ${theme.primaryColor};
-  color: #ffffff;
+const EventDescription = styled.p`
+  font-size: 1rem;
+  color: #fff;
+  margin-bottom: 15px;
+`;
+
+const RegisterButton = styled.button`
+  background: #3498db;
+  color: white;
   border: none;
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  font-size: 1.1rem;
+  padding: 10px 20px;
+  border-radius: 5px;
   cursor: pointer;
-  margin: 1rem 0;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 1rem;
+  transition: background 0.3s ease;
 
   &:hover {
-    background-color: ${theme.secondaryColor};
-    transform: scale(1.05);
-  }
-
-  @media (max-width: 768px) {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
+    background: #2980b9;
   }
 `;
 
-const Card = styled.div`
-  background-color: ${theme.cardBackground};
-  border: 1px solid ${theme.borderColor};
-  border-radius: 8px;
-  padding: 1rem;
-  margin: 0.5rem 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease, transform 0.3s ease;
+const FilterSection = styled.div`
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+`;
+
+const FilterButton = styled.button`
+  background: ${({ active }) => (active ? '#3498db' : '#ecf0f1')};
+  color: ${({ active }) => (active ? 'white' : '#333')};
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
 
   &:hover {
-    background-color: ${theme.borderColor};
-    transform: scale(1.02);
-  }
-
-  h4 {
-    margin: 0;
-    font-size: 1.2rem;
-    color: ${theme.primaryColor};
-  }
-
-  p {
-    margin: 0;
-    font-size: 1rem;
-    color: ${theme.textColor};
-  }
-
-  @media (max-width: 768px) {
-    padding: 0.75rem;
-    h4 {
-      font-size: 1rem;
-    }
-    p {
-      font-size: 0.9rem;
-    }
+    background: #3498db;
+    color: white;
   }
 `;
 
-const Calendar = styled.div`
-  background-color: ${theme.sectionBackground};
-  border-radius: 8px;
-  padding: 1rem;
-  border: 1px solid ${theme.borderColor};
-  color: ${theme.textColor};
+const CountdownTimer = styled.div`
+  background: #2c3e50;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  margin-bottom: 40px;
+`;
 
-  @media (max-width: 768px) {
-    padding: 0.75rem;
+const TimerText = styled.p`
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+`;
+
+const TimerNumbers = styled.div`
+  font-size: 2rem;
+  font-weight: bold;
+`;
+
+const CreateEventButton = styled.button`
+  background: #27ae60;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+  margin-bottom: 20px;
+  display: block; /* Make it a block-level element */
+  margin-left: auto;
+  margin-right: auto; /* Center horizontally */
+
+  &:hover {
+    background: #219653;
   }
 `;
 
-// EventManagement Component
-const EventManagement = () => {
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [showTickets, setShowTickets] = useState(false);
-  const [showToolkit, setShowToolkit] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+`;
+
+const ModalTitle = styled.h3`
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #2c3e50;
+`;
+
+const ModalInput = styled.input`
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  font-size: 1rem;
+`;
+
+const ModalTextarea = styled.textarea`
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  font-size: 1rem;
+  resize: vertical;
+`;
+
+const ModalButton = styled.button`
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: #2980b9;
+  }
+`;
+
+// Mock Data
+const initialEvents = [
+  {
+    id: 1,
+    title: 'Tech Fest 2023',
+    date: '2023-12-15',
+    description: 'Join us for the biggest tech event of the year!',
+    image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    category: 'Tech',
+    formLink: 'https://forms.gle/example1',
+  },
+  {
+    id: 2,
+    title: 'Cultural Fest',
+    date: '2023-11-20',
+    description: 'Experience the diversity of cultures at our annual fest.',
+    image: 'https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    category: 'Cultural',
+    formLink: 'https://forms.gle/example2',
+  },
+  {
+    id: 3,
+    title: 'Sports Day',
+    date: '2023-10-25',
+    description: 'Get ready for an exciting day of sports and competitions.',
+    image: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=2669&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    category: 'Sports',
+    formLink: 'https://forms.gle/example3',
+  },
+];
+
+const categories = ['All', 'Tech', 'Cultural', 'Sports'];
+
+// Main Component
+const EventManagementPage = () => {
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [events, setEvents] = useState(initialEvents);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newEvent, setNewEvent] = useState({
+    title: '',
+    date: '',
+    description: '',
+    image: '',
+    category: 'Tech',
+    formLink: '',
+  });
+
+  // Countdown timer logic
+  const calculateTimeLeft = () => {
+    const targetDate = new Date('2023-12-15');
+    const now = new Date();
+    const difference = targetDate - now;
+
+    if (difference > 0) {
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((difference / 1000 / 60) % 60);
+      const seconds = Math.floor((difference / 1000) % 60);
+      setTimeLeft({ days, hours, minutes, seconds });
+    }
+  };
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      calculateTimeLeft();
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Filter events by category
+  const filteredEvents = selectedCategory === 'All'
+    ? events
+    : events.filter(event => event.category === selectedCategory);
+
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewEvent({ ...newEvent, [name]: value });
+  };
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const event = { ...newEvent, id: events.length + 1 };
+    setEvents([...events, event]);
+    setIsModalOpen(false);
+    setNewEvent({
+      title: '',
+      date: '',
+      description: '',
+      image: '',
+      category: 'Tech',
+      formLink: '',
+    });
+  };
 
   return (
-    <Container>
-      <Banner>
-        <h1>Event Management Dashboard</h1>
-      </Banner>
+    <div>
+      {/* Hero Section */}
+      <HeroSection>
+        <HeroTitle>Event Management</HeroTitle>
+        <HeroSubtitle>Discover and register for exciting college events.</HeroSubtitle>
+      </HeroSection>
 
-      {/* Event Calendar */}
-      <Section>
-        <Header>
-          <IconWrapper>
-            <FaCalendarAlt size={28} />
-          </IconWrapper>
-          <Info>
-            <h2>Event Calendar</h2>
-            <p>Explore and manage campus events.</p>
-          </Info>
-        </Header>
-        <Button onClick={() => setShowCalendar(!showCalendar)}>
-          {showCalendar ? 'Hide Calendar' : 'Show Calendar'}
-        </Button>
-        {showCalendar && (
-          <Calendar>
-            <p>Event Calendar will be displayed here with weather updates and social media integration.</p>
-          </Calendar>
-        )}
-      </Section>
+      {/* Main Content */}
+      <EventContainer>
+        {/* Countdown Timer */}
+        <CountdownTimer>
+          <TimerText>Time until the next big event:</TimerText>
+          <TimerNumbers>
+            {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
+          </TimerNumbers>
+        </CountdownTimer>
 
-      {/* Ticketing System */}
-      <Section>
-        <Header>
-          <IconWrapper>
-            <FaTicketAlt size={28} />
-          </IconWrapper>
-          <Info>
-            <h2>Ticketing System</h2>
-            <p>Manage tickets and registrations for events.</p>
-          </Info>
-        </Header>
-        <Button onClick={() => setShowTickets(!showTickets)}>
-          {showTickets ? 'Hide Tickets' : 'Show Tickets'}
-        </Button>
-        {showTickets && (
-          <>
-            <Card>
-              <h4>Job Fair</h4>
-              <p>Early Bird Ticket - $20</p>
-            </Card>
-            <Card>
-              <h4>Tech Symposium</h4>
-              <p>VIP Ticket - $50</p>
-            </Card>
-          </>
-        )}
-      </Section>
+        {/* Create Event Button */}
+        
+        <CreateEventButton onClick={() => setIsModalOpen(true)}>
+          Create Event
+        </CreateEventButton>
 
-      {/* Event Organizer Toolkit */}
-      <Section>
-        <Header>
-          <IconWrapper>
-            <FaTools size={28} />
-          </IconWrapper>
-          <Info>
-            <h2>Organizer Toolkit</h2>
-            <p>Tools for creating and managing events.</p>
-          </Info>
-        </Header>
-        <Button onClick={() => setShowToolkit(!showToolkit)}>
-          {showToolkit ? 'Hide Toolkit' : 'Show Toolkit'}
-        </Button>
-        {showToolkit && (
-          <>
-            <Card>
-              <h4>Event Wizard</h4>
-              <p>Templates for creating events.</p>
-            </Card>
-            <Card>
-              <h4>Budget Tools</h4>
-              <p>Track event budgets and expenses.</p>
-            </Card>
-          </>
-        )}
-      </Section>
+        {/* Filter Section */}
+        <FilterSection>
+          {categories.map(category => (
+            <FilterButton
+              key={category}
+              active={selectedCategory === category}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category}
+            </FilterButton>
+          ))}
+        </FilterSection>
 
-      {/* Notifications */}
-      <Section>
-        <Header>
-          <IconWrapper>
-            <FaBell size={28} />
-          </IconWrapper>
-          <Info>
-            <h2>Notifications</h2>
-            <p>Keep track of important alerts and updates.</p>
-          </Info>
-        </Header>
-        <Button onClick={() => setShowNotifications(!showNotifications)}>
-          {showNotifications ? 'Hide Notifications' : 'Show Notifications'}
-        </Button>
-        {showNotifications && (
-          <Card>
-            <h4>Upcoming Event</h4>
-            <p>Don't forget about the upcoming tech symposium!</p>
-          </Card>
-        )}
-      </Section>
-    </Container>
+        {/* Event Grid */}
+        <EventGrid>
+          {filteredEvents.map(event => (
+            <EventCard key={event.id}>
+              <EventImage src={event.image} alt={event.title} />
+              <EventTitle>{event.title}</EventTitle>
+              <EventDate>{event.date}</EventDate>
+              <EventDescription>{event.description}</EventDescription>
+              <RegisterButton onClick={() => window.open(event.formLink, '_blank')}>
+                Register Now
+              </RegisterButton>
+            </EventCard>
+          ))}
+        </EventGrid>
+      </EventContainer>
+
+      {/* Create Event Modal */}
+      {isModalOpen && (
+        <ModalOverlay>
+          <ModalContent>
+            <ModalTitle>Create New Event</ModalTitle>
+            <form onSubmit={handleSubmit}>
+              <ModalInput
+                type="text"
+                name="title"
+                placeholder="Event Title"
+                value={newEvent.title}
+                onChange={handleInputChange}
+                required
+              />
+              <ModalInput
+                type="date"
+                name="date"
+                placeholder="Event Date"
+                value={newEvent.date}
+                onChange={handleInputChange}
+                required
+              />
+              <ModalTextarea
+                name="description"
+                placeholder="Event Description"
+                value={newEvent.description}
+                onChange={handleInputChange}
+                required
+              />
+              <ModalInput
+                type="text"
+                name="image"
+                placeholder="Event Image URL"
+                value={newEvent.image}
+                onChange={handleInputChange}
+                required
+              />
+              <ModalInput
+                type="text"
+                name="formLink"
+                placeholder="Google Form Link"
+                value={newEvent.formLink}
+                onChange={handleInputChange}
+                required
+              />
+              <ModalButton type="submit">Create Event</ModalButton>
+            </form>
+          </ModalContent>
+        </ModalOverlay>
+      )}
+    </div>
   );
 };
 
-export default EventManagement;
+export default EventManagementPage;
