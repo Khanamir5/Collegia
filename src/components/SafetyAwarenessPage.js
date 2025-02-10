@@ -98,7 +98,7 @@ const Safety = () => {
 
   // Mock emergency contacts
   const emergencyContacts = [
-    { name: 'Campus Security', number: '123-456-7890' },
+    { name: 'Campus Security', number: '7063884499' },
     { name: 'Local Police', number: '911' },
     { name: 'Health Center', number: '987-654-3210' },
     { name: 'Counseling Services', number: '555-123-4567' },
