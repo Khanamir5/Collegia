@@ -11,9 +11,11 @@ import {
   Cpu,
   Sparkles,
   Layers,
+  Home, // Import the Home icon
 } from "lucide-react";
 
 const navItems = [
+ 
   {
     name: "All",
     icon: Layers,
@@ -27,7 +29,12 @@ const navItems = [
   },
   { name: "Safety", icon: Shield, href: "/SafetyAwareness" },
   {
-    name: "AI Features",
+    name: "Home", // Add the Home button
+    icon: Home,
+    href: "/", // Assuming the home page route is "/"
+  },
+  {
+    name: "AI Tools",
     icon: Cpu,
     submenu: [
       { name: "AI Summary", icon: Sparkles, href: "/AIPage" },
