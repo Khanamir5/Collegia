@@ -1,572 +1,359 @@
-import React from 'react';
-import styled from 'styled-components';
-
-// Hero Section
-const HeroSection = styled.section`
-  background-image: url('https://images.unsplash.com/photo-1512758017271-d7b84c2113f1?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); // Update to your new background image
-  background-size: cover;
-  background-position: center;
-  padding: 120px 30px;
-  text-align: center;
-  color: #fefefe;
-  position: relative;
-  overflow: hidden;
-
-
-/* Pseudo-element for overlay */
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.593); /* Adjust overlay color and opacity here */
-    z-index: 1; /* Ensure overlay is above background image but below text */
-  }
-
-  /* Adjust z-index for text to be above overlay */
-  & > * {
-    position: relative;
-    z-index: 2;
-  }
-
-
-  @media (max-width: 768px) {
-    padding: 80px 20px;
-  }
-`;
-
-const HeroTitle = styled.h1`
-  font-size: 3.5rem;
-  font-weight: bold;
-  margin-bottom: 20px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-
-  @media (max-width: 768px) {
-    font-size: 2.5rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 2rem;
-  }
-`;
-
-const HeroSubtitle = styled.p`
-  font-size: 1.8rem;
-  margin-bottom: 40px;
-  font-style: italic;
-
-  @media (max-width: 768px) {
-    font-size: 1.4rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1.2rem;
-  }
-`;
-
-const CallToAction = styled.a`
-  padding: 16px 32px;
-  background-color: #28a745;
-  color: #fff;
-  text-decoration: none;
-  font-size: 1.3rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease, transform 0.3s ease;
-
-  &:hover {
-    background-color: #218838;
-    transform: scale(1.05);
-  }
-
-  @media (max-width: 768px) {
-    padding: 12px 24px;
-    font-size: 1.1rem;
-  }
-
-  @media (max-width: 480px) {
-    padding: 10px 20px;
-    font-size: 1rem;
-  }
-`;
-
-// What We Offer Section
-const OfferSection = styled.section`
-  padding: 60px 30px;
-  text-align: center;
-  background: linear-gradient(135deg, #f7f7f7 50%, #e0e0e0 50%);
-
-  @media (max-width: 768px) {
-    padding: 40px 20px;
-  }
-
-  @media (max-width: 480px) {
-    padding: 30px 15px;
-  }
-`;
-
-const OfferTitle = styled.h2`
-  font-size: 3rem;
-  color: #333;
-  margin-bottom: 30px;
-  font-weight: 600;
-
-  @media (max-width: 768px) {
-    font-size: 2.5rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 2rem;
-  }
-`;
-
-const OfferGrid = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-
-  @media (max-width: 768px) {
-    gap: 15px;
-  }
-
-  @media (max-width: 480px) {
-    gap: 10px;
-  }
-`;
-
-const OfferItem = styled.div`
-  flex-basis: 30%;
-  padding: 25px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-  text-align: left;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-  }
-
-  @media (max-width: 768px) {
-    flex-basis: 45%;
-  }
-
-  @media (max-width: 480px) {
-    flex-basis: 100%;
-  }
-
-  h3 {
-    font-size: 1.6rem;
-    color: #28a745;
-    margin-bottom: 10px;
-  }
-
-  p {
-    font-size: 1.1rem;
-    color: #555;
-  }
-`;
-
-// How It Works Section
-const StepsSection = styled.section`
-  padding: 60px 30px;
-  background: #f4f4f4;
-
-  @media (max-width: 768px) {
-    padding: 40px 20px;
-  }
-
-  @media (max-width: 480px) {
-    padding: 30px 15px;
-  }
-`;
-
-const StepsTitle = styled.h2`
-  font-size: 3rem;
-  color: #333;
-  text-align: center;
-  margin-bottom: 30px;
-  font-weight: 600;
-
-  @media (max-width: 768px) {
-    font-size: 2.5rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 2rem;
-  }
-`;
-
-const StepsGrid = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-
-  @media (max-width: 768px) {
-    gap: 15px;
-  }
-
-  @media (max-width: 480px) {
-    gap: 10px;
-  }
-`;
-
-const StepItem = styled.div`
-  flex-basis: 30%;
-  text-align: center;
-  background: #fff;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-  }
-
-  @media (max-width: 768px) {
-    flex-basis: 45%;
-  }
-
-  @media (max-width: 480px) {
-    flex-basis: 100%;
-  }
-`;
-
-const StepNumber = styled.div`
-  font-size: 3.5rem;
-  color: #28a745;
-  margin-bottom: 20px;
-
-  @media (max-width: 768px) {
-    font-size: 2.5rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 2rem;
-  }
-`;
-
-const StepDescription = styled.p`
-  font-size: 1.1rem;
-  color: #666;
-
-  @media (max-width: 768px) {
-    font-size: 1rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 0.9rem;
-  }
-`;
-
-// Our Key Researchers Section
-const ResearchersSection = styled.section`
-  padding: 60px 30px;
-  background: linear-gradient(135deg, #f4f4f4 50%, #e0e0e0 50%);
-
-  @media (max-width: 768px) {
-    padding: 40px 20px;
-  }
-
-  @media (max-width: 480px) {
-    padding: 30px 15px;
-  }
-`;
-
-const ResearchersTitle = styled.h2`
-  font-size: 3rem;
-  color: #333;
-  text-align: center;
-  margin-bottom: 30px;
-  font-weight: 600;
-
-  @media (max-width: 768px) {
-    font-size: 2.5rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 2rem;
-  }
-`;
-
-const ResearchersGrid = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-
-  @media (max-width: 768px) {
-    gap: 15px;
-  }
-
-  @media (max-width: 480px) {
-    gap: 10px;
-  }
-`;
-
-const ResearcherCard = styled.div`
-  flex-basis: 30%;
-  text-align: center;
-  background: #fff;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-  }
-
-  @media (max-width: 768px) {
-    flex-basis: 45%;
-  }
-
-  @media (max-width: 480px) {
-    flex-basis: 100%;
-  }
-`;
-
-const ResearcherImage = styled.img`
-  width: 100%;
-  border-radius: 50%;
-  margin-bottom: 15px;
-`;
-
-const ResearcherName = styled.h3`
-  font-size: 1.6rem;
-  color: #333;
-
-  @media (max-width: 768px) {
-    font-size: 1.4rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1.2rem;
-  }
-`;
-
-const ResearcherTitle = styled.p`
-  font-size: 1.1rem;
-  color: #777;
-
-  @media (max-width: 768px) {
-    font-size: 1rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 0.9rem;
-  }
-`;
-
-// Research Partners Section
-const PartnersSection = styled.section`
-  padding: 60px 30px;
-  background: #fff;
-
-  @media (max-width: 768px) {
-    padding: 40px 20px;
-  }
-
-  @media (max-width: 480px) {
-    padding: 30px 15px;
-  }
-`;
-
-const PartnersTitle = styled.h2`
-  font-size: 3rem;
-  color: #333;
-  text-align: center;
-  margin-bottom: 30px;
-  font-weight: 600;
-
-  @media (max-width: 768px) {
-    font-size: 2.5rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 2rem;
-  }
-`;
-
-const PartnersLogos = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-
-  @media (max-width: 768px) {
-    gap: 15px;
-  }
-
-  @media (max-width: 480px) {
-    gap: 10px;
-  }
-`;
-
-const PartnerLogo = styled.img`
-  max-width: 150px;
-  height: auto;
-
-  @media (max-width: 768px) {
-    max-width: 120px;
-  }
-
-  @media (max-width: 480px) {
-    max-width: 100px;
-  }
-`;
-
-// Call to Action Section
-const ContactSection = styled.section`
-  padding: 60px 30px;
-  text-align: center;
-  background: #021526;
-  
-
-  @media (max-width: 768px) {
-    padding: 40px 20px;
-  }
-
-  @media (max-width: 480px) {
-    padding: 30px 15px;
-  }
-`;
-
-const ContactTitle = styled.h2`
-  font-size: 3rem;
-  color: #fff;
-  margin-bottom: 20px;
-  font-weight: 600;
-
-  @media (max-width: 768px) {
-    font-size: 2.5rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 2rem;
-  }
-`;
-
-const ContactButton = styled.a`
-  padding: 16px 32px;
-  background-color: #28a745;
-  color: #fff;
-  text-decoration: none;
-  font-size: 1.3rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease, transform 0.3s ease;
-
-  &:hover {
-    background-color: #218838;
-    transform: scale(1.05);
-  }
-
-  @media (max-width: 768px) {
-    padding: 12px 24px;
-    font-size: 1.1rem;
-  }
-
-  @media (max-width: 480px) {
-    padding: 10px 20px;
-    font-size: 1rem;
-  }
-`;
-
-// Main Component
-const ResearchCollaborationPage = () => (
-  <div>
-    {/* Hero Section */}
-    <HeroSection>
-      <HeroTitle>Welcome to Our Research Collaboration Platform</HeroTitle>
-      <HeroSubtitle>Partner with us to drive innovation and make a difference.</HeroSubtitle>
-      <CallToAction href="#contact">Get Started</CallToAction>
-    </HeroSection>
-
-    {/* What We Offer Section */}
-    <OfferSection>
-      <OfferTitle>What We Offer</OfferTitle>
-      <OfferGrid>
-        <OfferItem>
-          <h3>Advanced Research Tools</h3>
-          <p>Access to cutting-edge research tools and technology to support your work.</p>
-        </OfferItem>
-        <OfferItem>
-          <h3>Expert Guidance</h3>
-          <p>Receive expert advice and guidance from seasoned professionals in your field.</p>
-        </OfferItem>
-        <OfferItem>
-          <h3>Collaborative Opportunities</h3>
-          <p>Engage in collaborative projects with top researchers and institutions.</p>
-        </OfferItem>
-      </OfferGrid>
-    </OfferSection>
-
-    {/* How It Works Section */}
-    <StepsSection>
-      <StepsTitle>How It Works</StepsTitle>
-      <StepsGrid>
-        <StepItem>
-          <StepNumber>1</StepNumber>
-          <StepDescription>Submit your research proposal and objectives.</StepDescription>
-        </StepItem>
-        <StepItem>
-          <StepNumber>2</StepNumber>
-          <StepDescription>Our team will review and provide feedback on your proposal.</StepDescription>
-        </StepItem>
-        <StepItem>
-          <StepNumber>3</StepNumber>
-          <StepDescription>Collaborate with our dedicated researchers.</StepDescription>
-        </StepItem>
-      </StepsGrid>
-    </StepsSection>
-
-    {/* Our Key Researchers Section */}
-    <ResearchersSection>
-      <ResearchersTitle>Meet Our Leading Researchers</ResearchersTitle>
-      <ResearchersGrid>
-        <ResearcherCard>
-          <ResearcherImage src="researcher1.jpg" alt="Researcher 1" />
-          <ResearcherName>Dr. Shubhankar Roy</ResearcherName>
-          <ResearcherTitle>Data Scientist</ResearcherTitle>
-        </ResearcherCard>
-        <ResearcherCard>
-          <ResearcherImage src="researcher2.jpg" alt="Researcher 2" />
-          <ResearcherName>Dr. Pushan Banerjee</ResearcherName>
-          <ResearcherTitle>Climate Expert</ResearcherTitle>
-        </ResearcherCard>
-        <ResearcherCard>
-          <ResearcherImage src="researcher3.jpg" alt="Researcher 3" />
-          <ResearcherName>Dr. Kartick Malik	</ResearcherName>
-          <ResearcherTitle>Healthcare Specialist</ResearcherTitle>
-        </ResearcherCard>
-      </ResearchersGrid>
-    </ResearchersSection>
-
-    {/* Research Partners Section */}
-    <PartnersSection>
-      <PartnersTitle>Our Research Partners</PartnersTitle>
-      <PartnersLogos>
-        <PartnerLogo src="partner1-logo.png" alt="Partner 1" />
-        <PartnerLogo src="partner2-logo.png" alt="Partner 2" />
-        <PartnerLogo src="partner3-logo.png" alt="Partner 3" />
-      </PartnersLogos>
-    </PartnersSection>
-
-    {/* Call to Action Section */}
-    <ContactSection>
-      <ContactTitle>Ready to Collaborate?</ContactTitle>
-      <ContactButton href="mailto:itsnishu445@gmail.com">Contact Us</ContactButton>
-    </ContactSection>
-  </div>
-);
-
-export default ResearchCollaborationPage;
+import React, { useState, useEffect } from 'react';
+
+const ResearchCollaboration = () => {
+  const [activeSection, setActiveSection] = useState('projects');
+  const [projects, setProjects] = useState([]);
+  const [researchers, setResearchers] = useState([]);
+  const [resources, setResources] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Simulate fetching projects from an API
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setProjects([
+        {
+          id: 1,
+          title: 'AI-Powered Climate Change Mitigation',
+          description: 'Developing machine learning models to predict and mitigate the effects of climate change on urban environments.',
+          keywords: ['AI', 'Climate Change', 'Urban Planning'],
+          collaborators: 8,
+          deadline: '2024-06-30',
+        },
+        {
+          id: 2,
+          title: 'Quantum Computing for Drug Discovery',
+          description: 'Utilizing quantum algorithms to accelerate the process of identifying potential drug candidates for various diseases.',
+          keywords: ['Quantum Computing', 'Drug Discovery', 'Bioinformatics'],
+          collaborators: 5,
+          deadline: '2023-12-31',
+        },
+        {
+          id: 3,
+          title: 'Renewable Energy Integration',
+          description: 'Developing strategies to integrate renewable energy sources into existing power grids for sustainable energy solutions.',
+          keywords: ['Renewable Energy', 'Power Grid', 'Sustainability'],
+          collaborators: 7,
+          deadline: '2024-09-30',
+        },
+        {
+          id: 4,
+          title: 'Blockchain for Supply Chain Management',
+          description: 'Using blockchain technology to enhance transparency and efficiency in global supply chain operations.',
+          keywords: ['Blockchain', 'Supply Chain', 'Transparency'],
+          collaborators: 9,
+          deadline: '2024-08-20',
+        },
+        
+        
+        
+      ]);
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  // Simulate fetching researchers from an API
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setResearchers([
+        {
+          id: 1,
+          name: 'Dr. Emily Chen',
+          title: 'Associate Professor of Environmental Science',
+          institution: 'Green University',
+          publications: 45,
+          expertise: ['Climate Modeling', 'Machine Learning', 'Data Analysis'],
+        },
+        {
+          id: 2,
+          name: 'Prof. Michael Johnson',
+          title: 'Professor of Quantum Physics',
+          institution: 'Tech Institute',
+          publications: 79,
+          expertise: ['Quantum Computing', 'Algorithm Design', 'Molecular Modeling'],
+        },
+        {
+          id: 3,
+          name: 'Dr. Aisha Patel',
+          title: 'Professor of Biomedical Engineering',
+          institution: 'Innovate University',
+          publications: 62,
+          expertise: ['Biomedical Devices', 'Tissue Engineering', 'Medical Imaging'],
+        },
+        {
+          id: 4,
+          name: 'Dr. Carlos Rodriguez',
+          title: 'Associate Professor of Cybersecurity',
+          institution: 'SecureTech Institute',
+          publications: 55,
+          expertise: ['Cybersecurity', 'Network Security', 'Cryptography'],
+        },
+      ]);
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  // Simulate fetching resources from an API
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setResources([
+        {
+          id: 1,
+          title: 'Large-scale Climate Data Set',
+          description: 'A comprehensive dataset of global climate patterns over the past 50 years.',
+        },
+        {
+          id: 2,
+          title: 'Quantum Algorithm Library',
+          description: 'Open-source library of quantum algorithms for various computational problems.',
+        },
+        {
+          id: 3,
+          title: 'Genomic Data Repository',
+          description: 'A repository of genomic data from various species for biological research.',
+        },
+        {
+          id: 4,
+          title: 'AI Model Zoo',
+          description: 'A collection of pre-trained machine learning models for various applications.',
+        },
+        
+      ]);
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  const styles = {
+    container: {
+      fontFamily: 'Arial, sans-serif',
+      padding: '20px 7vw',
+      maxWidth: '100vw',
+      margin: '0 auto',
+      backgroundColor: 'rgb(232, 232, 232)',
+      minHeight: '100vh',
+      boxSizing: 'border-box',
+    },
+    banner: {
+      backgroundImage: 'url(https://images.unsplash.com/photo-1501290741922-b56c0d0884af?q=80&w=2532&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      color: '#fff',
+      padding: '40px 20px',
+      height:'300px',
+      textAlign: 'center',
+      borderRadius: '10px',
+      marginBottom: '20px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '20px',
+      flexWrap: 'wrap',
+      position: 'relative',
+    },
+    bannerOverlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.52)',
+      borderRadius: '10px',
+    },
+    bannerContent: {
+      position: 'relative',
+      zIndex: 1,
+      maxWidth: '600px',
+    },
+    bannerTitle: {
+      fontSize: '2.5rem',
+      fontWeight: 'bold',
+      marginBottom: '10px',
+    },
+    bannerSubtitle: {
+      fontSize: '1.2rem',
+      opacity: '0.9',
+    },
+    header: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: '20px',
+      flexWrap: 'wrap',
+    },
+    navButtons: {
+      display: 'flex',
+      gap: '10px',
+      marginTop: '10px',
+      flexWrap: 'wrap',
+    },
+    button: {
+      padding: '10px 20px',
+      backgroundColor: '#007bff',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '5px',
+      cursor: 'pointer',
+      transition: 'background-color 0.3s ease',
+    },
+    activeButton: {
+      backgroundColor: '#0056b3',
+    },
+    search: {
+      padding: '10px',
+      width: '100%',
+      maxWidth: '300px',
+      borderRadius: '5px',
+      border: '1px solid #ccc',
+      marginBottom: '20px',
+    },
+    section: {
+      marginBottom: '40px',
+    },
+    cardContainer: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: '20px',
+    },
+    particularCard: {
+      display: 'flex',
+      flexDirection: isMobile ? 'column' : 'row', // Dynamic flex direction
+    },
+    card: {
+      border: '1px solid #ccc',
+      borderRadius: '10px',
+      padding: '20px',
+      width: isMobile ? '100%' : 'calc(50% - 20px)', // Dynamic width
+      boxSizing: 'border-box',
+      marginBottom: '20px',
+      transition: 'box-shadow 0.3s ease',
+      backgroundColor: '#fff',
+      ':hover': {
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+      },
+    },
+    shareResource: {
+      border: '1px solid #ccc',
+      borderRadius: '10px',
+      padding: '20px',
+      backgroundColor: '#fff',
+    },
+    input: {
+      width: '100%',
+      padding: '10px',
+      marginBottom: '10px',
+      borderRadius: '5px',
+      border: '1px solid #ccc',
+    },
+  };
+
+  return (
+    <div style={styles.container}>
+      {/* Banner Section */}
+      <div style={styles.banner}>
+        <div style={styles.bannerOverlay}></div>
+        <div style={styles.bannerContent}>
+          <h1 style={styles.bannerTitle}>Research Collaboration</h1>
+          <p style={styles.bannerSubtitle}>Connecting researchers and resources for innovative solutions</p>
+        </div>
+      </div>
+
+      {/* Navigation Buttons */}
+      <div style={styles.header}>
+        <div style={styles.navButtons}>
+          {['projects', 'researchers', 'resources'].map((section) => (
+            <button
+              key={section}
+              style={activeSection === section ? { ...styles.button, ...styles.activeButton } : styles.button}
+              onClick={() => setActiveSection(section)}
+            >
+              {section.charAt(0).toUpperCase() + section.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Loading and Error Handling */}
+      {loading && <p>Loading...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      {/* Projects Section */}
+      {activeSection === 'projects' && (
+        <div style={styles.section}>
+          <input type="text" placeholder="Search projects..." style={styles.search} />
+          <div style={styles.particularCard}>
+            <div style={styles.cardContainer}>
+              {projects.map((project) => (
+                <div key={project.id} style={styles.card}>
+                  <h2>{project.title}</h2>
+                  <p>{project.description}</p>
+                  <p><strong>Keywords:</strong> {project.keywords.join(', ')}</p>
+                  <p><strong>Collaborators:</strong> {project.collaborators}</p>
+                  <p><strong>Deadline:</strong> {project.deadline}</p>
+                  <button style={styles.button}>Join Project</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Researchers Section */}
+      {activeSection === 'researchers' && (
+        <div style={styles.section}>
+          <input type="text" placeholder="Search researchers..." style={styles.search} />
+          <div style={styles.cardContainer}>
+            {researchers.map((researcher) => (
+              <div key={researcher.id} style={styles.card}>
+                <h2>{researcher.name}</h2>
+                <p>{researcher.title}</p>
+                <p><strong>Institution:</strong> {researcher.institution}</p>
+                <p><strong>Publications:</strong> {researcher.publications}</p>
+                <p><strong>Expertise:</strong> {researcher.expertise.join(', ')}</p>
+                <button style={styles.button}>Connect</button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Resources Section */}
+      {activeSection === 'resources' && (
+        <div style={styles.section}>
+          <h2>Shared Resources</h2>
+          <div style={styles.cardContainer}>
+            {resources.map((resource) => (
+              <div key={resource.id} style={styles.card}>
+                <h3>{resource.title}</h3>
+                <p>{resource.description}</p>
+                <button style={styles.button}>Access Resource</button>
+              </div>
+            ))}
+          </div>
+          <div style={styles.shareResource}>
+            <h2>Share a Resource</h2>
+            <input type="text" placeholder="Resource Title" style={styles.input} />
+            <textarea placeholder="Brief description of the resource" style={styles.input} />
+            <input type="text" placeholder="Link to resource" style={styles.input} />
+            <button style={styles.button}>Share Resource</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ResearchCollaboration;
