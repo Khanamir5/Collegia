@@ -1,344 +1,306 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { FaBriefcase, FaCalendarCheck, FaUserTie, FaRobot } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
 
-// Styled Components
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-  background: url('https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
-  background-size: cover;
-  min-height: 100vh;
-  backdrop-filter: blur(10px);
-  color: #ffffff;
-`;
+const JobInternshipPortal = () => {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState({
+    jobType: '',
+    location: '',
+  });
+  const [darkMode, setDarkMode] = useState(false);
 
-const HeroSection = styled.section`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background: url('https://images.pexels.com/photos/8101929/pexels-photo-8101929.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') no-repeat center center;
-  background-size: cover;
-  border-radius: 8px;
-  padding: 5.9rem;
-  margin: 0rem 0;
-  width: 100%;
-  color: #ffffff;
+  // Simulate fetching jobs from an API
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setJobs([
+        {
+          id: 1,
+          title: 'Software Engineer',
+          company: 'Tech Innovators Inc.',
+          location: 'San Francisco, CA',
+          type: 'Full-time',
+          description: 'Develop cutting-edge software solutions for global clients.',
+          postedDate: '2023-10-01',
+        },
+        {
+          id: 2,
+          title: 'Marketing Intern',
+          company: 'Creative Minds Agency',
+          location: 'New York, NY',
+          type: 'Internship',
+          description: 'Assist in creating and executing marketing campaigns.',
+          postedDate: '2023-10-05',
+        },
+        {
+          id: 3,
+          title: 'Data Analyst',
+          company: 'Data Insights Co.',
+          location: 'Remote',
+          type: 'Part-time',
+          description: 'Analyze large datasets to provide actionable insights.',
+          postedDate: '2023-09-28',
+        },
+        {
+          id: 4,
+          title: 'Product Manager',
+          company: 'Innovate Tech',
+          location: 'Austin, TX',
+          type: 'Full-time',
+          description: 'Lead product development and strategy.',
+          postedDate: '2023-10-10',
+        },
+      ]);
+      setLoading(false);
+    }, 1000);
+  }, []);
 
-  /* Pseudo-element for overlay */
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.493); /* Adjust overlay color and opacity here */
-    z-index: 1; /* Ensure overlay is above background image but below text */
-  }
+  // Filter and search jobs
+  const filteredJobs = jobs.filter((job) => {
+    const matchesSearch = job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         job.company.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesJobType = filters.jobType ? job.type === filters.jobType : true;
+    const matchesLocation = filters.location ? job.location.toLowerCase().includes(filters.location.toLowerCase()) : true;
+    return matchesSearch && matchesJobType && matchesLocation;
+  });
 
-  /* Adjust z-index for text to be above overlay */
-  & > * {
-    position: relative;
-    z-index: 2;
-  }
-`;
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
 
+  // Styles
+  const styles = {
+    container: {
+      fontFamily: 'Arial, sans-serif',
+      padding: '20px 7vw',
+      maxWidth: '100vw',
+      background: darkMode ? 'rgb(30, 30, 30)': 'rgb(232, 232, 232)',
+       
+      margin: '0 auto',
+      minHeight: '100vh',
+      color: darkMode ? '#fff' : '#333',
+      transition: 'background-color 0.3s ease, color 0.3s ease',
+    },
+    banner: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      borderRadius: '25px',
+      margin:'5%',
+      width: '90%',
+      height: '300px',
+      backgroundImage: `url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      zIndex: 1,
+    },
+    overlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      borderRadius: '25px',
+      margin:'5%',
+      width: '90%',
+      height: '300px',
+      background: darkMode ? 'rgba(0, 0, 0, 0.52)' : 'rgba(0, 0, 0, 0.52)',
+      zIndex: 1,
+    },
+    header: {
+      textAlign: 'center',
+      marginBottom: window.innerWidth <= 768 ?'50px':'100px',
+      paddingTop: window.innerWidth <= 768 ?'50px':'100px',
+      position: 'relative',
+      zIndex: 1,
+    },
+    title: {
+      fontSize: '2.5rem',
+      fontWeight: 'bold',
+      color: '#fff',
+    },
+    subtitle: {
+      fontSize: '1.2rem',
+      color:  '#ccc', 
+    },
+    searchContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '10px',
+      marginBottom: '20px',
+      flexWrap: 'wrap',
+      position: 'sticky',
+      top: '75px',
+      zIndex: 2,
+      backgroundColor: darkMode ? 'rgba(26, 26, 26, 0.9)' : 'rgba(249, 249, 249, 0.9)',
+      padding: '15px',
+      borderRadius: '10px',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    },
+    searchInput: {
+      flex: 1,
+      padding: '10px',
+      borderRadius: '5px',
+      border: `1px solid ${darkMode ? '#444' : '#ccc'}`,
+      fontSize: '1rem',
+      backgroundColor: darkMode ? '#333' : '#fff',
+      color: darkMode ? '#fff' : '#333',
+    },
+    filterSelect: {
+      padding: '10px',
+      borderRadius: '5px',
+      border: `1px solid ${darkMode ? '#444' : '#ccc'}`,
+      fontSize: '1rem',
+      backgroundColor: darkMode ? '#333' : '#fff',
+      color: darkMode ? '#fff' : '#333',
+    },
+    jobList: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+      gap: '20px',
+    },
+    jobCard: {
+      backgroundColor: darkMode ? '#333' : '#fff',
+      border: `1px solid ${darkMode ? '#444' : '#ddd'}`,
+      borderRadius: '10px',
+      padding: '20px',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+      transition: 'transform 0.2s, box-shadow 0.2s, background-color 0.3s ease',
+      ':hover': {
+        transform: 'translateY(-5px)',
+        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
+      },
+    },
+    jobTitle: {
+      fontSize: '1.5rem',
+      fontWeight: 'bold',
+      marginBottom: '10px',
+      color: darkMode ? '#fff' : '#333',
+    },
+    jobCompany: {
+      fontSize: '1.2rem',
+      color: '#007bff',
+      marginBottom: '10px',
+    },
+    jobLocation: {
+      fontSize: '1rem',
+      color: darkMode ? '#ccc' : '#666',
+      marginBottom: '10px',
+    },
+    jobType: {
+      fontSize: '1rem',
+      color: '#28a745',
+      marginBottom: '10px',
+    },
+    jobDescription: {
+      fontSize: '1rem',
+      color: darkMode ? '#ccc' : '#444',
+      marginBottom: '20px',
+    },
+    jobPostedDate: {
+      fontSize: '0.9rem',
+      color: darkMode ? '#999' : '#666',
+    },
+    applyButton: {
+      padding: '10px 20px',
+      backgroundColor: '#007bff',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '5px',
+      cursor: 'pointer',
+      fontSize: '1rem',
+      transition: 'background-color 0.3s ease',
+      ':hover': {
+        backgroundColor: '#0056b3',
+      },
+    },
+    darkModeToggle: {
+      position: 'absolute',
+      top: window.innerWidth <= 768 ? '80px' : '85px',
+      right: window.innerWidth <= 768 ? '40px' : '20px',
+      
+      padding: '10px 10px',
+      backgroundColor: darkMode ? '#444' : '#007bff',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '50px',
+      cursor: 'pointer',
+      fontSize: '1rem',
+      transition: 'background-color 0.3s ease',
+      ':hover': {
+        backgroundColor: darkMode ? '#666' : '#0056b3',
+      },
+      zIndex: 3,
+      
+    },
+  };
 
-const HeroHeading = styled.h1`
-  font-size: 2.5rem;
-  margin: 0;
-  color: #ffffff;
-  font-weight: bold;
-`;
+  return (
+    <div style={styles.container}>
+      {/* Banner Image */}
+      <div style={styles.banner}></div>
+      <div style={styles.overlay}></div>
 
-const HeroTagline = styled.p`
-  font-size: 1.2rem;
-  margin: 1rem 0;
-  color: #e0e0e0;
-`;
+      {/* Dark Mode Toggle */}
+      <button style={styles.darkModeToggle} onClick={toggleDarkMode}>
+        {darkMode ? '🌕' : '🌜'}
+      </button>
 
+      {/* Header */}
+      <div style={styles.header}>
+        <h1 style={styles.title}>Job & Internship Portal</h1>
+        <p style={styles.subtitle}>Find your next opportunity with us!</p>
+      </div>
 
+      {/* Search and Filters */}
+      <div style={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="Search by job title or company..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={styles.searchInput}
+        />
+        <select
+          value={filters.jobType}
+          onChange={(e) => setFilters({ ...filters, jobType: e.target.value })}
+          style={styles.filterSelect}
+        >
+          <option value="">All Job Types</option>
+          <option value="Full-time">Full-time</option>
+          <option value="Part-time">Part-time</option>
+          <option value="Internship">Internship</option>
+        </select>
+        <input
+          type="text"
+          placeholder="Filter by location..."
+          value={filters.location}
+          onChange={(e) => setFilters({ ...filters, location: e.target.value })}
+          style={styles.filterSelect}
+        />
+      </div>
 
-const Section = styled.section`
-  width: 90%;
-  max-width: 1200px;
-  margin: 2rem 0;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(8px);
-  overflow: hidden;
-  transition: box-shadow 0.3s ease;
-
-  &:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
-  }
-`;
-
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  background: #16325B;
-  color: #ffffff;
-`;
-
-const IconWrapper = styled.div`
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  padding: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Info = styled.div`
-  margin-left: 1rem;
-
-  h2 {
-    margin: 0;
-    font-size: 1.5rem;
-  }
-
-  p {
-    margin: 0;
-    font-size: 1rem;
-  }
-`;
-
-const Button = styled.button`
-  background-color: #16325B;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-  margin: 1rem;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-
-  &:hover {
-    background-color: #0056b3;
-    transform: scale(1.02);
-  }
-`;
-
-const Card = styled.div`
-  background: rgba(92, 92, 92, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
-  padding: 1rem;
-  margin: 0.8rem 0.8rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    color: black;
-  }
-`;
-
-const MapSection = styled.div`
-  height: 400px;
-  width: 100%;
-  margin: 2rem 0;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-
-  iframe {
-    width: 100%;
-    height: 100%;
-    border: 0;
-  }
-`;
-
-const CareerResources = styled.div`
-  display: flex;
-  overflow-x: auto;
-  padding: 1rem;
-  gap: 1rem;
-  margin: 2rem 0;
-
-  .resource {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    padding: 1rem;
-    min-width: 200px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
-    flex: 0 0 auto;
-    
-    &:hover {
-      transform: scale(1.02);
-    }
-
-    h4 {
-      margin: 0;
-      color: black;
-    }
-
-    p {
-      color: grey;
-    }
-  }
-`;
-
-const CampusJobBoard = () => {
-    const [showJobs, setShowJobs] = useState(false);
-    const [showTracking, setShowTracking] = useState(false);
-    const [showResources, setShowResources] = useState(false);
-    const [showEngagement, setShowEngagement] = useState(false);
-
-    return (
-        <whole>
-            <HeroSection>
-                <HeroHeading>Welcome To Internship/Job Portal</HeroHeading>
-                <HeroTagline>Find Your Dream Job and Connect with Employers</HeroTagline>
-                
-            </HeroSection>
-            <Container>
-                {/* Hero Section */}
-
-                {/* Job Listings */}
-                <Section>
-                    <Header>
-                        <IconWrapper>
-                            <FaBriefcase size={40} color="#ffffff" />
-                        </IconWrapper>
-                        <Info>
-                            <h2>Job Listings</h2>
-                            <p>Explore tailored job opportunities.</p>
-                        </Info>
-                    </Header>
-                    <Button onClick={() => setShowJobs(!showJobs)}>
-                        {showJobs ? 'Hide Job Listings' : 'Show Job Listings'}
-                    </Button>
-                    {showJobs && (
-                        <div>
-                            <Card>
-                                <h4>Software Engineer at TechCorp</h4>
-                                <p>Location: San Francisco, CA</p>
-                                <p>Salary: $120,000 - $150,000</p>
-                            </Card>
-                            <Card>
-                                <h4>Data Scientist at DataWorks</h4>
-                                <p>Location: New York, NY</p>
-                                <p>Salary: $110,000 - $140,000</p>
-                            </Card>
-                        </div>
-                    )}
-                </Section>
-
-                {/* Application Tracking */}
-                <Section>
-                    <Header>
-                        <IconWrapper>
-                            <FaCalendarCheck size={40} color="#ffffff" />
-                        </IconWrapper>
-                        <Info>
-                            <h2>Application Tracking</h2>
-                            <p>Track and manage your job applications.</p>
-                        </Info>
-                    </Header>
-                    <Button onClick={() => setShowTracking(!showTracking)}>
-                        {showTracking ? 'Hide Application Tracking' : 'Show Application Tracking'}
-                    </Button>
-                    {showTracking && (
-                        <div>
-                            <Card>
-                                <h4>Application to TechCorp</h4>
-                                <p>Status: Under Review</p>
-                            </Card>
-                            <Card>
-                                <h4>Application to DataWorks</h4>
-                                <p>Status: Interview Scheduled</p>
-                            </Card>
-                        </div>
-                    )}
-                </Section>
-
-                {/* Career Resources */}
-                <Section>
-                    <Header>
-                        <IconWrapper>
-                            <FaRobot size={40} color="#ffffff" />
-                        </IconWrapper>
-                        <Info>
-                            <h2>Career Resources</h2>
-                            <p>Utilize tools to enhance your career prospects.</p>
-                        </Info>
-                    </Header>
-                    <Button onClick={() => setShowResources(!showResources)}>
-                        {showResources ? 'Hide Career Resources' : 'Show Career Resources'}
-                    </Button>
-                    {showResources && (
-                        <CareerResources>
-                            <div className="resource">
-                                <h4>Virtual Mock Interviews</h4>
-                                <p>Practice with AI-powered feedback.</p>
-                            </div>
-                            <div className="resource">
-                                <h4>Resume Builder</h4>
-                                <p>Create and optimize your resume with our tool.</p>
-                            </div>
-                            <div className="resource">
-                                <h4>Notes</h4>
-                                <p>Detailed notes of your subject.</p>
-                            </div>
-                        </CareerResources>
-                    )}
-                </Section>
-
-                {/* Employer Engagement */}
-                <Section>
-                    <Header>
-                        <IconWrapper>
-                            <FaUserTie size={40} color="#ffffff" />
-                        </IconWrapper>
-                        <Info>
-                            <h2>Employer Engagement</h2>
-                            <p>Connect with employers and explore career opportunities.</p>
-                        </Info>
-                    </Header>
-                    <Button onClick={() => setShowEngagement(!showEngagement)}>
-                        {showEngagement ? 'Hide Employer Engagement' : 'Show Employer Engagement'}
-                    </Button>
-                    {showEngagement && (
-                        <div>
-                            <Card>
-                                <h4>Company Profiles</h4>
-                                <p>Learn about companies and their culture.</p>
-                            </Card>
-                            <Card>
-                                <h4>Virtual Career Fairs</h4>
-                                <p>Attend career fairs remotely.</p>
-                            </Card>
-                        </div>
-                    )}
-                </Section>
-
-                {/* Map Section */}
-                <MapSection>
-                    <iframe
-                        title="JIS College of Engineering Map"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2428.123756759511!2d88.4466723!3d22.9596335!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02723f6bb5ebfb%3A0x18bce52cb73b36a!2sJIS%20College%20of%20Engineering!5e0!3m2!1sen!2sin!4v1633508536231!5m2!1sen!2sin"
-                        allowFullScreen=""
-                        loading="lazy"
-                    ></iframe>
-                </MapSection>
-            </Container>
-        </whole>
-    );
+      {/* Job Listings */}
+      {loading ? (
+        <p>Loading jobs...</p>
+      ) : (
+        <div style={styles.jobList}>
+          {filteredJobs.map((job) => (
+            <div key={job.id} style={styles.jobCard}>
+              <h2 style={styles.jobTitle}>{job.title}</h2>
+              <p style={styles.jobCompany}>{job.company}</p>
+              <p style={styles.jobLocation}>{job.location}</p>
+              <p style={styles.jobType}>{job.type}</p>
+              <p style={styles.jobDescription}>{job.description}</p>
+              <p style={styles.jobPostedDate}>Posted on: {job.postedDate}</p>
+              <button style={styles.applyButton}>Apply Now</button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
 
-export default CampusJobBoard;
+export default JobInternshipPortal;
