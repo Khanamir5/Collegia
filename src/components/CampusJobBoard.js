@@ -133,7 +133,7 @@ const JobInternshipPortal = () => {
       position: 'sticky',
       top: '75px',
       zIndex: 2,
-      backgroundColor: darkMode ? 'rgba(26, 26, 26, 0.9)' : 'rgba(249, 249, 249, 0.9)',
+      backgroundColor: darkMode ? 'rgba(26, 26, 26, 0.97)' : 'rgba(249, 249, 249, 0.97)',
       padding: '15px',
       borderRadius: '10px',
       boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',

@@ -244,7 +244,7 @@ const SocialNetworkPage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 style={{ ...styles.heading, color: isDarkMode ? "#fff" : "#333" }}>JIS - Social Network</h1>
+        <h1 style={{ ...styles.heading, color: isDarkMode ? "#fff" : "#333" }}>College Social Network</h1>
         <button
           style={styles.themeToggle}
           onClick={() => setIsDarkMode(!isDarkMode)}
@@ -438,7 +438,7 @@ const styles = {
   heading: {
     fontSize: "2.5rem",
     fontWeight: "bold",
-    background: "linear-gradient(90deg,rgb(0, 0, 0), #2575fc)",
+    background: "#2575FC",
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
   },

@@ -11,11 +11,10 @@ import {
   Cpu,
   Sparkles,
   Layers,
-  Home, // Import the Home icon
+  Home,
 } from "lucide-react";
 
 const navItems = [
- 
   {
     name: "All",
     icon: Layers,
@@ -29,9 +28,9 @@ const navItems = [
   },
   { name: "Safety", icon: Shield, href: "/SafetyAwareness" },
   {
-    name: "Home", // Add the Home button
+    name: "Home",
     icon: Home,
-    href: "/", // Assuming the home page route is "/"
+    href: "/",
   },
   {
     name: "AI Tools",
@@ -46,15 +45,40 @@ const navItems = [
 
 export default function MobileNavigation() {
   const [activeMenu, setActiveMenu] = useState(null);
+  const [isClosing, setIsClosing] = useState(false);
 
   const toggleMenu = (name) => {
-    setActiveMenu(activeMenu === name ? null : name);
+    if (activeMenu === name) {
+      // Start closing animation
+      setIsClosing(true);
+      setTimeout(() => {
+        setActiveMenu(null);
+        setIsClosing(false);
+      }, 200); // Match the duration of the animation
+    } else {
+      setActiveMenu(name);
+    }
+  };
+
+  const handleClick = (name) => {
+    if (activeMenu) {
+      // Start closing animation
+      setIsClosing(true);
+      setTimeout(() => {
+        setActiveMenu(null);
+        setIsClosing(false);
+      }, 200); // Match the duration of the animation
+    }
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest(".menu-container")) {
-        setActiveMenu(null);
+        setIsClosing(true);
+        setTimeout(() => {
+          setActiveMenu(null);
+          setIsClosing(false);
+        }, 200);
       }
     };
     document.addEventListener("click", handleClickOutside);
@@ -64,7 +88,7 @@ export default function MobileNavigation() {
   const styles = {
     nav: {
       position: "fixed",
-      bottom: 0,
+      bottom: -8,
       left: 0,
       right: 0,
       display: "flex",
@@ -168,6 +192,7 @@ export default function MobileNavigation() {
               style={({ isActive }) =>
                 isActive ? { ...styles.navItem, ...styles.active } : styles.navItem
               }
+              onClick={() => handleClick(item.name)}
             >
               <item.icon style={styles.navIcon} />
               <span>{item.name}</span>
@@ -179,11 +204,16 @@ export default function MobileNavigation() {
               style={{
                 ...styles.submenu,
                 ...(window.innerWidth < 500 ? styles.submenuMobile : {}),
-                ...(activeMenu ? styles.fadeInUp : styles.fadeOutDown),
+                ...(isClosing ? styles.fadeOutDown : styles.fadeInUp),
               }}
             >
               {item.submenu.map((subItem) => (
-                <NavLink key={subItem.name} to={subItem.href} style={styles.submenuItem}>
+                <NavLink
+                  key={subItem.name}
+                  to={subItem.href}
+                  style={styles.submenuItem}
+                  onClick={() => handleClick(subItem.name)}
+                >
                   <subItem.icon style={styles.submenuIcon} />
                   {subItem.name}
                 </NavLink>
