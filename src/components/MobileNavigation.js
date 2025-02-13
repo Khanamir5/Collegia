@@ -88,7 +88,7 @@ export default function MobileNavigation() {
   const styles = {
     nav: {
       position: "fixed",
-      bottom: -16,
+      bottom: -1,
       left: 0,
       right: 0,
       display: "flex",
