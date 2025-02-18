@@ -222,44 +222,44 @@ const BlogPage = () => {
             color: #fff;
           }
 
-          /* Parallax Header */
+/* Parallax Header */
           .parallax-header {
-  height: 300px;
-  background-image: url('https://images.unsplash.com/photo-1499750310107-5fef28a66643');
-  background-attachment: fixed;
-  background-position: center;
-  border-radius: 25px;
-  background-repeat: no-repeat;
-  background-size: cover;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: #fff;
-  position: relative;
-  overflow: hidden;
-}
+          height: 300px;
+          background-image: url('https://images.unsplash.com/photo-1499750310107-5fef28a66643');
+          background-attachment: fixed;
+          background-position: center;
+          border-radius: 25px;
+          background-repeat: no-repeat;
+          background-size: cover;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          color: #fff;
+          position: relative;
+          overflow: hidden;
+        }
 
 /* Overlay */
-.parallax-header::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.31); /* Adjust opacity for darker or lighter effect */
-  border-radius: 25px;
-  z-index: 1;
-}
+          .parallax-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.31); /* Adjust opacity for darker or lighter effect */
+            border-radius: 25px;
+            z-index: 1;
+          }
 
 /* Ensuring text remains on top */
-.parallax-header h1 {
-  position: relative;
-  z-index: 2;
-  font-size: 2rem;
-  font-weight: bold;
-}
+          .parallax-header h1 {
+            position: relative;
+            z-index: 2;
+            font-size: 2rem;
+            font-weight: bold;
+          }
 
 
           .header-content h1 {
@@ -301,11 +301,11 @@ const BlogPage = () => {
             gap: 10px;
             margin-top: 20px;
             padding: 10px 15px 10px 15px ;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(160, 160, 160, 0.61);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             position: sticky;
-            top: 0;
+            top: 70px;
             z-index: 999;
           }
 
