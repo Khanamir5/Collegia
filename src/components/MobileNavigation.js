@@ -24,6 +24,7 @@ const navItems = [
       { name: "Events", icon: Calendar, href: "/EventManagement" },
       { name: "Research", icon: BookOpen, href: "/ResearchCollaboration" },
       { name: "Study Materials", icon: FileText, href: "/StudyMaterials" },
+      { name: "Tools", icon: Briefcase, href: "/Tools" },
     ],
   },
   { name: "Safety", icon: Shield, href: "/SafetyAwareness" },

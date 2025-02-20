@@ -25,7 +25,7 @@ import StudyMaterialsPage from './components/StudyMaterialsPage';
 import Settings from './components/Settings';
 import Help from './components/Help';
 import MobileNavigation from './components/MobileNavigation';
-
+import Tools from './components/Tools';
 
 
 
@@ -45,6 +45,7 @@ const App = () => {
           <Route path="/PeerMentorship" element={<PeerMentorshipPage />} />
           <Route path="/StudentBudgeting" element={<StudentBudgetingPage />} />
           <Route path="/StudentSocial" element={<StudentSocialPage />} />
+          <Route path="/Tools" element={<Tools />} />
           <Route path="/CampusJobBoard" element={<CampusJobBoard />} />
           <Route path="/EventManagement" element={<EventManagement />} />
           <Route path="/AIPage" element={<AIPage />} />
