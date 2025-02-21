@@ -13,7 +13,7 @@ const HeroSection = () => {
     <HeroContainer>
       <HeroContent data-aos="fade-up">
         <HeroTitle>
-          <h1 className="rubik-glitch-pop-regular"> Collegia.</h1>
+          <h1 className="rubik-glitch-pop-regular"> JIS-Collegia.</h1>
         </HeroTitle>
         <HeroSubTitle>
           <h2>Revolutionize Your Student Experience</h2>
