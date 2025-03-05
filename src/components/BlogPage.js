@@ -287,7 +287,7 @@ const BlogPage = () => {
             cursor: pointer;
             font-size: 1rem;
             transition: background-color 0.3s;
-            z-index: 1000;
+            z-index: 10;
           }
 
           .dark-mode-toggle:hover {

@@ -14,7 +14,7 @@ const NavbarContainer = styled.nav`
   background: rgba(12, 12, 12, 0.507);
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  z-index: 100;
+  z-index: 1000;
   
   @media (max-width: 768px) {
     padding: 10px;
@@ -61,8 +61,8 @@ const Menu = styled.ul`
     top: 60px;
     width: 100%;
     border-radius: 0 0 18px 18px;
-    background-color: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(20px);
+    background-color: rgb(0, 0, 0);
+    backdrop-filter: blur(90px);
     padding: 20px;
   }
 `;
@@ -122,7 +122,7 @@ const Dropdown = styled.ul`
     top: 0;
     padding: 0;
     left: 3px;
-    background: rgba(26, 25, 25, 0.81);
+    background: rgba(32, 32, 32, 0.81);
   }
 `;
 
@@ -267,12 +267,13 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem('username');
     navigate('/login');
+    toggleMenu(); // Close the menu after logout
   };
 
   return (
     <NavbarContainer>
       <Logo className="rubik-glitch-pop-regular">
-        <Link to="/home">Collegia.</Link>
+        <Link to="/home" onClick={toggleMenu}>Collegia.</Link>
       </Logo>
 
       <HamburgerIcon onClick={toggleMenu}>
@@ -292,15 +293,15 @@ const Navbar = () => {
         </SearchContainer>
 
         <MenuItem>
-          <Link to="/about">About Us</Link>
+          <Link to="/about" onClick={toggleMenu}>About Us</Link>
         </MenuItem>
 
         <MenuItem>
-          <Link to="/blogs">Blogs</Link>
+          <Link to="/blogs" onClick={toggleMenu}>Blogs</Link>
         </MenuItem>
 
         <MenuItem>
-          <Link to="#notifications" style={{ marginTop: '-1px', display: 'flex', alignItems: 'center' }}>
+          <Link to="#notifications" style={{ marginTop: '-1px', display: 'flex', alignItems: 'center' }} onClick={toggleMenu}>
             <FaBell style={{ fontSize: '27px', marginLeft: '0px', marginTop: '-10px', color: '#f75c7e', transition: 'color 0.3s ease-in-out' }} />
             <span className="notification-text">Notification</span>
           </Link>
@@ -313,24 +314,22 @@ const Navbar = () => {
           </Link>
           <Dropdown>
             <ProfileItem>
-              <Link to="/UserProfilePage">User Profile</Link>
+              <Link to="/UserProfilePage" onClick={toggleMenu}>User Profile</Link>
             </ProfileItem>
             <ProfileItem>
-              <Link to="/Leaderboard">Leaderboard</Link>
+              <Link to="/Leaderboard" onClick={toggleMenu}>Leaderboard</Link>
             </ProfileItem>
             <ProfileItem>
-              <Link to="/Settings">Settings</Link>
+              <Link to="/Settings" onClick={toggleMenu}>Settings</Link>
             </ProfileItem>
             <ProfileItem>
-              <Link to="/Help">Help</Link>
+              <Link to="/Help" onClick={toggleMenu}>Help</Link>
             </ProfileItem>
-
           </Dropdown>
         </MenuItem>
         <button onClick={handleLogout} style={{ padding: '10px', background: '#e74c3c', color: 'white', border: 'none', borderRadius: '15px' }}>
           Logout
         </button>
-
       </Menu>
     </NavbarContainer>
   );
