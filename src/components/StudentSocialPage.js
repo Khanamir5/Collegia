@@ -64,6 +64,8 @@ const SocialNetworkPage = () => {
   const [commentInput, setCommentInput] = useState("");
   const [activePostId, setActivePostId] = useState(null);
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
+  const username = localStorage.getItem("username");
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -81,7 +83,7 @@ const SocialNetworkPage = () => {
       setTimeout(() => {
         const post = {
           id: posts.length + 1,
-          username: "CurrentUser",
+          username: username,
           content: newPost,
           image: "",
           likes: 0,

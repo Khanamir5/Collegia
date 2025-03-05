@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FaSearch, FaMicrophone, FaBell, FaChevronDown, FaUserCircle, FaBars } from 'react-icons/fa';
-import { MdFileUpload, MdFileDownload, MdChat, MdBook, MdLibraryBooks } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { FaSearch, FaMicrophone, FaBell, FaUserCircle, FaBars } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
 
 const NavbarContainer = styled.nav`
   position: sticky;
@@ -30,12 +29,10 @@ const NavbarContainer = styled.nav`
     display: inline; /* Shown only on small screens */
   }
 }
-
 `;
 
 const Logo = styled.div`
   font-size: 1.8rem;
-//   font-weight: bold;
   color: #fff;
 `;
 
@@ -60,13 +57,11 @@ const Menu = styled.ul`
     display: ${({ open }) => (open ? 'flex' : 'none')};
     flex-direction: column;
     position: absolute;
-    left: 40px;
-    top: 60px;
     left: 0;
+    top: 60px;
     width: 100%;
-    
     border-radius: 0 0 18px 18px;
-    background-color:rgba(0, 0, 0, 0.85);
+    background-color: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(20px);
     padding: 20px;
   }
@@ -89,11 +84,10 @@ const MenuItem = styled.li`
     }
   }
 
-   svg {
-   font-size: 1.6rem;
+  svg {
+    font-size: 1.6rem;
     margin-left: 10px;
     padding-top: 10px;
-    
     cursor: pointer;
     transition: color 0.3s ease;
 
@@ -102,14 +96,12 @@ const MenuItem = styled.li`
     }
   }
 
-
   &:hover > ul {
     display: block;
   }
 
   @media (max-width: 768px) {
     margin: 10px 0;
-    
   }
 `;
 
@@ -130,7 +122,7 @@ const Dropdown = styled.ul`
     top: 0;
     padding: 0;
     left: 3px;
-     background:rgba(26, 25, 25, 0.81);
+    background: rgba(26, 25, 25, 0.81);
   }
 `;
 
@@ -138,7 +130,6 @@ const DropdownItem = styled.li`
   a {
     display: block;
     width: 200px;
-    
     padding: 10px 20px;
     color: #fff;
     font-size: 1rem;
@@ -166,8 +157,7 @@ const SearchContainer = styled.div`
     border: none;
     color: #fff;
     outline: none;
-    font-size: .4rem;
-    
+    font-size: 0.4rem;
 
     &::placeholder {
       color: rgba(255, 255, 255, 0.7);
@@ -175,11 +165,10 @@ const SearchContainer = styled.div`
   }
 
   svg {
-  
     margin-left: 10px;
     cursor: pointer;
     transition: color 0.3s ease;
-    font-size: .8rem;
+    font-size: 0.8rem;
 
     &:hover {
       color: #f75c7e;
@@ -191,8 +180,6 @@ const SearchContainer = styled.div`
   }
 `;
 
-
-// Highlighted changes for larger icons
 const NotificationIcon = styled(FaBell)`
   font-size: 1.8rem; /* Increased size */
   margin-left: 10px;
@@ -200,7 +187,7 @@ const NotificationIcon = styled(FaBell)`
   transition: color 0.3s ease;
 
   &:hover {
-    color:rgb(16, 173, 29);
+    color: rgb(16, 173, 29);
   }
 
   @media (max-width: 768px) {
@@ -223,11 +210,8 @@ const ProfileIcon = styled(FaUserCircle)`
   }
 `;
 
-
-
 const ProfileDropdownContainer = styled.div`
   position: relative;
-  
 
   &:hover > ul {
     display: block;
@@ -278,18 +262,24 @@ const Navbar = () => {
     setMenuOpen(!menuOpen);
   };
 
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('username');
+    navigate('/login');
+  };
+
   return (
     <NavbarContainer>
-      <Logo className="rubik-glitch-pop-regular"><a href='/'>Collegia.</a> </Logo>
+      <Logo className="rubik-glitch-pop-regular">
+        <Link to="/home">Collegia.</Link>
+      </Logo>
 
       <HamburgerIcon onClick={toggleMenu}>
         <FaBars />
       </HamburgerIcon>
 
       <Menu open={menuOpen}>
-
-
-        {/* Search, Notification, Profile Menu inside Hamburger on small screens */}
         <SearchContainer>
           <input
             type="text"
@@ -301,82 +291,46 @@ const Navbar = () => {
           <FaMicrophone />
         </SearchContainer>
 
-
-
-        {/* <MenuItem >
-          <a href="#features" >Features <FaChevronDown /></a>
-          <Dropdown>
-            <DropdownItem><a href="StudentSocial">Social Network</a></DropdownItem>
-            <DropdownItem><a href="CampusJobBoard">Job/Internship Board</a></DropdownItem>
-            <DropdownItem><a href="EventManagement">Event Management</a></DropdownItem>
-            <DropdownItem><a href="StudentBudgeting">Student Budgeting</a></DropdownItem>
-            <DropdownItem><a href="ResearchCollaboration">Research Collaboration</a></DropdownItem>
-            <DropdownItem><a href="SafetyAwareness">Safety Awareness</a></DropdownItem>
-            <DropdownItem><a href="PeerMentorship">Peer Mentorship</a></DropdownItem>
-            <DropdownItem><a href="AIPage">AI-driven Insights</a></DropdownItem>
-          </Dropdown>
-        </MenuItem> */}
-
         <MenuItem>
-          <a href="/about">About Us</a>
+          <Link to="/about">About Us</Link>
         </MenuItem>
 
-
         <MenuItem>
-          <a href="/blogs">Blogs</a>
+          <Link to="/blogs">Blogs</Link>
         </MenuItem>
 
-
-        {/* <MenuItem>
-          <a href="#pages">Pages <FaChevronDown /></a>
-          <Dropdown>
-            <DropdownItem><a href="/about">About Us</a></DropdownItem>
-            <DropdownItem><a href="/ContactUs">Contact Us</a></DropdownItem>
-          </Dropdown>
-        </MenuItem> */}
-
-        {/* <MenuItem>
-          <a href="#extras">Extras <FaChevronDown /></a>
-          <Dropdown>
-            <DropdownItem><a href="/StudyMaterials"><MdBook /> Study Material</a></DropdownItem>
-            <DropdownItem><a href="/download"><MdFileDownload /> Download</a></DropdownItem>
-            <DropdownItem><a href="/chat"><MdChat /> Chat</a></DropdownItem>
-            <DropdownItem><a href="/blogs"><MdLibraryBooks />Blogs</a></DropdownItem>
-          </Dropdown>
-        </MenuItem> */}
-
-        {/* <MenuItem>
-          <a href="#login">Login <FaChevronDown /></a>
-          <Dropdown>
-            <DropdownItem><a href="/login">Student</a></DropdownItem>
-            <DropdownItem><a href="/login/faculty">Faculty</a></DropdownItem>
-            <DropdownItem><a href="/login/admin">Admin</a></DropdownItem>
-          </Dropdown>
-        </MenuItem> */}
-
-
-
         <MenuItem>
-          <a href="#notifications" style={{ marginTop: "-1px", display: "flex", alignItems: "center" }}>
-            <FaBell style={{ fontSize: "27px", marginLeft: "0px", marginTop: "-10px", color: "#f75c7e", transition: "color 0.3s ease-in-out" }} /><span className="notification-text">Notification</span>
-          </a>
+          <Link to="#notifications" style={{ marginTop: '-1px', display: 'flex', alignItems: 'center' }}>
+            <FaBell style={{ fontSize: '27px', marginLeft: '0px', marginTop: '-10px', color: '#f75c7e', transition: 'color 0.3s ease-in-out' }} />
+            <span className="notification-text">Notification</span>
+          </Link>
         </MenuItem>
 
-
-
         <MenuItem>
-          <a href="#Profile" style={{ marginTop: "-7px", display: "flex", alignItems: "center" }}>
-            <FaUserCircle style={{ fontSize: "27px", marginLeft: "0px", marginTop: "-10px", color: "#f75c7e", transition: "color 0.3s ease-in-out" }} /> Profile
-          </a>
+          <Link to="#Profile" style={{ marginTop: '-7px', display: 'flex', alignItems: 'center' }}>
+            <FaUserCircle style={{ fontSize: '27px', marginLeft: '0px', marginTop: '-10px', color: '#f75c7e', transition: 'color 0.3s ease-in-out' }} />
+            Profile
+          </Link>
           <Dropdown>
+            <ProfileItem>
+              <Link to="/UserProfilePage">User Profile</Link>
+            </ProfileItem>
+            <ProfileItem>
+              <Link to="/Leaderboard">Leaderboard</Link>
+            </ProfileItem>
+            <ProfileItem>
+              <Link to="/Settings">Settings</Link>
+            </ProfileItem>
+            <ProfileItem>
+              <Link to="/Help">Help</Link>
+            </ProfileItem>
 
-            <ProfileItem><a href="/UserProfilePage">User Profile</a></ProfileItem>
-            <ProfileItem><a href="/Leaderboard">Leaderboard</a></ProfileItem>
-            <ProfileItem><a href="/Settings">Settings</a></ProfileItem>
-            <ProfileItem><a href="/Help">Help</a></ProfileItem>
-            <DropdownItem><a href="/logout">Login/Logout</a></DropdownItem>
           </Dropdown>
         </MenuItem>
+        <button onClick={handleLogout} style={{ padding: '10px', background: '#e74c3c', color: 'white', border: 'none', borderRadius: '15px' }}>
+          Logout
+        </button>
+
       </Menu>
     </NavbarContainer>
   );

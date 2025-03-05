@@ -31,7 +31,7 @@ const navItems = [
   {
     name: "Home",
     icon: Home,
-    href: "/",
+    href: "/home",
   },
   {
     name: "AI Tools",
