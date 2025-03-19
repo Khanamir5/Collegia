@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const AboutUsContainer = styled.div`
   padding: 60px 20px;
-  background:rgb(230, 228, 228);
+  background:rgb(23, 23, 23);
   text-align: center;
 `;
 
@@ -69,21 +69,21 @@ const Section = styled.section`
 `;
 
 const Heading = styled.h1`
-  color: #f75c7e;
+  color:rgb(255, 255, 255);
   margin-bottom: 30px;
   font-size: 3rem;
   font-weight: bold;
 `;
 
 const SubHeading = styled.h2`
-  color: #333;
+  color: rgb(255, 255, 255);
   margin-bottom: 20px;
   font-size: 2.5rem;
   font-weight: 600;
 `;
 
 const Paragraph = styled.p`
-  color: #666;
+  color: rgba(254, 254, 254, 0.56);
   line-height: 1.8;
   font-size: 1.125rem;
   max-width: 900px;
@@ -94,13 +94,14 @@ const TeamContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+
   gap: 30px;
 `;
 
 const TeamMember = styled.a`
-  background: #fff;
+  background: rgba(91, 91, 91, 0.69);
   border-radius: 10px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(254, 254, 254, 0.56);
   padding: 25px;
   text-align: center;
   width: 220px;
@@ -121,11 +122,11 @@ const TeamMember = styled.a`
     height: 120px;
     object-fit: cover;
     margin-bottom: 15px;
-    border: 3px solid #f75c7e;
+    border: 5px solid black;
   }
 
   h3 {
-    color: #f75c7e;
+    color:rgb(255, 255, 255);
     margin-bottom: 10px;
     font-size: 1.5rem;
   }
@@ -168,9 +169,9 @@ const AboutUsPage = () => {
             <img src="./images/Team-members/Tripti.jpg" alt="Tripti Sharma" />
             <h3>Tripti Sharma</h3>
           </TeamMember>
-          <TeamMember href="https://www.linkedin.com/in/uddalok-basak-885a86286/" target="_blank" rel="noopener noreferrer">
-            <img src="./images/Team-members/Messi.jpg" alt="Uddalok Basak" />
-            <h3>Uddalok Basak</h3>
+          <TeamMember href="https://www.linkedin.com/in/gaurav-shaw-b25523322/" target="_blank" rel="noopener noreferrer">
+            <img src="./images/Team-members/Gaurav.jpg" alt="Gaurav Shaw" />
+            <h3>Gaurav Shaw</h3>
           </TeamMember>
           <TeamMember href="https://www.linkedin.com/in/supravat-biswas-7b538b252/" target="_blank" rel="noopener noreferrer">
             <img src="./images/Team-members/Supravat.jpeg" alt="Supravat Biswas" />
