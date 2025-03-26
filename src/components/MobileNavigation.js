@@ -40,7 +40,7 @@ const navItems = [
       { name: "AI Summary", icon: Sparkles, href: "/AIVideoSummarizer" },
       { name: "Flashcards", icon: Shield, href: "/FlashcardGenerator" },
       { name: "StudyPlanner", icon: Layers, href: "/StudyPlanner" },
-      { name: "Others", icon: Layers, href: "/AIPage" },
+      // { name: "Others", icon: Layers, href: "/AIPage" },
     ],
   },
   {

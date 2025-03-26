@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaUsers, FaBriefcase, FaCalendarAlt, FaWallet, FaFlask, FaShieldAlt, FaHandsHelping, FaRobot } from 'react-icons/fa';
+import { FaUsers, FaBriefcase, FaCalendarAlt, FaBook, FaFlask, FaShieldAlt, FaTools, FaRobot } from 'react-icons/fa';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -15,7 +15,7 @@ const services = [
     link: '/StudentSocial',
   },
   {
-    title: 'Job Board',
+    title: 'Job/Internship',
     description: 'Find part-time jobs, internships, and career opportunities tailored to your field.',
     icon: <FaBriefcase />,
     link: '/CampusJobBoard',
@@ -25,12 +25,6 @@ const services = [
     description: 'Stay updated on campus events, manage RSVPs, and get tickets effortlessly.',
     icon: <FaCalendarAlt />,
     link: '/EventManagement',
-  },
-  {
-    title: 'Student Budgeting',
-    description: 'Track expenses and manage finances with ease, ensuring financial stability.',
-    icon: <FaWallet />,
-    link: '/StudentBudgeting',
   },
   {
     title: 'Research Collaboration',
@@ -45,18 +39,25 @@ const services = [
     link: '/SafetyAwareness',
   },
   {
-    title: 'Peer Mentorship',
-    description: 'Get guidance and support from experienced peers and mentors.',
-    icon: <FaHandsHelping />,
-    link: '/PeerMentorship',
-  },
-  {
     title: 'AI-driven Insights',
     description: 'Receive personalized recommendations and summaries of key academic content.',
     icon: <FaRobot />,
     link: '/AIPage',
   },
+  {
+    title: 'Study Material',
+    description: 'Access course notes, video lectures, and curated study resources.',
+    icon: <FaBook />,
+    link: '/StudyMaterial',
+  },
+  {
+    title: 'Productive Tools',
+    description: 'Boost efficiency with task planners, focus timers, and collaboration tools.',
+    icon: <FaTools />,
+    link: '/ProductivityTools',
+  },
 ];
+
 
 const ServicesSection = () => {
   return (

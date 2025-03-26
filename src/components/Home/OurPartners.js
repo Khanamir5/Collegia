@@ -132,7 +132,7 @@ const OurPartners = () => {
       </PartnersGrid>
       <CallToAction>
         <CallToActionHeading>Want to Become a Partner?</CallToActionHeading>
-        <CallToActionButton href="/become-a-partner">Apply Now</CallToActionButton>
+        <CallToActionButton href="/ContactUs">Apply Now</CallToActionButton>
       </CallToAction>
     </PartnersSection>
   );

@@ -19,28 +19,29 @@ const pulse = keyframes`
   100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
 `;
 
-// Styled Components
+// Styled Components with Enhanced Responsiveness
 const GlassContainer = styled.div`
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 16px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 `;
 
 const ResearchContainer = styled.div`
   min-height: 100vh;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Inter', sans-serif;
   background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
   background-size: 400% 400%;
   animation: ${gradientFlow} 15s ease infinite;
   color: #f0f0f0;
-  padding: 2rem;
+  padding: 1rem;
+  @media (min-width: 640px) { padding: 1.5rem; }
+  @media (min-width: 1024px) { padding: 2rem; }
 `;
 
 const Banner = styled(GlassContainer)`
-  height: 300px;
+  height: 200px;
   background-image: url('https://images.unsplash.com/photo-1501290741922-b56c0d0884af?q=80&w=2532&auto=format&fit=crop');
   background-size: cover;
   background-position: center;
@@ -48,10 +49,9 @@ const Banner = styled(GlassContainer)`
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   position: relative;
   overflow: hidden;
-
   &::before {
     content: '';
     position: absolute;
@@ -59,43 +59,58 @@ const Banner = styled(GlassContainer)`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(rgba(15, 12, 41, 0.8), rgba(36, 34, 62, 0.9));
+    background: linear-gradient(rgba(7, 6, 9, 0.62), rgba(29, 28, 48, 0.77));
     z-index: 1;
+  }
+  @media (min-width: 768px) { height: 250px; }
+  @media (min-width: 1024px) {
+    height: 300px;
+    margin-bottom: 2rem;
   }
 `;
 
 const BannerContent = styled.div`
   position: relative;
   z-index: 2;
-  max-width: 800px;
   padding: 0 1rem;
+  width: 100%;
+  max-width: 800px;
 `;
 
 const BannerTitle = styled.h1`
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   font-weight: 800;
   background: linear-gradient(90deg, #fff, #a5b4fc);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin: 0 0 1rem;
+  margin: 0 0 0.75rem;
   line-height: 1.2;
-
-  @media (max-width: 768px) {
-    font-size: 2rem;
+  @media (min-width: 640px) { font-size: 2rem; }
+  @media (min-width: 1024px) {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
   }
 `;
 
 const BannerSubtitle = styled.p`
-  font-size: 1.25rem;
+  font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.8);
   margin: 0;
+  @media (min-width: 640px) { font-size: 1rem; }
+  @media (min-width: 1024px) { font-size: 1.25rem; }
 `;
 
 const NavContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 2rem;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  @media (min-width: 640px) {
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
 `;
 
 const NavButton = styled.button`
@@ -104,196 +119,258 @@ const NavButton = styled.button`
   color: ${({ active }) => 
     active ? '#a5b4fc' : 'rgba(255, 255, 255, 0.8)'};
   border: none;
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   border-radius: 50px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin: 0 0.5rem;
-
+  white-space: nowrap;
   &:hover {
     background: rgba(165, 180, 252, 0.2);
+  }
+  @media (min-width: 640px) {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
   }
 `;
 
 const SearchInput = styled.input`
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 50px;
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
-  font-size: 1rem;
+  font-size: 0.9rem;
   outline: none;
   width: 100%;
-  max-width: 500px;
-  margin: 0 auto 2rem;
+  margin: 0 auto 1.5rem;
   display: block;
   transition: all 0.3s ease;
-
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-  }
-
+  &::placeholder { color: rgba(255, 255, 255, 0.5); }
   &:focus {
     background: rgba(255, 255, 255, 0.15);
     box-shadow: 0 0 0 2px rgba(165, 180, 252, 0.5);
+  }
+  @media (min-width: 640px) {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    max-width: 500px;
   }
 `;
 
 const CardGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 1400px;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  max-width: 100%;
   margin: 0 auto;
-`;
-
-const Card = styled(GlassContainer)`
-  padding: 1.5rem;
-  border-radius: 16px;
-  transition: all 0.3s ease;
-  animation: ${fadeIn} 0.5s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    border-color: rgba(165, 180, 252, 0.5);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1400px;
   }
 `;
 
+const Card = styled(GlassContainer)`
+  padding: 1rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  animation: ${fadeIn} 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  &:hover {
+    transform: translateY(-5px);
+    border-color: rgba(165, 180, 252, 0.5);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  @media (min-width: 768px) { padding: 1.5rem; }
+`;
+
 const CardTitle = styled.h2`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  margin: 0 0 1rem;
+  margin: 0 0 0.75rem;
   color: white;
+  @media (min-width: 768px) {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
 `;
 
 const CardText = styled.p`
   color: rgba(255, 255, 255, 0.7);
-  font-size: 1rem;
-  margin: 0 0 1.5rem;
+  font-size: 0.9rem;
+  margin: 0 0 1rem;
+  flex: 1;
+  @media (min-width: 768px) {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const TagContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  @media (min-width: 768px) { margin-bottom: 1.5rem; }
 `;
 
 const Tag = styled.span`
   background: rgba(165, 180, 252, 0.2);
   color: #a5b4fc;
-  padding: 0.25rem 0.75rem;
+  padding: 0.2rem 0.6rem;
   border-radius: 50px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
+  @media (min-width: 768px) {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+  }
 `;
 
 const MetaInfo = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  @media (min-width: 768px) { margin-bottom: 1.5rem; }
 `;
 
 const ActionButton = styled.button`
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: white;
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 50px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   width: 100%;
-
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+  }
+  @media (min-width: 640px) {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
   }
 `;
 
 const ResourceForm = styled(GlassContainer)`
-  padding: 2rem;
-  margin-top: 3rem;
-  max-width: 800px;
+  padding: 1rem;
+  margin-top: 2rem;
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
+  @media (min-width: 640px) {
+    padding: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  @media (min-width: 1024px) {
+    padding: 2rem;
+    margin-top: 3rem;
+    max-width: 800px;
+  }
 `;
 
 const FormTitle = styled.h2`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  margin: 0 0 1.5rem;
+  margin: 0 0 1rem;
   color: white;
+  @media (min-width: 768px) {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const FormInput = styled.input`
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 50px;
   background: rgba(255, 255, 255, 0.05);
   color: #fff;
-  font-size: 1rem;
+  font-size: 0.9rem;
   outline: none;
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   transition: all 0.3s ease;
-
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-  }
-
+  &::placeholder { color: rgba(255, 255, 255, 0.5); }
   &:focus {
     border-color: #a5b4fc;
     background: rgba(255, 255, 255, 0.1);
+  }
+  @media (min-width: 640px) {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
   }
 `;
 
 const FormTextarea = styled.textarea`
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.05);
   color: #fff;
-  font-size: 1rem;
+  font-size: 0.9rem;
   outline: none;
   width: 100%;
-  min-height: 120px;
-  margin-bottom: 1rem;
+  min-height: 100px;
+  margin-bottom: 0.75rem;
   resize: vertical;
   transition: all 0.3s ease;
-
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-  }
-
+  &::placeholder { color: rgba(255, 255, 255, 0.5); }
   &:focus {
     border-color: #a5b4fc;
     background: rgba(255, 255, 255, 0.1);
+  }
+  @media (min-width: 640px) {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    min-height: 120px;
+    margin-bottom: 1rem;
   }
 `;
 
 const Loading = styled.div`
   text-align: center;
-  padding: 2rem;
+  padding: 1.5rem;
   color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  @media (min-width: 768px) {
+    padding: 2rem;
+    font-size: 1rem;
+  }
 `;
 
 const ErrorMessage = styled.div`
   text-align: center;
-  padding: 2rem;
+  padding: 1.5rem;
   color: #ef4444;
   background: rgba(239, 68, 68, 0.1);
-  border-radius: 16px;
-  max-width: 800px;
-  margin: 0 auto;
+  border-radius: 12px;
+  max-width: 100%;
+  margin: 0 auto 1.5rem;
+  font-size: 0.9rem;
+  @media (min-width: 640px) {
+    padding: 2rem;
+    max-width: 800px;
+    font-size: 1rem;
+  }
 `;
 
+// Main Component
 const ResearchCollaboration = () => {
   const [activeSection, setActiveSection] = useState('projects');
   const [projects, setProjects] = useState([]);

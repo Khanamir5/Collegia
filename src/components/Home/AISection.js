@@ -140,28 +140,41 @@ const AISection = () => {
           Explore how our advanced AI technology transforms your experience with smart recommendations, dynamic insights, and automated summaries.
         </SectionDescription>
         <FeatureGrid>
-          <FeatureCard data-aos="fade-up" data-aos-delay="200">
-            <FeatureIcon>🤖</FeatureIcon>
-            <FeatureTitle>Personalized Recommendations</FeatureTitle>
-            <FeatureDescription>
-              AI algorithms analyze your behavior and preferences to offer tailored content and opportunities that suit your needs.
-            </FeatureDescription>
-          </FeatureCard>
-          <FeatureCard data-aos="fade-up" data-aos-delay="300">
-            <FeatureIcon>📊</FeatureIcon>
-            <FeatureTitle>Dynamic Insights</FeatureTitle>
-            <FeatureDescription>
-              Receive real-time insights on your academic and career progress, helping you make informed decisions and stay ahead.
-            </FeatureDescription>
-          </FeatureCard>
-          <FeatureCard data-aos="fade-up" data-aos-delay="400">
-            <FeatureIcon>📝</FeatureIcon>
-            <FeatureTitle>Automated Summaries</FeatureTitle>
-            <FeatureDescription>
-              Quickly review and retain important information with AI-generated summaries of notes, lectures, and research materials.
-            </FeatureDescription>
-          </FeatureCard>
-        </FeatureGrid>
+
+<FeatureCard data-aos="fade-up" data-aos-delay="400">
+  <FeatureIcon>📝</FeatureIcon>
+  <FeatureTitle>
+    <a href="/AIVideoSummarizer">Automated Summaries</a>
+  </FeatureTitle>
+  <FeatureDescription>
+    Quickly review and retain important information with AI-generated summaries of notes, lectures, and research materials.
+  </FeatureDescription>
+</FeatureCard>
+
+<FeatureCard data-aos="fade-up" data-aos-delay="600">
+  <FeatureIcon>📅</FeatureIcon>
+  <FeatureTitle>
+    <a href="/StudyPlanner">Study Planner</a>
+  </FeatureTitle>
+  <FeatureDescription>
+    Organize your study schedule efficiently with AI-powered planning tools that adapt to your learning habits.
+  </FeatureDescription>
+</FeatureCard>
+
+<FeatureCard data-aos="fade-up" data-aos-delay="500">
+  <FeatureIcon>📇</FeatureIcon>
+  <FeatureTitle>
+    <a href="/FlashcardGenerator">Flashcard Generator</a>
+  </FeatureTitle>
+  <FeatureDescription>
+    Enhance learning with AI-generated flashcards, turning your notes into bite-sized, interactive study tools.
+  </FeatureDescription>
+</FeatureCard>
+
+
+</FeatureGrid>
+
+
       </ParallaxContainer>
     </AISectionWrapper>
   );

@@ -35,6 +35,30 @@ const GlassContainer = styled.div`
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+`;
+
+const MainHeader = styled(GlassContainer)`
+  text-align: center;
+  width: 100%;
+  jistify-content: center;
+  align-items: center;
+  padding: 1rem 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+  overflow: hidden;
+  animation: ${fadeIn} 0.8s ease-out;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(15, 12, 41, 0.8), rgba(36, 34, 62, 0.9));
+    z-index: -1;
+  }
 `;
 
 const Container = styled.div`
@@ -57,6 +81,7 @@ const Header = styled.header`
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+  animation: ${fadeIn} 0.8s ease;
 `;
 
 const Title = styled.h1`
@@ -68,14 +93,21 @@ const Title = styled.h1`
   -webkit-text-fill-color: transparent;
   margin: 0;
   line-height: 1.2;
-  @media (max-width: 768px) { font-size: 2.5rem; }
+  letter-spacing: -0.05em;
+  @media (max-width: 768px) { 
+    font-size: 2.5rem; 
+  }
 `;
 
 const Subtitle = styled.p`
   font-size: 1.25rem;
   color: rgba(255, 255, 255, 0.8);
-  margin: 0;
+  margin-bottom: 70px;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
   max-width: 600px;
+  line-height: 1.6;
 `;
 
 const SearchFilterWrapper = styled(GlassContainer)`
@@ -83,8 +115,13 @@ const SearchFilterWrapper = styled(GlassContainer)`
   gap: 1rem;
   align-items: center;
   flex-wrap: wrap;
-  padding: 1rem;
+  padding: 1.25rem;
   justify-content: center;
+  margin-top: 0rem;
+  width: fit-content;
+  &:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
 `;
 
 const FilterButton = styled.button`
@@ -95,11 +132,13 @@ const FilterButton = styled.button`
   border-radius: 50px;
   cursor: pointer;
   font-size: 0.9rem;
+  font-weight: 500;
   transition: all 0.3s ease;
   &:hover {
     background: rgba(165, 180, 252, 0.2);
     color: #a5b4fc;
     border-color: rgba(165, 180, 252, 0.5);
+    transform: translateY(-2px);
   }
 `;
 
@@ -107,9 +146,9 @@ const PrimaryButton = styled.button`
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
+  padding: 0.85rem 1.75rem;
   border-radius: 50px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -118,10 +157,13 @@ const PrimaryButton = styled.button`
   gap: 0.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(99, 102, 241, 0.3);
   }
-  &:active { transform: translateY(0); }
+  &:active { 
+    transform: translateY(0); 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const SecondaryButton = styled(PrimaryButton)`
@@ -130,32 +172,33 @@ const SecondaryButton = styled(PrimaryButton)`
   color: white;
   &:hover {
     background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
   }
 `;
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
   max-width: 1400px;
   margin-left: auto;
   margin-right: auto;
+  padding: 1rem 0;
 `;
 
 const Card = styled(GlassContainer)`
-  padding: 1.5rem;
+  padding: 1.75rem;
   border-radius: 16px;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
   cursor: pointer;
-  animation: ${fadeIn} 0.5s ease;
+  animation: ${fadeIn} 0.6s ease;
   display: flex;
   flex-direction: column;
   height: 100%;
   &:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
     border-color: rgba(165, 180, 252, 0.5);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
   }
 `;
 
@@ -163,72 +206,88 @@ const CardHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 `;
 
 const CardTitle = styled.h3`
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.35rem;
+  font-weight: 700;
   margin: 0;
   color: white;
   flex: 1;
+  line-height: 1.4;
 `;
 
 const CardCategory = styled.span`
   background: rgba(165, 180, 252, 0.2);
   color: #a5b4fc;
-  padding: 0.25rem 0.75rem;
+  padding: 0.35rem 0.9rem;
   border-radius: 50px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 `;
 
 const CardDescription = styled.p`
   color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-  margin: 0.5rem 0 1.5rem;
+  font-size: 0.95rem;
+  margin: 0.75rem 0 1.75rem;
   flex: 1;
+  line-height: 1.6;
 `;
 
 const CardMeta = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
   margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 `;
 
 const CardImage = styled.img`
   width: 100%;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
   aspect-ratio: 16/9;
   object-fit: cover;
+  transition: transform 0.3s ease;
+  ${Card}:hover & {
+    transform: scale(1.02);
+  }
 `;
 
 const CountdownTimer = styled(GlassContainer)`
-  padding: 1.5rem;
+  padding: 1.75rem;
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 0rem;
   max-width: 1400px;
   margin-left: auto;
   margin-right: auto;
+  animation: ${pulse} 2s infinite;
 `;
 
 const TimerText = styled.p`
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
 `;
 
 const TimerNumbers = styled.div`
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: 2.5rem;
+  font-weight: 700;
   background: linear-gradient(90deg, #a5b4fc, #6366f1);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  letter-spacing: 0.05em;
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
 `;
 
 const EmptyState = styled.div`
@@ -236,19 +295,103 @@ const EmptyState = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem;
+  padding: 4rem 2rem;
   text-align: center;
   color: rgba(255, 255, 255, 0.5);
   grid-column: 1 / -1;
+  animation: ${fadeIn} 0.6s ease;
 `;
 
 const EmptyIcon = styled.div`
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  opacity: 0.5;
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.7;
+  animation: ${float} 3s ease-in-out infinite;
+`;
+
+const ErrorMessage = styled.div`
+  color: #ef4444;
+  text-align: center;
+  margin: 1.5rem auto;
+  padding: 1rem;
+  max-width: 600px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 8px;
+  animation: ${fadeIn} 0.5s ease;
+`;
+
+const LoadingSpinner = styled.div`
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #a5b4fc;
+  animation: spin 1s ease-in-out infinite;
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
 `;
 
 const categories = ['All', 'Tech', 'Cultural', 'Sports'];
+
+// Dummy data for when backend fails
+const dummyEvents = [
+  {
+    id: 1,
+    title: "Tech Symposium 2025",
+    category: "Tech",
+    description: "Annual technology symposium featuring workshops, keynote speakers, and hands-on tech demonstrations with industry leaders.",
+    date: "2025-04-15",
+    image: "https://source.unsplash.com/random/600x400/?tech,conference",
+    formLink: "https://example.com/register/tech-symposium"
+  },
+  {
+    id: 2,
+    title: "Cultural Fest",
+    category: "Cultural",
+    description: "Celebrate our diverse community with performances, food, and cultural exhibits from around the world.",
+    date: "2025-04-20",
+    image: "https://source.unsplash.com/random/600x400/?festival,culture",
+    formLink: "https://example.com/register/cultural-fest"
+  },
+  {
+    id: 3,
+    title: "Inter-College Sports Tournament",
+    category: "Sports",
+    description: "Annual sports competition featuring basketball, soccer, volleyball and more. Show your school spirit!",
+    date: "2025-04-25",
+    image: "https://source.unsplash.com/random/600x400/?sports,basketball",
+    formLink: "https://example.com/register/sports-day"
+  },
+  {
+    id: 4,
+    title: "Hackathon 2025",
+    category: "Tech",
+    description: "48-hour coding marathon where students collaborate to build innovative projects. Prizes for top teams!",
+    date: "2025-04-30",
+    image: "https://source.unsplash.com/random/600x400/?hackathon,programming",
+    formLink: "https://example.com/register/hackathon"
+  },
+  {
+    id: 5,
+    title: "Art Exhibition",
+    category: "Cultural",
+    description: "Showcase of student artwork including paintings, sculptures, and digital media creations.",
+    date: "2025-05-05",
+    image: "https://source.unsplash.com/random/600x400/?art,exhibition",
+    formLink: "https://example.com/register/art-exhibition"
+  },
+  {
+    id: 6,
+    title: "Startup Pitch Competition",
+    category: "Tech",
+    description: "Entrepreneurial students present their business ideas to a panel of investors for funding opportunities.",
+    date: "2025-05-10",
+    image: "https://source.unsplash.com/random/600x400/?startup,meeting",
+    formLink: "https://example.com/register/pitch-competition"
+  }
+];
 
 const EventManagementPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -268,10 +411,14 @@ const EventManagementPage = () => {
           params: { category: selectedCategory === 'All' ? null : selectedCategory },
         });
         setEvents(response.data);
-        console.log('Fetched events:', response.data);
       } catch (error) {
         console.error('Error fetching events:', error);
-        setError('Failed to load events. Please try again.');
+        setError('Failed to load events. Showing sample data instead.');
+        // Filter dummy events based on selected category
+        const filteredDummy = selectedCategory === 'All' 
+          ? dummyEvents 
+          : dummyEvents.filter(event => event.category === selectedCategory);
+        setEvents(filteredDummy);
       } finally {
         setLoading(false);
       }
@@ -308,9 +455,14 @@ const EventManagementPage = () => {
 
   return (
     <Container>
+      
       <Header>
+      <MainHeader>
         <Title>College Events</Title>
-        <Subtitle>Discover and register for exciting college events</Subtitle>
+        <Subtitle>
+          Discover, register, and participate in exciting events across campus. 
+          Find something that matches your interests!
+        </Subtitle>
         
         <CountdownTimer>
           <TimerText>Time until the next event:</TimerText>
@@ -318,6 +470,7 @@ const EventManagementPage = () => {
             {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
           </TimerNumbers>
         </CountdownTimer>
+        </MainHeader>
 
         <SearchFilterWrapper>
           {categories.map((category) => (
@@ -332,24 +485,31 @@ const EventManagementPage = () => {
         </SearchFilterWrapper>
       </Header>
 
-      {error && <p style={{ color: '#ef4444', textAlign: 'center', marginBottom: '20px' }}>{error}</p>}
+      {error && <ErrorMessage>{error}</ErrorMessage>}
 
       {loading ? (
         <EmptyState>
-          <EmptyIcon>⏳</EmptyIcon>
-          <h3>Loading events...</h3>
+          <LoadingSpinner />
+          <h3 style={{ marginTop: '1.5rem' }}>Loading Events...</h3>
+          <p style={{ opacity: 0.7 }}>Please wait while we fetch the latest events</p>
         </EmptyState>
       ) : (
         <Grid>
           {events.length === 0 ? (
             <EmptyState>
               <EmptyIcon>📅</EmptyIcon>
-              <h3>No events found</h3>
-              <p>Try adjusting your filters</p>
+              <h3>No events found in this category</h3>
+              <p>Try selecting a different filter or check back later</p>
+              <SecondaryButton 
+                onClick={() => setSelectedCategory('All')}
+                style={{ marginTop: '1.5rem' }}
+              >
+                Show All Events
+              </SecondaryButton>
             </EmptyState>
           ) : (
             events.map((event) => (
-              <Card key={event.id}>
+              <Card key={event.id} onClick={() => window.open(event.formLink, '_blank')}>
                 <CardImage src={event.image} alt={event.title} />
                 <CardHeader>
                   <CardTitle>{event.title}</CardTitle>
@@ -357,11 +517,18 @@ const EventManagementPage = () => {
                 </CardHeader>
                 <CardDescription>{event.description}</CardDescription>
                 <CardMeta>
-                  <span>{event.date}</span>
+                  <span>📅 {new Date(event.date).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}</span>
                 </CardMeta>
                 <PrimaryButton 
-                  onClick={() => window.open(event.formLink, '_blank')}
-                  style={{ marginTop: '1rem' }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(event.formLink, '_blank');
+                  }}
+                  style={{ marginTop: '1.5rem' }}
                 >
                   Register Now
                 </PrimaryButton>
@@ -373,9 +540,9 @@ const EventManagementPage = () => {
 
       <SecondaryButton 
         onClick={() => navigate('/home')}
-        style={{ margin: '2rem auto', display: 'block' }}
+        style={{ margin: '3rem auto', display: 'block' }}
       >
-        Back to Home
+        ← Back to Home
       </SecondaryButton>
     </Container>
   );

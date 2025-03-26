@@ -21,9 +21,9 @@ const Home = () => {
       <AboutSection />
       <ServicesSection />
       <CreativeStatsSection />
-      <LatestNewsSection />
-      <OurPartners />
       <AISection />
+      <OurPartners />
+      <LatestNewsSection />
       <TimelineSection />
       <TestimonialSlider />
 

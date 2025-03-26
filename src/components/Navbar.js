@@ -297,6 +297,10 @@ const Navbar = () => {
         </MenuItem>
 
         <MenuItem>
+          <Link to="/ContactUs" onClick={toggleMenu}>Contact Us</Link>
+        </MenuItem>
+
+        <MenuItem>
           <Link to="/blogs" onClick={toggleMenu}>Blogs</Link>
         </MenuItem>
 

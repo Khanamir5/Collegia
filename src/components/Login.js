@@ -197,10 +197,30 @@ function Login() {
             textAlign: 'center',
             marginTop: '15px',
             color: 'red',
-            fontSize: 'clamp(12px, 3vw, 14px)',
+            fontSize: 'clamp(17px, 3vw, 14px)',
           }}
         >
-          TestUser: Use Testuser/Test123 to login.
+          TestUser: Use these credentials to login.
+        </p>
+        <p
+          style={{
+            textAlign: 'center',
+            marginTop: '0px',
+            color: 'red',
+            fontSize: 'clamp(10px, 3vw, 14px)',
+          }}
+        >
+          Username: TestUser
+        </p>
+        <p
+          style={{
+            textAlign: 'center',
+            marginTop: '0px',
+            color: 'red',
+            fontSize: 'clamp(10px, 3vw, 14px)',
+          }}
+        >
+          Password: Test123
         </p>
       </div>
     </div>
