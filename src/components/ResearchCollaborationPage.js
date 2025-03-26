@@ -1,4 +1,298 @@
 import React, { useState, useEffect } from 'react';
+import styled, { keyframes } from 'styled-components';
+
+// Animations
+const gradientFlow = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+`;
+
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const pulse = keyframes`
+  0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+`;
+
+// Styled Components
+const GlassContainer = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+`;
+
+const ResearchContainer = styled.div`
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
+  background-size: 400% 400%;
+  animation: ${gradientFlow} 15s ease infinite;
+  color: #f0f0f0;
+  padding: 2rem;
+`;
+
+const Banner = styled(GlassContainer)`
+  height: 300px;
+  background-image: url('https://images.unsplash.com/photo-1501290741922-b56c0d0884af?q=80&w=2532&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(15, 12, 41, 0.8), rgba(36, 34, 62, 0.9));
+    z-index: 1;
+  }
+`;
+
+const BannerContent = styled.div`
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  padding: 0 1rem;
+`;
+
+const BannerTitle = styled.h1`
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #fff, #a5b4fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0 0 1rem;
+  line-height: 1.2;
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+`;
+
+const BannerSubtitle = styled.p`
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+`;
+
+const NavContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+`;
+
+const NavButton = styled.button`
+  background: ${({ active }) => 
+    active ? 'rgba(165, 180, 252, 0.2)' : 'rgba(255, 255, 255, 0.05)'};
+  color: ${({ active }) => 
+    active ? '#a5b4fc' : 'rgba(255, 255, 255, 0.8)'};
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 0.5rem;
+
+  &:hover {
+    background: rgba(165, 180, 252, 0.2);
+  }
+`;
+
+const SearchInput = styled.input`
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 2rem;
+  display: block;
+  transition: all 0.3s ease;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  &:focus {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 2px rgba(165, 180, 252, 0.5);
+  }
+`;
+
+const CardGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+`;
+
+const Card = styled(GlassContainer)`
+  padding: 1.5rem;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  animation: ${fadeIn} 0.5s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    border-color: rgba(165, 180, 252, 0.5);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const CardTitle = styled.h2`
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+  color: white;
+`;
+
+const CardText = styled.p`
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  margin: 0 0 1.5rem;
+`;
+
+const TagContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+`;
+
+const Tag = styled.span`
+  background: rgba(165, 180, 252, 0.2);
+  color: #a5b4fc;
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+`;
+
+const MetaInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1.5rem;
+`;
+
+const ActionButton = styled.button`
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
+  }
+`;
+
+const ResourceForm = styled(GlassContainer)`
+  padding: 2rem;
+  margin-top: 3rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
+const FormTitle = styled.h2`
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem;
+  color: white;
+`;
+
+const FormInput = styled.input`
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  width: 100%;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  &:focus {
+    border-color: #a5b4fc;
+    background: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const FormTextarea = styled.textarea`
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  width: 100%;
+  min-height: 120px;
+  margin-bottom: 1rem;
+  resize: vertical;
+  transition: all 0.3s ease;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  &:focus {
+    border-color: #a5b4fc;
+    background: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const Loading = styled.div`
+  text-align: center;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.8);
+`;
+
+const ErrorMessage = styled.div`
+  text-align: center;
+  padding: 2rem;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+`;
 
 const ResearchCollaboration = () => {
   const [activeSection, setActiveSection] = useState('projects');
@@ -7,17 +301,7 @@ const ResearchCollaboration = () => {
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
-  // Handle window resize
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Simulate fetching projects from an API
   useEffect(() => {
@@ -56,9 +340,6 @@ const ResearchCollaboration = () => {
           collaborators: 9,
           deadline: '2024-08-20',
         },
-        
-        
-        
       ]);
       setLoading(false);
     }, 1000);
@@ -131,228 +412,123 @@ const ResearchCollaboration = () => {
           title: 'AI Model Zoo',
           description: 'A collection of pre-trained machine learning models for various applications.',
         },
-        
       ]);
       setLoading(false);
     }, 1000);
   }, []);
 
-  const styles = {
-    container: {
-      fontFamily: 'Arial, sans-serif',
-      padding: '20px 7vw',
-      maxWidth: '100vw',
-      margin: '0 auto',
-      backgroundColor: 'rgb(232, 232, 232)',
-      minHeight: '100vh',
-      boxSizing: 'border-box',
-    },
-    banner: {
-      backgroundImage: 'url(https://images.unsplash.com/photo-1501290741922-b56c0d0884af?q=80&w=2532&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      color: '#fff',
-      padding: '40px 20px',
-      height:'300px',
-      textAlign: 'center',
-      borderRadius: '10px',
-      marginBottom: '20px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '20px',
-      flexWrap: 'wrap',
-      position: 'relative',
-    },
-    bannerOverlay: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.52)',
-      borderRadius: '10px',
-    },
-    bannerContent: {
-      position: 'relative',
-      zIndex: 1,
-      maxWidth: '600px',
-    },
-    bannerTitle: {
-      fontSize: '2.5rem',
-      fontWeight: 'bold',
-      marginBottom: '10px',
-    },
-    bannerSubtitle: {
-      fontSize: '1.2rem',
-      opacity: '0.9',
-    },
-    header: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: '20px',
-      flexWrap: 'wrap',
-    },
-    navButtons: {
-      display: 'flex',
-      gap: '10px',
-      marginTop: '10px',
-      flexWrap: 'wrap',
-    },
-    button: {
-      padding: '10px 20px',
-      backgroundColor: '#007bff',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '5px',
-      cursor: 'pointer',
-      transition: 'background-color 0.3s ease',
-    },
-    activeButton: {
-      backgroundColor: '#0056b3',
-    },
-    search: {
-      padding: '10px',
-      width: '100%',
-      maxWidth: '300px',
-      borderRadius: '5px',
-      border: '1px solid #ccc',
-      marginBottom: '20px',
-    },
-    section: {
-      marginBottom: '40px',
-    },
-    cardContainer: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      gap: '20px',
-    },
-    particularCard: {
-      display: 'flex',
-      flexDirection: isMobile ? 'column' : 'row', // Dynamic flex direction
-    },
-    card: {
-      border: '1px solid #ccc',
-      borderRadius: '10px',
-      padding: '20px',
-      width: isMobile ? '100%' : 'calc(50% - 20px)', // Dynamic width
-      boxSizing: 'border-box',
-      marginBottom: '20px',
-      transition: 'box-shadow 0.3s ease',
-      backgroundColor: '#fff',
-      ':hover': {
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-      },
-    },
-    shareResource: {
-      border: '1px solid #ccc',
-      borderRadius: '10px',
-      padding: '20px',
-      backgroundColor: '#fff',
-    },
-    input: {
-      width: '100%',
-      padding: '10px',
-      marginBottom: '10px',
-      borderRadius: '5px',
-      border: '1px solid #ccc',
-    },
-  };
+  const filteredProjects = projects.filter(project =>
+    project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    project.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    project.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
+  const filteredResearchers = researchers.filter(researcher =>
+    researcher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    researcher.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    researcher.institution.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    researcher.expertise.some(expertise => expertise.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
+  const filteredResources = resources.filter(resource =>
+    resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    resource.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
-    <div style={styles.container}>
-      {/* Banner Section */}
-      <div style={styles.banner}>
-        <div style={styles.bannerOverlay}></div>
-        <div style={styles.bannerContent}>
-          <h1 style={styles.bannerTitle}>Research Collaboration</h1>
-          <p style={styles.bannerSubtitle}>Connecting researchers and resources for innovative solutions</p>
-        </div>
-      </div>
+    <ResearchContainer>
+      <Banner>
+        <BannerContent>
+          <BannerTitle>Research Collaboration Hub</BannerTitle>
+          <BannerSubtitle>Connecting researchers and resources for innovative solutions</BannerSubtitle>
+        </BannerContent>
+      </Banner>
 
-      {/* Navigation Buttons */}
-      <div style={styles.header}>
-        <div style={styles.navButtons}>
-          {['projects', 'researchers', 'resources'].map((section) => (
-            <button
-              key={section}
-              style={activeSection === section ? { ...styles.button, ...styles.activeButton } : styles.button}
-              onClick={() => setActiveSection(section)}
-            >
-              {section.charAt(0).toUpperCase() + section.slice(1)}
-            </button>
-          ))}
-        </div>
-      </div>
+      <NavContainer>
+        {['projects', 'researchers', 'resources'].map((section) => (
+          <NavButton
+            key={section}
+            active={activeSection === section}
+            onClick={() => setActiveSection(section)}
+          >
+            {section.charAt(0).toUpperCase() + section.slice(1)}
+          </NavButton>
+        ))}
+      </NavContainer>
 
-      {/* Loading and Error Handling */}
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <SearchInput
+        type="text"
+        placeholder={`Search ${activeSection}...`}
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
 
-      {/* Projects Section */}
+      {loading && <Loading>Loading...</Loading>}
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+
       {activeSection === 'projects' && (
-        <div style={styles.section}>
-          <input type="text" placeholder="Search projects..." style={styles.search} />
-          <div style={styles.particularCard}>
-            <div style={styles.cardContainer}>
-              {projects.map((project) => (
-                <div key={project.id} style={styles.card}>
-                  <h2>{project.title}</h2>
-                  <p>{project.description}</p>
-                  <p><strong>Keywords:</strong> {project.keywords.join(', ')}</p>
-                  <p><strong>Collaborators:</strong> {project.collaborators}</p>
-                  <p><strong>Deadline:</strong> {project.deadline}</p>
-                  <button style={styles.button}>Join Project</button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <CardGrid>
+          {filteredProjects.map((project) => (
+            <Card key={project.id}>
+              <CardTitle>{project.title}</CardTitle>
+              <CardText>{project.description}</CardText>
+              <TagContainer>
+                {project.keywords.map((keyword, index) => (
+                  <Tag key={index}>{keyword}</Tag>
+                ))}
+              </TagContainer>
+              <MetaInfo>
+                <span>Collaborators: {project.collaborators}</span>
+                <span>Deadline: {project.deadline}</span>
+              </MetaInfo>
+              <ActionButton>Join Project</ActionButton>
+            </Card>
+          ))}
+        </CardGrid>
       )}
 
-      {/* Researchers Section */}
       {activeSection === 'researchers' && (
-        <div style={styles.section}>
-          <input type="text" placeholder="Search researchers..." style={styles.search} />
-          <div style={styles.cardContainer}>
-            {researchers.map((researcher) => (
-              <div key={researcher.id} style={styles.card}>
-                <h2>{researcher.name}</h2>
-                <p>{researcher.title}</p>
-                <p><strong>Institution:</strong> {researcher.institution}</p>
-                <p><strong>Publications:</strong> {researcher.publications}</p>
-                <p><strong>Expertise:</strong> {researcher.expertise.join(', ')}</p>
-                <button style={styles.button}>Connect</button>
-              </div>
-            ))}
-          </div>
-        </div>
+        <CardGrid>
+          {filteredResearchers.map((researcher) => (
+            <Card key={researcher.id}>
+              <CardTitle>{researcher.name}</CardTitle>
+              <CardText>{researcher.title}</CardText>
+              <CardText><strong>Institution:</strong> {researcher.institution}</CardText>
+              <TagContainer>
+                {researcher.expertise.map((expertise, index) => (
+                  <Tag key={index}>{expertise}</Tag>
+                ))}
+              </TagContainer>
+              <MetaInfo>
+                <span>Publications: {researcher.publications}</span>
+              </MetaInfo>
+              <ActionButton>Connect</ActionButton>
+            </Card>
+          ))}
+        </CardGrid>
       )}
 
-      {/* Resources Section */}
       {activeSection === 'resources' && (
-        <div style={styles.section}>
-          <h2>Shared Resources</h2>
-          <div style={styles.cardContainer}>
-            {resources.map((resource) => (
-              <div key={resource.id} style={styles.card}>
-                <h3>{resource.title}</h3>
-                <p>{resource.description}</p>
-                <button style={styles.button}>Access Resource</button>
-              </div>
+        <>
+          <CardGrid>
+            {filteredResources.map((resource) => (
+              <Card key={resource.id}>
+                <CardTitle>{resource.title}</CardTitle>
+                <CardText>{resource.description}</CardText>
+                <ActionButton>Access Resource</ActionButton>
+              </Card>
             ))}
-          </div>
-          <div style={styles.shareResource}>
-            <h2>Share a Resource</h2>
-            <input type="text" placeholder="Resource Title" style={styles.input} />
-            <textarea placeholder="Brief description of the resource" style={styles.input} />
-            <input type="text" placeholder="Link to resource" style={styles.input} />
-            <button style={styles.button}>Share Resource</button>
-          </div>
-        </div>
+          </CardGrid>
+          <ResourceForm>
+            <FormTitle>Share a Resource</FormTitle>
+            <FormInput type="text" placeholder="Resource Title" />
+            <FormTextarea placeholder="Brief description of the resource" />
+            <FormInput type="text" placeholder="Link to resource" />
+            <ActionButton>Share Resource</ActionButton>
+          </ResourceForm>
+        </>
       )}
-    </div>
+    </ResearchContainer>
   );
 };
 

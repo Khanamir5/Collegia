@@ -12,7 +12,9 @@ import PeerMentorshipPage from './components/PeerMentorshipPage';
 import StudentBudgetingPage from './components/StudentBudgetingPage';
 import StudentSocialPage from './components/StudentSocialPage';
 import CampusJobBoard from './components/CampusJobBoard';
+import JobDashboard from './components/JobDashboard';
 import EventManagement from './components/EventManagement';
+import EventDashboard from './components/EventDashboard';
 import AIPage from './components/AIPage';
 import UserProfilePage from './components/UserProfilePage';
 import Leaderboard from './components/Leaderboard';
@@ -27,6 +29,10 @@ import MobileNavigation from './components/MobileNavigation';
 import Tools from './components/Tools';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import AIVideoSummarizer from './components/AIVideoSummarizer';
+import FlashcardGenerator from './components/FlashcardGenerator';
+import StudyPlanner from './components/StudyPlanner';
+import AdminDashboard from './components/AdminDashboard';
 
 // Authentication check based on username
 const isAuthenticated = () => {
@@ -64,6 +70,7 @@ const App = () => {
             <Route path="/" element={isAuthenticated() ? <Navigate to="/home" /> : <Login />} />
             <Route path="/login" element={isAuthenticated() ? <Navigate to="/home" /> : <Login />} />
             <Route path="/signup" element={isAuthenticated() ? <Navigate to="/home" /> : <Signup />} />
+            <Route path="/admin" element={<PrivateRoute element={<AdminDashboard />} />} />
             <Route path="/home" element={<PrivateRoute element={<Home />} />} />
             <Route path="/about" element={<PrivateRoute element={<AboutUsPage />} />} />
             <Route path="/ResearchCollaboration" element={<PrivateRoute element={<ResearchCollaborationPage />} />} />
@@ -73,8 +80,13 @@ const App = () => {
             <Route path="/StudentSocial" element={<PrivateRoute element={<StudentSocialPage />} />} />
             <Route path="/Tools" element={<PrivateRoute element={<Tools />} />} />
             <Route path="/CampusJobBoard" element={<PrivateRoute element={<CampusJobBoard />} />} />
+            <Route path="/JobDashboard" element={<PrivateRoute element={<JobDashboard />} />} />
             <Route path="/EventManagement" element={<PrivateRoute element={<EventManagement />} />} />
+            <Route path="/EventDashboard" element={<PrivateRoute element={<EventDashboard />} />} />
             <Route path="/AIPage" element={<PrivateRoute element={<AIPage />} />} />
+            <Route path="/AIVideoSummarizer" element={<PrivateRoute element={<AIVideoSummarizer />} />} />
+            <Route path="/FlashcardGenerator" element={<PrivateRoute element={<FlashcardGenerator />} />} />
+            <Route path="/StudyPlanner" element={<PrivateRoute element={<StudyPlanner />} />} />
             <Route path="/UserProfilePage" element={<PrivateRoute element={<UserProfilePage />} />} />
             <Route path="/Leaderboard" element={<PrivateRoute element={<Leaderboard />} />} />
             <Route path="/TimelinePage" element={<PrivateRoute element={<TimelinePage />} />} />

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const JobInternshipPortal = () => {
   const [jobs, setJobs] = useState([]);
@@ -9,65 +11,53 @@ const JobInternshipPortal = () => {
     location: '',
   });
   const [darkMode, setDarkMode] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  // Simulate fetching jobs from an API
+  // Fetch jobs from the backend
   useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setJobs([
-        {
-          id: 1,
-          title: 'Software Engineer',
-          company: 'Tech Innovators Inc.',
-          location: 'San Francisco, CA',
-          type: 'Full-time',
-          description: 'Develop cutting-edge software solutions for global clients.',
-          postedDate: '2023-10-01',
-        },
-        {
-          id: 2,
-          title: 'Marketing Intern',
-          company: 'Creative Minds Agency',
-          location: 'New York, NY',
-          type: 'Internship',
-          description: 'Assist in creating and executing marketing campaigns.',
-          postedDate: '2023-10-05',
-        },
-        {
-          id: 3,
-          title: 'Data Analyst',
-          company: 'Data Insights Co.',
-          location: 'Remote',
-          type: 'Part-time',
-          description: 'Analyze large datasets to provide actionable insights.',
-          postedDate: '2023-09-28',
-        },
-        {
-          id: 4,
-          title: 'Product Manager',
-          company: 'Innovate Tech',
-          location: 'Austin, TX',
-          type: 'Full-time',
-          description: 'Lead product development and strategy.',
-          postedDate: '2023-10-10',
-        },
-      ]);
-      setLoading(false);
-    }, 1000);
-  }, []);
+    const fetchJobs = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        // Initially fetch all jobs without filters
+        const initialResponse = await axios.get('http://localhost:8080/api/jobs');
+        console.log('Initial jobs fetched:', initialResponse.data);
+        setJobs(initialResponse.data);
 
-  // Filter and search jobs
-  const filteredJobs = jobs.filter((job) => {
-    const matchesSearch = job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         job.company.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesJobType = filters.jobType ? job.type === filters.jobType : true;
-    const matchesLocation = filters.location ? job.location.toLowerCase().includes(filters.location.toLowerCase()) : true;
-    return matchesSearch && matchesJobType && matchesLocation;
-  });
+        // Then apply search and filters if present
+        const response = await axios.get('http://localhost:8080/api/jobs/search', {
+          params: {
+            title: searchQuery || null,
+            company: searchQuery || null,
+            type: filters.jobType || null,
+            location: filters.location || null,
+          },
+        });
+        console.log('Filtered jobs fetched:', response.data);
+        setJobs(response.data);
+      } catch (error) {
+        console.error('Error fetching jobs:', error.response?.data || error.message);
+        setError('Failed to load jobs. Check console for details.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchJobs();
+  }, [searchQuery, filters.jobType, filters.location]);
 
   // Toggle dark mode
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
+  };
+
+  // Handle "Apply Now" button click
+  const handleApply = (jobLink) => {
+    if (jobLink) {
+      window.open(jobLink, '_blank', 'noopener,noreferrer');
+    } else {
+      setError('No application link provided for this job.');
+    }
   };
 
   // Styles
@@ -76,8 +66,7 @@ const JobInternshipPortal = () => {
       fontFamily: 'Arial, sans-serif',
       padding: '20px 7vw',
       maxWidth: '100vw',
-      background: darkMode ? 'rgb(30, 30, 30)': 'rgb(232, 232, 232)',
-       
+      background: darkMode ? 'rgb(30, 30, 30)' : 'rgb(232, 232, 232)',
       margin: '0 auto',
       minHeight: '100vh',
       color: darkMode ? '#fff' : '#333',
@@ -88,7 +77,7 @@ const JobInternshipPortal = () => {
       top: 0,
       left: 0,
       borderRadius: '25px',
-      margin:'5%',
+      margin: '5%',
       width: '90%',
       height: '300px',
       backgroundImage: `url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')`,
@@ -101,7 +90,7 @@ const JobInternshipPortal = () => {
       top: 0,
       left: 0,
       borderRadius: '25px',
-      margin:'5%',
+      margin: '5%',
       width: '90%',
       height: '300px',
       background: darkMode ? 'rgba(0, 0, 0, 0.52)' : 'rgba(0, 0, 0, 0.52)',
@@ -109,8 +98,8 @@ const JobInternshipPortal = () => {
     },
     header: {
       textAlign: 'center',
-      marginBottom: window.innerWidth <= 768 ?'50px':'100px',
-      paddingTop: window.innerWidth <= 768 ?'50px':'100px',
+      marginBottom: window.innerWidth <= 768 ? '50px' : '100px',
+      paddingTop: window.innerWidth <= 768 ? '50px' : '100px',
       position: 'relative',
       zIndex: 1,
     },
@@ -121,7 +110,7 @@ const JobInternshipPortal = () => {
     },
     subtitle: {
       fontSize: '1.2rem',
-      color:  '#ccc', 
+      color: '#ccc',
     },
     searchContainer: {
       display: 'flex',
@@ -140,20 +129,24 @@ const JobInternshipPortal = () => {
     },
     searchInput: {
       flex: 1,
-      padding: '10px',
+      padding: '12px',
       borderRadius: '5px',
       border: `1px solid ${darkMode ? '#444' : '#ccc'}`,
       fontSize: '1rem',
       backgroundColor: darkMode ? '#333' : '#fff',
       color: darkMode ? '#fff' : '#333',
+      outline: 'none',
+      transition: 'border-color 0.3s ease',
     },
     filterSelect: {
-      padding: '10px',
+      padding: '12px',
       borderRadius: '5px',
       border: `1px solid ${darkMode ? '#444' : '#ccc'}`,
       fontSize: '1rem',
       backgroundColor: darkMode ? '#333' : '#fff',
       color: darkMode ? '#fff' : '#333',
+      outline: 'none',
+      transition: 'border-color 0.3s ease',
     },
     jobList: {
       display: 'grid',
@@ -167,10 +160,6 @@ const JobInternshipPortal = () => {
       padding: '20px',
       boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
       transition: 'transform 0.2s, box-shadow 0.2s, background-color 0.3s ease',
-      ':hover': {
-        transform: 'translateY(-5px)',
-        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
-      },
     },
     jobTitle: {
       fontSize: '1.5rem',
@@ -201,6 +190,13 @@ const JobInternshipPortal = () => {
     jobPostedDate: {
       fontSize: '0.9rem',
       color: darkMode ? '#999' : '#666',
+      marginBottom: '10px',
+    },
+    jobLink: {
+      fontSize: '0.9rem',
+      color: '#007bff',
+      marginBottom: '10px',
+      wordBreak: 'break-all',
     },
     applyButton: {
       padding: '10px 20px',
@@ -211,16 +207,12 @@ const JobInternshipPortal = () => {
       cursor: 'pointer',
       fontSize: '1rem',
       transition: 'background-color 0.3s ease',
-      ':hover': {
-        backgroundColor: '#0056b3',
-      },
     },
     darkModeToggle: {
       position: 'absolute',
       top: window.innerWidth <= 768 ? '80px' : '85px',
       right: window.innerWidth <= 768 ? '40px' : '20px',
-      
-      padding: '10px 10px',
+      padding: '10px',
       backgroundColor: darkMode ? '#444' : '#007bff',
       color: '#fff',
       border: 'none',
@@ -228,11 +220,23 @@ const JobInternshipPortal = () => {
       cursor: 'pointer',
       fontSize: '1rem',
       transition: 'background-color 0.3s ease',
-      ':hover': {
-        backgroundColor: darkMode ? '#666' : '#0056b3',
-      },
       zIndex: 3,
-      
+    },
+    errorMessage: {
+      color: 'red',
+      margin: '15px 0',
+      fontSize: '1rem',
+    },
+    backButton: {
+      padding: '12px 25px',
+      backgroundColor: '#007bff',
+      color: 'white',
+      border: 'none',
+      borderRadius: '5px',
+      cursor: 'pointer',
+      fontSize: '1rem',
+      transition: 'background-color 0.3s ease',
+      marginTop: '20px',
     },
   };
 
@@ -243,7 +247,12 @@ const JobInternshipPortal = () => {
       <div style={styles.overlay}></div>
 
       {/* Dark Mode Toggle */}
-      <button style={styles.darkModeToggle} onClick={toggleDarkMode}>
+      <button
+        style={styles.darkModeToggle}
+        onClick={toggleDarkMode}
+        onMouseOver={(e) => e.target.style.backgroundColor = darkMode ? '#666' : '#0056b3'}
+        onMouseOut={(e) => e.target.style.backgroundColor = darkMode ? '#444' : '#007bff'}
+      >
         {darkMode ? '🌕' : '🌜'}
       </button>
 
@@ -261,11 +270,15 @@ const JobInternshipPortal = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           style={styles.searchInput}
+          onFocus={(e) => e.target.style.borderColor = '#007bff'}
+          onBlur={(e) => e.target.style.borderColor = darkMode ? '#444' : '#ccc'}
         />
         <select
           value={filters.jobType}
           onChange={(e) => setFilters({ ...filters, jobType: e.target.value })}
           style={styles.filterSelect}
+          onFocus={(e) => e.target.style.borderColor = '#007bff'}
+          onBlur={(e) => e.target.style.borderColor = darkMode ? '#444' : '#ccc'}
         >
           <option value="">All Job Types</option>
           <option value="Full-time">Full-time</option>
@@ -278,27 +291,79 @@ const JobInternshipPortal = () => {
           value={filters.location}
           onChange={(e) => setFilters({ ...filters, location: e.target.value })}
           style={styles.filterSelect}
+          onFocus={(e) => e.target.style.borderColor = '#007bff'}
+          onBlur={(e) => e.target.style.borderColor = darkMode ? '#444' : '#ccc'}
         />
       </div>
 
+      {/* Error Message */}
+      {error && <p style={styles.errorMessage}>{error}</p>}
+
       {/* Job Listings */}
       {loading ? (
-        <p>Loading jobs...</p>
+        <p style={{ color: darkMode ? '#fff' : '#333', fontSize: '1rem' }}>Loading jobs...</p>
       ) : (
         <div style={styles.jobList}>
-          {filteredJobs.map((job) => (
-            <div key={job.id} style={styles.jobCard}>
-              <h2 style={styles.jobTitle}>{job.title}</h2>
-              <p style={styles.jobCompany}>{job.company}</p>
-              <p style={styles.jobLocation}>{job.location}</p>
-              <p style={styles.jobType}>{job.type}</p>
-              <p style={styles.jobDescription}>{job.description}</p>
-              <p style={styles.jobPostedDate}>Posted on: {job.postedDate}</p>
-              <button style={styles.applyButton}>Apply Now</button>
-            </div>
-          ))}
+          {jobs.length === 0 ? (
+            <p style={{ color: darkMode ? '#fff' : '#333', fontSize: '1rem' }}>
+              No jobs found. Try adjusting your search or filters.
+            </p>
+          ) : (
+            jobs.map((job) => (
+              <div
+                key={job.id}
+                style={styles.jobCard}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-5px)';
+                  e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+                }}
+              >
+                <h2 style={styles.jobTitle}>{job.title}</h2>
+                <p style={styles.jobCompany}>{job.company}</p>
+                <p style={styles.jobLocation}>{job.location}</p>
+                <p style={styles.jobType}>{job.type}</p>
+                <p style={styles.jobDescription}>{job.description}</p>
+                <p style={styles.jobPostedDate}>Posted on: {job.postedDate}</p>
+                {job.link && (
+                  <p style={styles.jobLink}>
+                    Link:{' '}
+                    <a
+                      href={job.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: '#007bff', textDecoration: 'underline' }}
+                    >
+                      {job.link}
+                    </a>
+                  </p>
+                )}
+                <button
+                  style={styles.applyButton}
+                  onClick={() => handleApply(job.link)}
+                  onMouseOver={(e) => e.target.style.backgroundColor = '#0056b3'}
+                  onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}
+                >
+                  Apply Now
+                </button>
+              </div>
+            ))
+          )}
         </div>
       )}
+
+      {/* Back to Home Button */}
+      <button
+        style={styles.backButton}
+        onClick={() => navigate('/home')}
+        onMouseOver={(e) => e.target.style.backgroundColor = '#0056b3'}
+        onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}
+      >
+        Back to Home
+      </button>
     </div>
   );
 };

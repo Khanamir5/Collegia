@@ -21,7 +21,9 @@ const navItems = [
     submenu: [
       { name: "Social", icon: Users, href: "/StudentSocial" },
       { name: "Jobs", icon: Briefcase, href: "/CampusJobBoard" },
+      // { name: "JobDashboard", icon: Users, href: "/JobDashboard" },
       { name: "Events", icon: Calendar, href: "/EventManagement" },
+      // { name: "EventDashboard", icon: Users, href: "/EventDashboard" },
       { name: "Research", icon: BookOpen, href: "/ResearchCollaboration" },
       { name: "Study Materials", icon: FileText, href: "/StudyMaterials" },
       { name: "Tools", icon: Briefcase, href: "/Tools" },
@@ -37,11 +39,24 @@ const navItems = [
     name: "AI Tools",
     icon: Cpu,
     submenu: [
-      { name: "AI Summary", icon: Sparkles, href: "/AIPage" },
+
+      { name: "AI Summary", icon: Sparkles, href: "/AIVideoSummarizer" },
+      { name: "Flashcards", icon: Shield, href: "/FlashcardGenerator" },
+      { name: "StudyPlanner", icon: Layers, href: "/StudyPlanner" },
       { name: "Others", icon: Layers, href: "/AIPage" },
     ],
   },
-  { name: "Profile", icon: User, href: "/UserProfilePage" },
+  {
+    name: "Profile",
+    icon: User,
+    submenu: [
+
+      { name: "Profile", icon: User, href: "/UserProfilePage" },
+      { name: "Admin Dashboard", icon: User, href: "/admin" },
+    ],
+  },
+
+
 ];
 
 export default function MobileNavigation() {
