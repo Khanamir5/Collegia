@@ -1,71 +1,588 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  FiHome,
-  FiUser,
-  FiMessageCircle,
-  FiUsers,
-  FiHeart,
-  FiMessageSquare,
-  FiShare,
-  FiPlus,
-  FiSun,
-  FiMoon,
+import { 
+  FiHome, FiUser, FiMessageCircle, FiUsers, 
+  FiHeart, FiMessageSquare, FiShare2, FiPlus, 
+  FiMoon, FiSun, FiImage, FiLink, FiMoreHorizontal 
 } from "react-icons/fi";
+import styled, { keyframes } from 'styled-components';
+
+// Animations
+const gradientFlow = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+`;
+
+const float = keyframes`
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+`;
+
+const pulse = keyframes`
+  0% { box-shadow: 0 0 0 0 rgba(165, 180, 252, 0.7); }
+  70% { box-shadow: 0 0 0 15px rgba(165, 180, 252, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(165, 180, 252, 0); }
+`;
+
+// Styled Components
+const AppContainer = styled.div`
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
+  background-size: 400% 400%;
+  animation: ${gradientFlow} 15s ease infinite;
+  color: #f0f0f0;
+  padding: 1rem;
+`;
+
+const GlassCard = styled(motion.div)`
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+`;
+
+const Header = styled(GlassCard)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  position: sticky;
+  top: 1rem;
+  z-index: 100;
+`;
+
+const AppTitle = styled(motion.h1)`
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #a5b4fc, #6366f1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  line-height: 1.2;
+`;
+
+const LayoutGrid = styled.div`
+  display: grid;
+  grid-template-columns: 280px 1fr 280px;
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const Sidebar = styled(GlassCard)`
+  position: sticky;
+  top: calc(1rem + 80px);
+  height: fit-content;
+  
+  @media (max-width: 1024px) {
+    display: none;
+  }
+`;
+
+const NavList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const NavItem = styled(motion.li)`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: ${({ active }) => (active ? '#a5b4fc' : 'rgba(255, 255, 255, 0.8)')};
+  background: ${({ active }) => (active ? 'rgba(165, 180, 252, 0.1)' : 'transparent')};
+  
+  &:hover {
+    background: rgba(165, 180, 252, 0.1);
+  }
+`;
+
+const MainContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+const CreatePostCard = styled(GlassCard)`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const PostInput = styled.textarea`
+  width: 100%;
+  min-height: 100px;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  resize: none;
+  transition: all 0.3s ease;
+  
+  &:focus {
+    border-color: #a5b4fc;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+`;
+
+const PostActions = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const MediaButtons = styled.div`
+  display: flex;
+  gap: 0.75rem;
+`;
+
+const MediaButton = styled(motion.button)`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #a5b4fc;
+  }
+`;
+
+const PrimaryButton = styled(motion.button)`
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  transition: all 0.3s ease;
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+`;
+
+const FeedContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+const PostCard = styled(GlassCard)`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  }
+`;
+
+const PostHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const UserInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+`;
+
+const UserAvatar = styled(motion.img)`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(165, 180, 252, 0.3);
+`;
+
+const Username = styled.h3`
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: white;
+`;
+
+const PostTime = styled.span`
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+`;
+
+const PostContent = styled.p`
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+`;
+
+const PostImage = styled(motion.img)`
+  width: 100%;
+  border-radius: 12px;
+  max-height: 500px;
+  object-fit: cover;
+  cursor: pointer;
+`;
+
+const PostFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+`;
+
+const ReactionButton = styled(motion.button)`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  border-radius: 50px;
+  color: ${({ active }) => (active ? '#a5b4fc' : 'rgba(255, 255, 255, 0.7)')};
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #a5b4fc;
+  }
+`;
+
+const CommentSection = styled(motion.div)`
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+`;
+
+const CommentInputWrapper = styled.div`
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+`;
+
+const CommentInput = styled.input`
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.3s ease;
+  
+  &:focus {
+    border-color: #a5b4fc;
+    background: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const CommentButton = styled(PrimaryButton)`
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9rem;
+`;
+
+const CommentList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+`;
+
+const CommentItem = styled.div`
+  display: flex;
+  gap: 0.75rem;
+`;
+
+const CommentAvatar = styled.img`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+const CommentContent = styled.div`
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+`;
+
+const CommentAuthor = styled.div`
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.25rem;
+`;
+
+const CommentText = styled.p`
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+`;
+
+const SuggestionsCard = styled(Sidebar)`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const SectionTitle = styled.h3`
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: white;
+`;
+
+const ConnectionCard = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const ConnectionAvatar = styled(UserAvatar)`
+  width: 48px;
+  height: 48px;
+`;
+
+const ConnectionInfo = styled.div`
+  flex: 1;
+`;
+
+const ConnectionName = styled(Username)`
+  font-size: 0.95rem;
+`;
+
+const ConnectionMeta = styled.div`
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+`;
+
+const ConnectButton = styled(PrimaryButton)`
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+`;
+
+const MobileNav = styled(GlassCard)`
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  justify-content: space-around;
+  padding: 0.75rem;
+  border-radius: 50px;
+  z-index: 100;
+  
+  @media (min-width: 1025px) {
+    display: none;
+  }
+`;
+
+const NavIcon = styled(motion.div)`
+  padding: 0.75rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ active }) => (active ? '#a5b4fc' : 'rgba(255, 255, 255, 0.7)')};
+  background: ${({ active }) => (active ? 'rgba(165, 180, 252, 0.1)' : 'transparent')};
+  cursor: pointer;
+`;
+
+const FloatingButton = styled(PrimaryButton)`
+  position: fixed;
+  bottom: 5rem;
+  right: 1.5rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: ${pulse} 2s infinite;
+  
+  @media (min-width: 1025px) {
+    display: none;
+  }
+`;
+
+const ThemeToggle = styled(PrimaryButton)`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const SocialNetworkPage = () => {
+  // Sample data
   const [posts, setPosts] = useState([
     {
       id: 1,
-      username: "Nishant",
+      user: {
+        name: "Nishant",
+        avatar: "https://randomuser.me/api/portraits/men/1.jpg"
+      },
       content: "Enjoying the beautiful weather today! 🌞",
       image: "https://images.unsplash.com/photo-1561915511-0184090c2bdb?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       likes: 12,
-      comments: [],
+      comments: [
+        { id: 1, user: { name: "Aditya", avatar: "https://randomuser.me/api/portraits/men/2.jpg" }, text: "Looks amazing!" },
+        { id: 2, user: { name: "Gourav", avatar: "https://randomuser.me/api/portraits/men/3.jpg" }, text: "Where is this?" }
+      ],
       shares: 1,
       liked: false,
+      time: "2 hours ago"
     },
     {
       id: 2,
-      username: "Udity",
-      content: "Just finished a great book! 📚",
+      user: {
+        name: "Udity",
+        avatar: "https://randomuser.me/api/portraits/women/1.jpg"
+      },
+      content: "Just finished a great book! 📚 Highly recommend 'Atomic Habits' by James Clear. It's transformed how I think about building good habits and breaking bad ones.",
       image: "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVhZGluZyUyMGJvb2tzfGVufDB8fDB8fHww",
       likes: 8,
       comments: [],
       shares: 0,
       liked: false,
+      time: "5 hours ago"
     },
     {
       id: 3,
-      username: "Tripti",
-      content: 'Watching Pakistani-drama "KMKT❤️"',
+      user: {
+        name: "Tripti",
+        avatar: "https://randomuser.me/api/portraits/women/2.jpg"
+      },
+      content: 'Watching Pakistani-drama "KMKT❤️" - the storyline is so engaging!',
       image: "https://m.media-amazon.com/images/M/MV5BODU1NmViMjQtZWMxMC00YTg2LTg3NGYtMWMzYTZkNjY4ODFmXkEyXkFqcGc@._V1_QL75_UX804_.jpg",
-      likes: 12,
-      comments: [],
-      shares: 1,
-      liked: false,
+      likes: 24,
+      comments: [
+        { id: 1, user: { name: "Subham", avatar: "https://randomuser.me/api/portraits/men/4.jpg" }, text: "I love this drama too!" }
+      ],
+      shares: 3,
+      liked: true,
+      time: "1 day ago"
     },
     {
       id: 4,
-      username: "Uddalok",
-      content: "Going to gym 💪",
+      user: {
+        name: "Uddalok",
+        avatar: "https://randomuser.me/api/portraits/men/5.jpg"
+      },
+      content: "Just hit a new PR at the gym today! 💪 Consistency is key. 6 months ago I could barely bench 135lbs, now I'm up to 225lbs!",
       image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z3ltfGVufDB8fDB8fHww",
-      likes: 8,
+      likes: 18,
       comments: [],
-      shares: 0,
+      shares: 2,
       liked: false,
-    },
+      time: "2 days ago"
+    }
   ]);
 
   const [newPost, setNewPost] = useState("");
   const [isPosting, setIsPosting] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
   const [activeNav, setActiveNav] = useState("Home");
   const [commentInput, setCommentInput] = useState("");
   const [activePostId, setActivePostId] = useState(null);
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
-  const username = localStorage.getItem("username");
+  const [showImageModal, setShowImageModal] = useState(null);
 
+  const suggestedConnections = [
+    { 
+      id: 1, 
+      name: "Gaurav", 
+      avatar: "https://randomuser.me/api/portraits/men/6.jpg",
+      mutualConnections: 5,
+      bio: "Software Developer"
+    },
+    { 
+      id: 2, 
+      name: "Aditya", 
+      avatar: "https://randomuser.me/api/portraits/men/7.jpg",
+      mutualConnections: 3,
+      bio: "UI/UX Designer"
+    },
+    { 
+      id: 3, 
+      name: "Gourav", 
+      avatar: "https://randomuser.me/api/portraits/men/8.jpg",
+      mutualConnections: 8,
+      bio: "Data Scientist"
+    },
+    { 
+      id: 4, 
+      name: "Subham", 
+      avatar: "https://randomuser.me/api/portraits/men/9.jpg",
+      mutualConnections: 2,
+      bio: "Product Manager"
+    },
+    { 
+      id: 5, 
+      name: "Rahul", 
+      avatar: "https://randomuser.me/api/portraits/men/10.jpg",
+      mutualConnections: 4,
+      bio: "Marketing Specialist"
+    }
+  ];
 
   useEffect(() => {
     const handleResize = () => {
@@ -83,572 +600,430 @@ const SocialNetworkPage = () => {
       setTimeout(() => {
         const post = {
           id: posts.length + 1,
-          username: username,
+          user: {
+            name: "You",
+            avatar: "https://randomuser.me/api/portraits/lego/1.jpg"
+          },
           content: newPost,
           image: "",
           likes: 0,
           comments: [],
           shares: 0,
           liked: false,
+          time: "Just now"
         };
         setPosts([post, ...posts]);
         setNewPost("");
         setIsPosting(false);
-      }, 1000); // Simulate API delay
+      }, 1000);
     }
   };
 
   const handleLike = (id) => {
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === id
-          ? { ...post, liked: !post.liked, likes: post.liked ? post.likes - 1 : post.likes + 1 }
-          : post
-      )
-    );
+    setPosts(posts.map(post => 
+      post.id === id 
+        ? { ...post, liked: !post.liked, likes: post.liked ? post.likes - 1 : post.likes + 1 } 
+        : post
+    ));
   };
 
   const handleCommentSubmit = (postId) => {
     if (commentInput.trim()) {
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post.id === postId
-            ? { ...post, comments: [...post.comments, { id: post.comments.length + 1, text: commentInput }] }
-            : post
-        )
-      );
+      setPosts(posts.map(post => 
+        post.id === postId 
+          ? { 
+              ...post, 
+              comments: [
+                ...post.comments, 
+                { 
+                  id: post.comments.length + 1, 
+                  user: { 
+                    name: "You", 
+                    avatar: "https://randomuser.me/api/portraits/lego/1.jpg" 
+                  }, 
+                  text: commentInput 
+                }
+              ] 
+            } 
+          : post
+      ));
       setCommentInput("");
       setActivePostId(null);
     }
   };
 
-  const suggestedConnections = [
-    { id: 1, name: "Gaurav", avatar: "https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg" },
-    { id: 2, name: "Aditya", avatar: "https://png.pngtree.com/png-vector/20220817/ourmid/pngtree-man-avatar-with-circle-frame-vector-ilustration-png-image_6110328.png" },
-    { id: 3, name: "Gourav", avatar: "https://img.freepik.com/premium-vector/man-avatar-profile-picture-isolated-background-avatar-profile-picture-man_1293239-4841.jpg?semt=ais_hybrid" },
-    { id: 4, name: "Subham", avatar: "https://static.vecteezy.com/system/resources/previews/024/183/502/original/male-avatar-portrait-of-a-young-man-with-a-beard-illustration-of-male-character-in-modern-color-style-vector.jpg" },
-  ];
+  const handleShare = (postId) => {
+    const post = posts.find(p => p.id === postId);
+    alert(`Shared post by ${post.user.name}: "${post.content.substring(0, 30)}..."`);
+  };
+
+  const handleConnect = (userId) => {
+    alert(`Connection request sent to ${suggestedConnections.find(u => u.id === userId).name}`);
+  };
+
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
 
   const renderContent = () => {
     switch (activeNav) {
       case "Home":
         return (
           <>
-            {/* Post Creation Interface */}
-            <motion.form
-              onSubmit={handlePostSubmit}
-              style={{ ...styles.postForm, backgroundColor: isDarkMode ? "#444" : "#fff" }}
+            <CreatePostCard
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
+              transition={{ duration: 0.3 }}
             >
-              <textarea
+              <PostInput
                 value={newPost}
                 onChange={(e) => setNewPost(e.target.value)}
                 placeholder="What's on your mind?"
-                style={{ ...styles.postInput, backgroundColor: isDarkMode ? "#555" : "#f0f2f5", color: isDarkMode ? "#fff" : "#333" }}
               />
-              <button
-                type="submit"
-                style={{ ...styles.postButton, backgroundColor: isDarkMode ? "#6a11cb" : "#2575fc" }}
-                disabled={isPosting}
-              >
-                {isPosting ? "Posting..." : "Post"}
-              </button>
-            </motion.form>
+              <PostActions>
+                <MediaButtons>
+                  <MediaButton whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <FiImage /> Photo
+                  </MediaButton>
+                  <MediaButton whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <FiLink /> Link
+                  </MediaButton>
+                </MediaButtons>
+                <PrimaryButton
+                  onClick={handlePostSubmit}
+                  disabled={isPosting || !newPost.trim()}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {isPosting ? "Posting..." : "Post"}
+                </PrimaryButton>
+              </PostActions>
+            </CreatePostCard>
 
-            {/* Feed of Posts */}
-            <div style={styles.feed}>
+            <FeedContainer>
               <AnimatePresence>
                 {posts.map((post) => (
-                  <motion.div
+                  <PostCard
                     key={post.id}
-                    style={{ ...styles.postCard, backgroundColor: isDarkMode ? "#444" : "#fff" }}
+                    layout
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
-                    whileHover={{ scale: 1.02 }}
                   >
-                    <h3 style={{ ...styles.postUsername, color: isDarkMode ? "#fff" : "#333" }}>{post.username}</h3>
-                    <p style={{ ...styles.postContent, color: isDarkMode ? "#ddd" : "#555" }}>{post.content}</p>
-                    {post.image && (
-                      <img src={post.image} alt="Post" style={styles.postImage} />
-                    )}
-                    <div style={styles.postActions}>
-                      <button
-                        style={{ ...styles.actionButton, color: post.liked ? "#ff4757" : isDarkMode ? "#fff" : "#555" }}
-                        onClick={() => handleLike(post.id)}
+                    <PostHeader>
+                      <UserInfo>
+                        <UserAvatar 
+                          src={post.user.avatar} 
+                          alt={post.user.name}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        />
+                        <div>
+                          <Username>{post.user.name}</Username>
+                          <PostTime>{post.time}</PostTime>
+                        </div>
+                      </UserInfo>
+                      <motion.button 
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)' }}
                       >
-                        <FiHeart size={18} /> {post.likes}
-                      </button>
-                      <button
-                        style={{ ...styles.actionButton, color: isDarkMode ? "#fff" : "#555" }}
-                        onClick={() => setActivePostId(post.id === activePostId ? null : post.id)}
-                      >
-                        <FiMessageSquare size={18} /> {post.comments.length}
-                      </button>
-                      <button style={{ ...styles.actionButton, color: isDarkMode ? "#fff" : "#555" }}>
-                        <FiShare size={18} /> {post.shares}
-                      </button>
-                    </div>
+                        <FiMoreHorizontal />
+                      </motion.button>
+                    </PostHeader>
 
-                    {/* Comment Section */}
+                    <PostContent>{post.content}</PostContent>
+
+                    {post.image && (
+                      <PostImage
+                        src={post.image}
+                        alt="Post"
+                        onClick={() => setShowImageModal(post.image)}
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                      />
+                    )}
+
+                    <PostFooter>
+                      <ReactionButton
+                        onClick={() => handleLike(post.id)}
+                        active={post.liked}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <FiHeart /> {post.likes}
+                      </ReactionButton>
+                      <ReactionButton
+                        onClick={() => setActivePostId(post.id === activePostId ? null : post.id)}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <FiMessageSquare /> {post.comments.length}
+                      </ReactionButton>
+                      <ReactionButton
+                        onClick={() => handleShare(post.id)}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <FiShare2 /> {post.shares}
+                      </ReactionButton>
+                    </PostFooter>
+
                     {activePostId === post.id && (
-                      <motion.div
-                        style={styles.commentSection}
+                      <CommentSection
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
                       >
-                        <textarea
-                          value={commentInput}
-                          onChange={(e) => setCommentInput(e.target.value)}
-                          placeholder="Write a comment..."
-                          style={{ ...styles.commentInput, backgroundColor: isDarkMode ? "#555" : "#f0f2f5", color: isDarkMode ? "#fff" : "#333" }}
-                        />
-                        <button
-                          style={{ ...styles.commentButton, backgroundColor: isDarkMode ? "#6a11cb" : "#2575fc" }}
-                          onClick={() => handleCommentSubmit(post.id)}
-                        >
-                          Comment
-                        </button>
-                        {post.comments.map((comment) => (
-                          <div key={comment.id} style={{ ...styles.comment, backgroundColor: isDarkMode ? "#555" : "#f0f2f5" }}>
-                            <p style={{ color: isDarkMode ? "#ddd" : "#555" }}>{comment.text}</p>
-                          </div>
-                        ))}
-                      </motion.div>
+                        <CommentInputWrapper>
+                          <CommentInput
+                            value={commentInput}
+                            onChange={(e) => setCommentInput(e.target.value)}
+                            placeholder="Write a comment..."
+                          />
+                          <CommentButton
+                            onClick={() => handleCommentSubmit(post.id)}
+                            disabled={!commentInput.trim()}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            Post
+                          </CommentButton>
+                        </CommentInputWrapper>
+
+                        {post.comments.length > 0 && (
+                          <CommentList>
+                            {post.comments.map((comment) => (
+                              <CommentItem key={comment.id}>
+                                <CommentAvatar src={comment.user.avatar} alt={comment.user.name} />
+                                <CommentContent>
+                                  <CommentAuthor>{comment.user.name}</CommentAuthor>
+                                  <CommentText>{comment.text}</CommentText>
+                                </CommentContent>
+                              </CommentItem>
+                            ))}
+                          </CommentList>
+                        )}
+                      </CommentSection>
                     )}
-                  </motion.div>
+                  </PostCard>
                 ))}
               </AnimatePresence>
-            </div>
+            </FeedContainer>
           </>
         );
       case "Profile":
-        return <div style={{ color: isDarkMode ? "#fff" : "#333" }}>Profile Content</div>;
+        return (
+          <GlassCard
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h2>Profile Page</h2>
+            <p>Coming soon with more features!</p>
+          </GlassCard>
+        );
       case "Messages":
-        return <div style={{ color: isDarkMode ? "#fff" : "#333" }}>Messages Content</div>;
+        return (
+          <GlassCard
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h2>Messages</h2>
+            <p>Your conversations will appear here.</p>
+          </GlassCard>
+        );
       case "Groups":
-        return <div style={{ color: isDarkMode ? "#fff" : "#333" }}>Groups Content</div>;
+        return (
+          <GlassCard
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h2>Groups</h2>
+            <p>Join or create groups to connect with like-minded people.</p>
+          </GlassCard>
+        );
       default:
         return null;
     }
   };
 
   return (
-    <div style={{ ...styles.page, backgroundColor: isDarkMode ? "#1a1a1a" : "#f0f2f5" }}>
+    <AppContainer>
       {/* Header */}
-      <motion.header
-        style={{ ...styles.header, backgroundColor: isDarkMode ? "#333" : "#fff" }}
+      <Header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 style={{ ...styles.heading, color: isDarkMode ? "#fff" : "#333" }}>College Social Network</h1>
-        <button
-          style={styles.themeToggle}
-          onClick={() => setIsDarkMode(!isDarkMode)}
+        <AppTitle
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
         >
-          {isDarkMode ? <FiSun size={24} color="#fff" /> : <FiMoon size={24} color="#333" />}
-        </button>
-      </motion.header>
+          Campus Connect
+        </AppTitle>
+        <ThemeToggle
+          onClick={toggleTheme}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          {darkMode ? <FiSun /> : <FiMoon />}
+        </ThemeToggle>
+      </Header>
 
-      {/* Top Navbar */}
+      {/* Mobile Navigation */}
       {!isLargeScreen && (
-        <motion.div
-          style={{
-            position: "sticky",
-            top: 75,
-            borderRadius: 20,
-            width: "100%",
-            display: "flex",
-            justifyContent: "space-around",
-            alignItems: "center",
-            padding: "10px 0",
-            backgroundColor: isDarkMode ? "#333" : "#fff",
-            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-            zIndex: 10,
-          }}
-          initial={{ opacity: 0, y: -20 }}
+        <MobileNav
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="top-navbar"
+          transition={{ delay: 0.3 }}
         >
           {[
-            { icon: <FiHome size={24} />, label: "Home" },
-            { icon: <FiUser size={24} />, label: "Profile" },
-            { icon: <FiMessageCircle size={24} />, label: "Messages" },
-            { icon: <FiUsers size={24} />, label: "Groups" },
-          ].map((item, index) => (
-            <motion.div
-              key={index}
-              style={{
-                padding: "10px",
-                borderRadius: "8px",
-                cursor: "pointer",
-                backgroundColor: activeNav === item.label ? (isDarkMode ? "#444" : "#f0f2f5") : "transparent",
-              }}
+            { icon: <FiHome />, label: "Home" },
+            { icon: <FiUser />, label: "Profile" },
+            { icon: <FiMessageCircle />, label: "Messages" },
+            { icon: <FiUsers />, label: "Groups" },
+          ].map((item) => (
+            <NavIcon
+              key={item.label}
+              active={activeNav === item.label}
+              onClick={() => setActiveNav(item.label)}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => setActiveNav(item.label)}
             >
               {item.icon}
-            </motion.div>
+            </NavIcon>
           ))}
-        </motion.div>
+        </MobileNav>
       )}
 
-      {/* Three-column layout */}
-      <div style={styles.layout}>
+      {/* Main Layout */}
+      <LayoutGrid>
         {/* Left Sidebar */}
         {isLargeScreen && (
-          <motion.div
-            style={{ ...styles.sidebar, backgroundColor: isDarkMode ? "#333" : "#fff" }}
+          <Sidebar
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="left-sidebar"
+            transition={{ delay: 0.4 }}
           >
-            <nav style={styles.nav}>
-              <ul style={styles.navList}>
-                {[
-                  { icon: <FiHome size={24} />, label: "Home" },
-                  { icon: <FiUser size={24} />, label: "Profile" },
-                  { icon: <FiMessageCircle size={24} />, label: "Messages" },
-                  { icon: <FiUsers size={24} />, label: "Groups" },
-                ].map((item, index) => (
-                  <motion.li
-                    key={index}
-                    style={{
-                      ...styles.navItem,
-                      color: isDarkMode ? "#fff" : "#333",
-                      backgroundColor: activeNav === item.label ? (isDarkMode ? "#444" : "#f0f2f5") : "transparent",
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setActiveNav(item.label)}
-                  >
-                    {item.icon} {item.label}
-                  </motion.li>
-                ))}
-              </ul>
-            </nav>
-          </motion.div>
+            <NavList>
+              {[
+                { icon: <FiHome />, label: "Home" },
+                { icon: <FiUser />, label: "Profile" },
+                { icon: <FiMessageCircle />, label: "Messages" },
+                { icon: <FiUsers />, label: "Groups" },
+              ].map((item) => (
+                <NavItem
+                  key={item.label}
+                  active={activeNav === item.label}
+                  onClick={() => setActiveNav(item.label)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {item.icon} {item.label}
+                </NavItem>
+              ))}
+            </NavList>
+          </Sidebar>
         )}
 
-        {/* Main Content Area */}
-        <div style={styles.mainContent}>{renderContent()}</div>
+        {/* Main Content */}
+        <MainContent>{renderContent()}</MainContent>
 
         {/* Right Sidebar */}
         {isLargeScreen && (
-          <motion.div
-            style={{ ...styles.sidebar, backgroundColor: isDarkMode ? "#333" : "#fff" }}
+          <SuggestionsCard
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="right-sidebar"
+            transition={{ delay: 0.4 }}
           >
-            <h3 style={{ ...styles.suggestionsHeading, color: isDarkMode ? "#fff" : "#333" }}>Suggested Connections</h3>
+            <SectionTitle>Suggested Connections</SectionTitle>
             {suggestedConnections.map((user) => (
-              <motion.div
+              <ConnectionCard
                 key={user.id}
-                style={{
-                  ...styles.connectionCard,
-                  backgroundColor: isDarkMode ? "#444" : "#f0f2f5",
-                  background: isDarkMode
-                    ? "linear-gradient(145deg, #444, #333)"
-                    : "linear-gradient(145deg, #f0f2f5, #e0e2e5)",
-                  boxShadow: isDarkMode
-                    ? "0 4px 6px rgba(0, 0, 0, 0.3)"
-                    : "0 4px 6px rgba(0, 0, 0, 0.1)",
-                }}
-                whileHover={{ scale: 1.03, boxShadow: isDarkMode ? "0 8px 12px rgba(0, 0, 0, 0.5)" : "0 8px 12px rgba(0, 0, 0, 0.2)" }}
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 300 }}
               >
-                {/* Avatar with Bounce Animation */}
-                <motion.img
-                  src={user.avatar}
+                <ConnectionAvatar 
+                  src={user.avatar} 
                   alt={user.name}
-                  style={styles.connectionAvatar}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  transition={{ type: "spring", stiffness: 300 }}
                 />
-
-                {/* Name and Connect Button Container */}
-                <div style={styles.nameButtonContainer}>
-                  {/* User Name */}
-                  <p style={{ ...styles.connectionName, color: isDarkMode ? "#fff" : "#333" }}>{user.name}</p>
-
-                  {/* Connect Button with Loading State */}
-                  <motion.button
-                    style={{
-                      ...styles.connectButton,
-                      backgroundColor: isDarkMode ? "#6a11cb" : "#2575fc",
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => {
-                      // Simulate a connection request
-                      setTimeout(() => {
-                        alert(`Sent connection request to ${user.name}`);
-                      }, 1000);
-                    }}
-                  >
-                    Connect
-                  </motion.button>
-                </div>
-              </motion.div>
+                <ConnectionInfo>
+                  <ConnectionName>{user.name}</ConnectionName>
+                  <ConnectionMeta>
+                    {user.mutualConnections} mutual connections • {user.bio}
+                  </ConnectionMeta>
+                </ConnectionInfo>
+                <ConnectButton
+                  onClick={() => handleConnect(user.id)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Connect
+                </ConnectButton>
+              </ConnectionCard>
             ))}
+          </SuggestionsCard>
+        )}
+      </LayoutGrid>
+
+      {/* Floating Action Button (Mobile) */}
+      {!isLargeScreen && (
+        <FloatingButton
+          onClick={() => setActiveNav("Home")}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <FiPlus />
+        </FloatingButton>
+      )}
+
+      {/* Image Modal */}
+      <AnimatePresence>
+        {showImageModal && (
+          <motion.div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.9)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000,
+              padding: '2rem'
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowImageModal(null)}
+          >
+            <motion.img
+              src={showImageModal}
+              style={{
+                maxWidth: '100%',
+                maxHeight: '90vh',
+                borderRadius: '12px'
+              }}
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              onClick={(e) => e.stopPropagation()}
+            />
           </motion.div>
         )}
-      </div>
-
-      {/* Floating Action Button */}
-      <motion.button
-        style={{ ...styles.floatingButton, backgroundColor: isDarkMode ? "#6a11cb" : "#2575fc" }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      >
-        <FiPlus size={24} color="#fff" />
-      </motion.button>
-    </div>
+      </AnimatePresence>
+    </AppContainer>
   );
-};
-
-// Inline CSS Styles
-const styles = {
-  page: {
-    fontFamily: "'Poppins', sans-serif",
-    padding: "20px",
-    minHeight: "100vh",
-    transition: "background 0.3s",
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "20px",
-    borderRadius: "15px",
-    marginBottom: "20px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-  },
-  heading: {
-    fontSize: "2.5rem",
-    fontWeight: "bold",
-    background: "#2575FC",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-  },
-  themeToggle: {
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-  },
-  layout: {
-    display: "flex",
-    flexDirection: "row",
-    gap: "20px",
-    maxWidth: "1200px",
-    margin: "0 auto",
-    '@media (max-width: 1024px)': {
-      flexDirection: "column",
-    },
-  },
-  sidebar: {
-    width: "250px",
-    borderRadius: "15px",
-    padding: "20px",
-    backdropFilter: "blur(10px)",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    position: "sticky",
-    top: "80px",
-    height: "fit-content",
-    '@media (max-width: 1024px)': {
-      display: "none",
-    },
-  },
-  nav: {
-    marginBottom: "20px",
-  },
-  navList: {
-    listStyle: "none",
-    padding: "0",
-  },
-  navItem: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    marginBottom: "10px",
-    cursor: "pointer",
-    fontSize: "1.1rem",
-    padding: "10px",
-    borderRadius: "10px",
-    transition: "background 0.3s",
-  },
-  mainContent: {
-    flex: 1,
-    borderRadius: "15px",
-    padding: "20px",
-    backdropFilter: "blur(10px)",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    '@media (max-width: 1024px)': {
-      width: "100%",
-    },
-  },
-  postForm: {
-    marginBottom: "20px",
-    borderRadius: "15px",
-    padding: "20px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-  },
-  postInput: {
-    width: "100%",
-    height: "100px",
-    padding: "10px",
-    borderRadius: "10px",
-    border: "none",
-    resize: "none",
-    fontSize: "1rem",
-    transition: "background 0.3s, color 0.3s",
-  },
-  postButton: {
-    marginTop: "10px",
-    padding: "10px 20px",
-    color: "#fff",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer",
-    fontSize: "1rem",
-    fontWeight: "bold",
-    transition: "background 0.3s",
-  },
-  feed: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "20px",
-  },
-  postCard: {
-    borderRadius: "15px",
-    padding: "20px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    transition: "background 0.3s",
-  },
-  postUsername: {
-    margin: "0 0 10px 0",
-    fontSize: "1.2rem",
-    fontWeight: "bold",
-  },
-  postContent: {
-    margin: "0 0 10px 0",
-    fontSize: "1rem",
-  },
-  postImage: {
-    width: "100%",
-    borderRadius: "10px",
-  },
-  postActions: {
-    display: "flex",
-    gap: "10px",
-    marginTop: "10px",
-  },
-  actionButton: {
-    display: "flex",
-    alignItems: "center",
-    gap: "5px",
-    padding: "5px 10px",
-    background: "none",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer",
-    fontSize: "0.9rem",
-    transition: "color 0.3s",
-  },
-  commentSection: {
-    marginTop: "10px",
-  },
-  commentInput: {
-    width: "100%",
-    height: "60px",
-    padding: "10px",
-    borderRadius: "10px",
-    border: "none",
-    resize: "none",
-    fontSize: "1rem",
-    transition: "background 0.3s, color 0.3s",
-  },
-  commentButton: {
-    marginTop: "10px",
-    padding: "5px 10px",
-    color: "#fff",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer",
-    fontSize: "0.9rem",
-    transition: "background 0.3s",
-  },
-  comment: {
-    marginTop: "10px",
-    padding: "10px",
-    borderRadius: "10px",
-  },
-  suggestionsHeading: {
-    margin: "0 0 10px 0",
-    fontSize: "1.2rem",
-    fontWeight: "bold",
-  },
-  connectionCard: {
-    display: "flex",
-    alignItems: "flex-start",
-    gap: "15px",
-    marginBottom: "10px",
-    padding: "15px",
-    borderRadius: "15px",
-    transition: "all 0.3s ease",
-    cursor: "pointer",
-  },
-  connectionAvatar: {
-    width: "50px",
-    height: "50px",
-    borderRadius: "50%",
-    transition: "all 0.3s ease",
-  },
-  nameButtonContainer: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "8px",
-    flex: 1,
-  },
-  connectionName: {
-    margin: "0",
-    fontSize: "1rem",
-    fontWeight: "500",
-  },
-  connectButton: {
-    padding: "8px 16px",
-    color: "#fff",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer",
-    fontSize: "0.9rem",
-    fontWeight: "bold",
-    transition: "all 0.3s ease",
-    width: "100%",
-  },
-  floatingButton: {
-    position: "fixed",
-    bottom: "20px",
-    right: "20px",
-    padding: "15px",
-    border: "none",
-    borderRadius: "50%",
-    cursor: "pointer",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-  },
 };
 
 export default SocialNetworkPage;
