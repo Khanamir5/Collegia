@@ -10,11 +10,6 @@ const gradientFlow = keyframes`
   100% { background-position: 0% 50%; }
 `;
 
-const fadeIn = keyframes`
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-`;
-
 // Styled Components
 const GlassContainer = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -103,23 +98,6 @@ const FormInput = styled.input`
   }
 `;
 
-const FormTextarea = styled.textarea`
-  padding: 0.75rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
-  font-size: 1rem;
-  outline: none;
-  transition: all 0.3s ease;
-  min-height: 120px;
-  resize: vertical;
-  &:focus {
-    border-color: #a5b4fc;
-    background: rgba(255, 255, 255, 0.1);
-  }
-`;
-
 const FormSelect = styled.select`
   padding: 0.75rem 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -185,7 +163,7 @@ const SuccessButton = styled(PrimaryButton)`
   }
 `;
 
-const EventGrid = styled.div`
+const UserGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 1.5rem;
@@ -194,7 +172,7 @@ const EventGrid = styled.div`
   margin-right: auto;
 `;
 
-const EventCard = styled(GlassContainer)`
+const UserCard = styled(GlassContainer)`
   padding: 1.5rem;
   border-radius: 16px;
   transition: all 0.3s ease;
@@ -208,37 +186,20 @@ const EventCard = styled(GlassContainer)`
   }
 `;
 
-const EventTitle = styled.h3`
+const UserTitle = styled.h3`
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0 0 0.5rem;
   color: white;
 `;
 
-const EventMeta = styled.p`
+const UserMeta = styled.p`
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.7);
   margin: 0.25rem 0;
 `;
 
-const EventDescription = styled.p`
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.9rem;
-  margin: 1rem 0;
-  flex: 1;
-`;
-
-const EventLink = styled.a`
-  color: #a5b4fc;
-  text-decoration: none;
-  font-size: 0.9rem;
-  word-break: break-all;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const EventActions = styled.div`
+const UserActions = styled.div`
   display: flex;
   gap: 0.75rem;
   margin-top: 1.5rem;
@@ -288,35 +249,33 @@ const ButtonGroup = styled.div`
   flex-wrap: wrap;
 `;
 
-const categories = ['Tech', 'Cultural', 'Sports'];
+const roles = ['User', 'Admin'];
 
-const EventDashboard = () => {
-  const [events, setEvents] = useState([]);
+const UserManagementDashboard = () => {
+  const [users, setUsers] = useState([]);
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({
-    title: '',
-    date: '',
-    description: '',
-    image: '',
-    category: 'Tech',
-    formLink: '',
+    username: '',
+    email: '',
+    role: 'User',
+    createdAt: '',
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchEvents();
+    fetchUsers();
   }, []);
 
-  const fetchEvents = async () => {
+  const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/events');
-      setEvents(response.data);
-      console.log('Fetched events:', response.data);
+      const response = await axios.get('http://localhost:8080/api/users');
+      setUsers(response.data);
+      console.log('Fetched users:', response.data);
     } catch (error) {
-      console.error('Error fetching events:', error);
-      setError('Failed to load events.');
+      console.error('Error fetching users:', error);
+      setError('Failed to load users.');
     }
   };
 
@@ -325,51 +284,65 @@ const EventDashboard = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const validateEmail = (email) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
+
+    if (!validateEmail(formData.email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    const userData = {
+      ...formData,
+      createdAt: formData.createdAt || new Date().toISOString().split('T')[0],
+    };
+
     try {
       if (editId) {
-        const response = await axios.put(`http://localhost:8080/api/events/${editId}`, formData);
-        setEvents(events.map(event => (event.id === editId ? response.data : event)));
-        setSuccess('Event updated successfully!');
+        const response = await axios.put(`http://localhost:8080/api/users/${editId}`, userData);
+        setUsers(users.map(user => (user.id === editId ? response.data : user)));
+        setSuccess('User updated successfully!');
         setEditId(null);
       } else {
-        const response = await axios.post('http://localhost:8080/api/events', formData);
-        setEvents([...events, response.data]);
-        setSuccess('Event created successfully!');
+        const response = await axios.post('http://localhost:8080/api/users', userData);
+        setUsers([...users, response.data]);
+        setSuccess('User created successfully!');
       }
-      setFormData({ title: '', date: '', description: '', image: '', category: 'Tech', formLink: '' });
+      setFormData({ username: '', email: '', role: 'User', createdAt: '' });
     } catch (error) {
-      console.error('Error saving event:', error);
-      setError('Failed to save event.');
+      console.error('Error saving user:', error);
+      setError('Failed to save user.');
     }
   };
 
-  const handleEdit = (event) => {
+  const handleEdit = (user) => {
     setFormData({
-      title: event.title,
-      date: event.date,
-      description: event.description,
-      image: event.image,
-      category: event.category,
-      formLink: event.formLink,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
     });
-    setEditId(event.id);
+    setEditId(user.id);
     setError('');
     setSuccess('');
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this event?')) {
+    if (window.confirm('Are you sure you want to delete this user?')) {
       try {
-        await axios.delete(`http://localhost:8080/api/events/${id}`);
-        setEvents(events.filter(event => event.id !== id));
-        setSuccess('Event deleted successfully!');
+        await axios.delete(`http://localhost:8080/api/users/${id}`);
+        setUsers(users.filter(user => user.id !== id));
+        setSuccess('User deleted successfully!');
       } catch (error) {
-        console.error('Error deleting event:', error);
-        setError('Failed to delete event.');
+        console.error('Error deleting user:', error);
+        setError('Failed to delete user.');
       }
     }
   };
@@ -377,8 +350,8 @@ const EventDashboard = () => {
   return (
     <Container>
       <Header>
-        <Title>Event Management Dashboard</Title>
-        <Subtitle>Create and manage events for your organization</Subtitle>
+        <Title>User Management Dashboard</Title>
+        <Subtitle>Manage user accounts and roles</Subtitle>
       </Header>
 
       <FormContainer>
@@ -387,128 +360,91 @@ const EventDashboard = () => {
 
         <form onSubmit={handleSubmit}>
           <FormGroup>
-            <FormLabel>Event Title*</FormLabel>
+            <FormLabel>Username*</FormLabel>
             <FormInput
               type="text"
-              name="title"
-              placeholder="Event Title"
-              value={formData.title}
+              name="username"
+              placeholder="johndoe"
+              value={formData.username}
               onChange={handleInputChange}
               required
             />
           </FormGroup>
 
           <FormGroup>
-            <FormLabel>Date*</FormLabel>
+            <FormLabel>Email*</FormLabel>
             <FormInput
-              type="date"
-              name="date"
-              value={formData.date}
+              type="email"
+              name="email"
+              placeholder="john.doe@example.com"
+              value={formData.email}
               onChange={handleInputChange}
               required
             />
           </FormGroup>
 
           <FormGroup>
-            <FormLabel>Description*</FormLabel>
-            <FormTextarea
-              name="description"
-              placeholder="Event Description"
-              value={formData.description}
-              onChange={handleInputChange}
-              required
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <FormLabel>Image URL*</FormLabel>
-            <FormInput
-              type="url"
-              name="image"
-              placeholder="https://example.com/image.jpg"
-              value={formData.image}
-              onChange={handleInputChange}
-              required
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <FormLabel>Google Form Link*</FormLabel>
-            <FormInput
-              type="url"
-              name="formLink"
-              placeholder="https://forms.gle/example"
-              value={formData.formLink}
-              onChange={handleInputChange}
-              required
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <FormLabel>Category*</FormLabel>
+            <FormLabel>Role*</FormLabel>
             <FormSelect
-              name="category"
-              value={formData.category}
+              name="role"
+              value={formData.role}
               onChange={handleInputChange}
             >
-              {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
+              {roles.map(role => (
+                <option key={role} value={role}>{role}</option>
               ))}
             </FormSelect>
           </FormGroup>
 
+          <FormGroup>
+            <FormLabel>Created At (optional)</FormLabel>
+            <FormInput
+              type="date"
+              name="createdAt"
+              value={formData.createdAt}
+              onChange={handleInputChange}
+            />
+          </FormGroup>
+
           <PrimaryButton type="submit" style={{ width: '100%' }}>
-            {editId ? 'Update Event' : 'Create Event'}
+            {editId ? 'Update User' : 'Create User'}
           </PrimaryButton>
         </form>
       </FormContainer>
 
       <Header>
-        <Title>Your Events</Title>
-        <Subtitle>Manage existing event listings</Subtitle>
+        <Title>Your Users</Title>
+        <Subtitle>View and manage existing users</Subtitle>
       </Header>
 
-      {events.length === 0 ? (
+      {users.length === 0 ? (
         <EmptyState>
-          <EmptyIcon>🎉</EmptyIcon>
-          <h3>No events yet</h3>
-          <p>Create your first event using the form above</p>
+          <EmptyIcon>👤</EmptyIcon>
+          <h3>No users yet</h3>
+          <p>Create your first user using the form above</p>
         </EmptyState>
       ) : (
-        <EventGrid>
-          {events.map(event => (
-            <EventCard key={event.id}>
-              <EventTitle>{event.title}</EventTitle>
-              <EventMeta><strong>Date:</strong> {event.date}</EventMeta>
-              <EventDescription>
-                {event.description.length > 200 
-                  ? `${event.description.substring(0, 200)}...` 
-                  : event.description}
-              </EventDescription>
-              <EventMeta><strong>Category:</strong> {event.category}</EventMeta>
-              <EventMeta>
-                <strong>Image:</strong> <EventLink href={event.image} target="_blank" rel="noopener noreferrer">{event.image}</EventLink>
-              </EventMeta>
-              <EventMeta>
-                <strong>Form:</strong> <EventLink href={event.formLink} target="_blank" rel="noopener noreferrer">{event.formLink}</EventLink>
-              </EventMeta>
-              <EventActions>
-                <SuccessButton onClick={() => handleEdit(event)}>
+        <UserGrid>
+          {users.map(user => (
+            <UserCard key={user.id}>
+              <UserTitle>{user.username}</UserTitle>
+              <UserMeta><strong>Email:</strong> {user.email}</UserMeta>
+              <UserMeta><strong>Role:</strong> {user.role}</UserMeta>
+              <UserMeta><strong>Created:</strong> {user.createdAt}</UserMeta>
+              <UserActions>
+                <SuccessButton onClick={() => handleEdit(user)}>
                   Edit
                 </SuccessButton>
-                <DangerButton onClick={() => handleDelete(event.id)}>
+                <DangerButton onClick={() => handleDelete(user.id)}>
                   Delete
                 </DangerButton>
-              </EventActions>
-            </EventCard>
+              </UserActions>
+            </UserCard>
           ))}
-        </EventGrid>
+        </UserGrid>
       )}
 
       <ButtonGroup>
-        <SecondaryButton onClick={() => navigate('/events')}>
-          View Event Portal
-        </SecondaryButton>
         <SecondaryButton onClick={() => navigate('/home')}>
           Back to Home
         </SecondaryButton>
@@ -517,4 +453,4 @@ const EventDashboard = () => {
   );
 };
 
-export default EventDashboard;
+export default UserManagementDashboard;

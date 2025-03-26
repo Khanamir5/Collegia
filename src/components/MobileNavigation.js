@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Users,
   Briefcase,
@@ -21,9 +21,7 @@ const navItems = [
     submenu: [
       { name: "Social", icon: Users, href: "/StudentSocial" },
       { name: "Jobs", icon: Briefcase, href: "/CampusJobBoard" },
-      // { name: "JobDashboard", icon: Users, href: "/JobDashboard" },
       { name: "Events", icon: Calendar, href: "/EventManagement" },
-      // { name: "EventDashboard", icon: Users, href: "/EventDashboard" },
       { name: "Research", icon: BookOpen, href: "/ResearchCollaboration" },
       { name: "Study Materials", icon: FileText, href: "/StudyMaterials" },
       { name: "Tools", icon: Briefcase, href: "/Tools" },
@@ -39,7 +37,6 @@ const navItems = [
     name: "AI Tools",
     icon: Cpu,
     submenu: [
-
       { name: "AI Summary", icon: Sparkles, href: "/AIVideoSummarizer" },
       { name: "Flashcards", icon: Shield, href: "/FlashcardGenerator" },
       { name: "StudyPlanner", icon: Layers, href: "/StudyPlanner" },
@@ -50,40 +47,41 @@ const navItems = [
     name: "Profile",
     icon: User,
     submenu: [
-
       { name: "Profile", icon: User, href: "/UserProfilePage" },
       { name: "Admin Dashboard", icon: User, href: "/admin" },
     ],
   },
-
-
 ];
 
-export default function MobileNavigation() {
+export default function MobileNavigation({ showPopup }) {
   const [activeMenu, setActiveMenu] = useState(null);
   const [isClosing, setIsClosing] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = (name) => {
     if (activeMenu === name) {
-      // Start closing animation
       setIsClosing(true);
       setTimeout(() => {
         setActiveMenu(null);
         setIsClosing(false);
-      }, 200); // Match the duration of the animation
+      }, 200);
     } else {
       setActiveMenu(name);
     }
   };
 
-  const handleClick = (name) => {
-    if (activeMenu) {
-      // Start closing animation
-      setIsClosing(true);
-      setTimeout(() => {
-        setActiveMenu(null);
-        setIsClosing(false);
-      }, 200); // Match the duration of the animation
+  const handleClick = (name, href) => {
+    if (href === "/admin" && localStorage.getItem('role') !== 'Admin') {
+      showPopup("You don't have access to the Admin Dashboard!");
+    } else {
+      navigate(href);
+      if (activeMenu) {
+        setIsClosing(true);
+        setTimeout(() => {
+          setActiveMenu(null);
+          setIsClosing(false);
+        }, 200);
+      }
     }
   };
 
@@ -208,7 +206,7 @@ export default function MobileNavigation() {
               style={({ isActive }) =>
                 isActive ? { ...styles.navItem, ...styles.active } : styles.navItem
               }
-              onClick={() => handleClick(item.name)}
+              onClick={() => handleClick(item.name, item.href)}
             >
               <item.icon style={styles.navIcon} />
               <span>{item.name}</span>
@@ -224,15 +222,14 @@ export default function MobileNavigation() {
               }}
             >
               {item.submenu.map((subItem) => (
-                <NavLink
+                <div
                   key={subItem.name}
-                  to={subItem.href}
                   style={styles.submenuItem}
-                  onClick={() => handleClick(subItem.name)}
+                  onClick={() => handleClick(subItem.name, subItem.href)}
                 >
                   <subItem.icon style={styles.submenuIcon} />
                   {subItem.name}
-                </NavLink>
+                </div>
               ))}
             </div>
           )}

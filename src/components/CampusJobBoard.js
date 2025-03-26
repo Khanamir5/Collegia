@@ -1,6 +1,308 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import styled, { keyframes } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+
+// Animations
+const gradientFlow = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+`;
+
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const pulse = keyframes`
+  0% { box-shadow: 0 0 0 0 rgba(100, 108, 255, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(100, 108, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(100, 108, 255, 0); }
+`;
+
+// Styled Components
+const GlassContainer = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+`;
+
+const Container = styled.div`
+  padding: 2rem;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
+  background-size: 400% 400%;
+  animation: ${gradientFlow} 15s ease infinite;
+  color: #f0f0f0;
+`;
+
+const Banner = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 400px;
+  background-image: url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+  background-size: cover;
+  
+  background-position: center;
+  z-index: 0;
+`;
+
+const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 400px;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+`;
+
+const Header = styled.header`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  padding-top: 100px;
+  padding-bottom: 30px;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+`;
+
+const Title = styled.h1`
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #fff, #a5b4fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  line-height: 1.2;
+  @media (max-width: 768px) { font-size: 2.5rem; }
+`;
+
+const Subtitle = styled.p`
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  max-width: 600px;
+`;
+
+const SearchFilterWrapper = styled(GlassContainer)`
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  position: sticky;
+  top: 70px;
+  z-index: 10;
+`;
+
+const SearchInput = styled.input`
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  min-width: 250px;
+  &::placeholder { color: rgba(255, 255, 255, 0.5); }
+  &:focus {
+    border-color: #a5b4fc;
+    background: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const FilterSelect = styled.select`
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  &:focus {
+    border-color: #a5b4fc;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  option {
+    background: #24243e;
+    color: white;
+  }
+`;
+
+const PrimaryButton = styled.button`
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
+  }
+  &:active { transform: translateY(0); }
+`;
+
+const SecondaryButton = styled(PrimaryButton)`
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const JobGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
+const JobCard = styled(GlassContainer)`
+  padding: 1.5rem;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  animation: ${fadeIn} 0.5s ease;
+  &:hover {
+    transform: translateY(-5px);
+    border-color: rgba(165, 180, 252, 0.5);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const JobTitle = styled.h2`
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: white;
+`;
+
+const JobCompany = styled.p`
+  font-size: 1.1rem;
+  color: #a5b4fc;
+  margin: 0 0 0.5rem;
+`;
+
+const JobMeta = styled.p`
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0.25rem 0;
+`;
+
+const JobType = styled.span`
+  display: inline-block;
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+`;
+
+const JobDescription = styled.p`
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  flex: 1;
+`;
+
+const JobLink = styled.a`
+  color: #a5b4fc;
+  text-decoration: none;
+  font-size: 0.9rem;
+  word-break: break-all;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const EmptyState = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  grid-column: 1 / -1;
+`;
+
+const EmptyIcon = styled.div`
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+`;
+
+const ErrorMessage = styled.p`
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+`;
+
+const LoadingMessage = styled.p`
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  grid-column: 1 / -1;
+`;
+
+const ThemeToggle = styled(PrimaryButton)`
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: ${pulse} 2s infinite;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+`;
 
 const JobInternshipPortal = () => {
   const [jobs, setJobs] = useState([]);
@@ -20,12 +322,6 @@ const JobInternshipPortal = () => {
       setLoading(true);
       setError('');
       try {
-        // Initially fetch all jobs without filters
-        const initialResponse = await axios.get('http://localhost:8080/api/jobs');
-        console.log('Initial jobs fetched:', initialResponse.data);
-        setJobs(initialResponse.data);
-
-        // Then apply search and filters if present
         const response = await axios.get('http://localhost:8080/api/jobs/search', {
           params: {
             title: searchQuery || null,
@@ -34,11 +330,10 @@ const JobInternshipPortal = () => {
             location: filters.location || null,
           },
         });
-        console.log('Filtered jobs fetched:', response.data);
         setJobs(response.data);
       } catch (error) {
-        console.error('Error fetching jobs:', error.response?.data || error.message);
-        setError('Failed to load jobs. Check console for details.');
+        console.error('Error fetching jobs:', error);
+        setError('Failed to load jobs. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -46,12 +341,10 @@ const JobInternshipPortal = () => {
     fetchJobs();
   }, [searchQuery, filters.jobType, filters.location]);
 
-  // Toggle dark mode
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
 
-  // Handle "Apply Now" button click
   const handleApply = (jobLink) => {
     if (jobLink) {
       window.open(jobLink, '_blank', 'noopener,noreferrer');
@@ -60,311 +353,89 @@ const JobInternshipPortal = () => {
     }
   };
 
-  // Styles
-  const styles = {
-    container: {
-      fontFamily: 'Arial, sans-serif',
-      padding: '20px 7vw',
-      maxWidth: '100vw',
-      background: darkMode ? 'rgb(30, 30, 30)' : 'rgb(232, 232, 232)',
-      margin: '0 auto',
-      minHeight: '100vh',
-      color: darkMode ? '#fff' : '#333',
-      transition: 'background-color 0.3s ease, color 0.3s ease',
-    },
-    banner: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      borderRadius: '25px',
-      margin: '5%',
-      width: '90%',
-      height: '300px',
-      backgroundImage: `url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      zIndex: 1,
-    },
-    overlay: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      borderRadius: '25px',
-      margin: '5%',
-      width: '90%',
-      height: '300px',
-      background: darkMode ? 'rgba(0, 0, 0, 0.52)' : 'rgba(0, 0, 0, 0.52)',
-      zIndex: 1,
-    },
-    header: {
-      textAlign: 'center',
-      marginBottom: window.innerWidth <= 768 ? '50px' : '100px',
-      paddingTop: window.innerWidth <= 768 ? '50px' : '100px',
-      position: 'relative',
-      zIndex: 1,
-    },
-    title: {
-      fontSize: '2.5rem',
-      fontWeight: 'bold',
-      color: '#fff',
-    },
-    subtitle: {
-      fontSize: '1.2rem',
-      color: '#ccc',
-    },
-    searchContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '10px',
-      marginBottom: '20px',
-      flexWrap: 'wrap',
-      position: 'sticky',
-      top: '75px',
-      zIndex: 2,
-      backgroundColor: darkMode ? 'rgba(26, 26, 26, 0.97)' : 'rgba(249, 249, 249, 0.97)',
-      padding: '15px',
-      borderRadius: '10px',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    },
-    searchInput: {
-      flex: 1,
-      padding: '12px',
-      borderRadius: '5px',
-      border: `1px solid ${darkMode ? '#444' : '#ccc'}`,
-      fontSize: '1rem',
-      backgroundColor: darkMode ? '#333' : '#fff',
-      color: darkMode ? '#fff' : '#333',
-      outline: 'none',
-      transition: 'border-color 0.3s ease',
-    },
-    filterSelect: {
-      padding: '12px',
-      borderRadius: '5px',
-      border: `1px solid ${darkMode ? '#444' : '#ccc'}`,
-      fontSize: '1rem',
-      backgroundColor: darkMode ? '#333' : '#fff',
-      color: darkMode ? '#fff' : '#333',
-      outline: 'none',
-      transition: 'border-color 0.3s ease',
-    },
-    jobList: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-      gap: '20px',
-    },
-    jobCard: {
-      backgroundColor: darkMode ? '#333' : '#fff',
-      border: `1px solid ${darkMode ? '#444' : '#ddd'}`,
-      borderRadius: '10px',
-      padding: '20px',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-      transition: 'transform 0.2s, box-shadow 0.2s, background-color 0.3s ease',
-    },
-    jobTitle: {
-      fontSize: '1.5rem',
-      fontWeight: 'bold',
-      marginBottom: '10px',
-      color: darkMode ? '#fff' : '#333',
-    },
-    jobCompany: {
-      fontSize: '1.2rem',
-      color: '#007bff',
-      marginBottom: '10px',
-    },
-    jobLocation: {
-      fontSize: '1rem',
-      color: darkMode ? '#ccc' : '#666',
-      marginBottom: '10px',
-    },
-    jobType: {
-      fontSize: '1rem',
-      color: '#28a745',
-      marginBottom: '10px',
-    },
-    jobDescription: {
-      fontSize: '1rem',
-      color: darkMode ? '#ccc' : '#444',
-      marginBottom: '20px',
-    },
-    jobPostedDate: {
-      fontSize: '0.9rem',
-      color: darkMode ? '#999' : '#666',
-      marginBottom: '10px',
-    },
-    jobLink: {
-      fontSize: '0.9rem',
-      color: '#007bff',
-      marginBottom: '10px',
-      wordBreak: 'break-all',
-    },
-    applyButton: {
-      padding: '10px 20px',
-      backgroundColor: '#007bff',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '5px',
-      cursor: 'pointer',
-      fontSize: '1rem',
-      transition: 'background-color 0.3s ease',
-    },
-    darkModeToggle: {
-      position: 'absolute',
-      top: window.innerWidth <= 768 ? '80px' : '85px',
-      right: window.innerWidth <= 768 ? '40px' : '20px',
-      padding: '10px',
-      backgroundColor: darkMode ? '#444' : '#007bff',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '50px',
-      cursor: 'pointer',
-      fontSize: '1rem',
-      transition: 'background-color 0.3s ease',
-      zIndex: 3,
-    },
-    errorMessage: {
-      color: 'red',
-      margin: '15px 0',
-      fontSize: '1rem',
-    },
-    backButton: {
-      padding: '12px 25px',
-      backgroundColor: '#007bff',
-      color: 'white',
-      border: 'none',
-      borderRadius: '5px',
-      cursor: 'pointer',
-      fontSize: '1rem',
-      transition: 'background-color 0.3s ease',
-      marginTop: '20px',
-    },
-  };
-
   return (
-    <div style={styles.container}>
-      {/* Banner Image */}
-      <div style={styles.banner}></div>
-      <div style={styles.overlay}></div>
-
-      {/* Dark Mode Toggle */}
-      <button
-        style={styles.darkModeToggle}
-        onClick={toggleDarkMode}
-        onMouseOver={(e) => e.target.style.backgroundColor = darkMode ? '#666' : '#0056b3'}
-        onMouseOut={(e) => e.target.style.backgroundColor = darkMode ? '#444' : '#007bff'}
-      >
+    <Container>
+      <Banner />
+      <Overlay />
+      
+      <ThemeToggle onClick={toggleDarkMode}>
         {darkMode ? '🌕' : '🌜'}
-      </button>
+      </ThemeToggle>
 
-      {/* Header */}
-      <div style={styles.header}>
-        <h1 style={styles.title}>Job & Internship Portal</h1>
-        <p style={styles.subtitle}>Find your next opportunity with us!</p>
-      </div>
+      <Header>
+        <Title>Job & Internship Portal</Title>
+        <Subtitle>Find your next opportunity with us!</Subtitle>
+      </Header>
 
-      {/* Search and Filters */}
-      <div style={styles.searchContainer}>
-        <input
+      <SearchFilterWrapper>
+        <SearchInput
           type="text"
           placeholder="Search by job title or company..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          style={styles.searchInput}
-          onFocus={(e) => e.target.style.borderColor = '#007bff'}
-          onBlur={(e) => e.target.style.borderColor = darkMode ? '#444' : '#ccc'}
         />
-        <select
+        <FilterSelect
           value={filters.jobType}
           onChange={(e) => setFilters({ ...filters, jobType: e.target.value })}
-          style={styles.filterSelect}
-          onFocus={(e) => e.target.style.borderColor = '#007bff'}
-          onBlur={(e) => e.target.style.borderColor = darkMode ? '#444' : '#ccc'}
         >
           <option value="">All Job Types</option>
           <option value="Full-time">Full-time</option>
           <option value="Part-time">Part-time</option>
           <option value="Internship">Internship</option>
-        </select>
-        <input
+        </FilterSelect>
+        <SearchInput
           type="text"
           placeholder="Filter by location..."
           value={filters.location}
           onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-          style={styles.filterSelect}
-          onFocus={(e) => e.target.style.borderColor = '#007bff'}
-          onBlur={(e) => e.target.style.borderColor = darkMode ? '#444' : '#ccc'}
         />
-      </div>
+      </SearchFilterWrapper>
 
-      {/* Error Message */}
-      {error && <p style={styles.errorMessage}>{error}</p>}
+      {error && <ErrorMessage>{error}</ErrorMessage>}
 
-      {/* Job Listings */}
       {loading ? (
-        <p style={{ color: darkMode ? '#fff' : '#333', fontSize: '1rem' }}>Loading jobs...</p>
+        <LoadingMessage>Loading jobs...</LoadingMessage>
       ) : (
-        <div style={styles.jobList}>
+        <JobGrid>
           {jobs.length === 0 ? (
-            <p style={{ color: darkMode ? '#fff' : '#333', fontSize: '1rem' }}>
-              No jobs found. Try adjusting your search or filters.
-            </p>
+            <EmptyState>
+              <EmptyIcon>🔍</EmptyIcon>
+              <h3>No jobs found</h3>
+              <p>Try adjusting your search or filters</p>
+            </EmptyState>
           ) : (
             jobs.map((job) => (
-              <div
-                key={job.id}
-                style={styles.jobCard}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-5px)';
-                  e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-                }}
-              >
-                <h2 style={styles.jobTitle}>{job.title}</h2>
-                <p style={styles.jobCompany}>{job.company}</p>
-                <p style={styles.jobLocation}>{job.location}</p>
-                <p style={styles.jobType}>{job.type}</p>
-                <p style={styles.jobDescription}>{job.description}</p>
-                <p style={styles.jobPostedDate}>Posted on: {job.postedDate}</p>
+              <JobCard key={job.id}>
+                <JobTitle>{job.title}</JobTitle>
+                <JobCompany>{job.company}</JobCompany>
+                <JobMeta><strong>Location:</strong> {job.location}</JobMeta>
+                <JobType>{job.type}</JobType>
+                <JobDescription>
+                  {job.description.length > 150 
+                    ? `${job.description.substring(0, 150)}...` 
+                    : job.description}
+                </JobDescription>
+                <JobMeta><strong>Posted:</strong> {job.postedDate}</JobMeta>
                 {job.link && (
-                  <p style={styles.jobLink}>
-                    Link:{' '}
-                    <a
-                      href={job.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: '#007bff', textDecoration: 'underline' }}
-                    >
-                      {job.link}
-                    </a>
-                  </p>
+                  <JobMeta>
+                    <strong>Link:</strong> <JobLink href={job.link} target="_blank" rel="noopener noreferrer">Apply Now</JobLink>
+                  </JobMeta>
                 )}
-                <button
-                  style={styles.applyButton}
-                  onClick={() => handleApply(job.link)}
-                  onMouseOver={(e) => e.target.style.backgroundColor = '#0056b3'}
-                  onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}
-                >
+                <PrimaryButton onClick={() => handleApply(job.link)}>
                   Apply Now
-                </button>
-              </div>
+                </PrimaryButton>
+              </JobCard>
             ))
           )}
-        </div>
+        </JobGrid>
       )}
 
-      {/* Back to Home Button */}
-      <button
-        style={styles.backButton}
-        onClick={() => navigate('/home')}
-        onMouseOver={(e) => e.target.style.backgroundColor = '#0056b3'}
-        onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}
-      >
-        Back to Home
-      </button>
-    </div>
+      <ButtonGroup>
+        <SecondaryButton onClick={() => navigate('/home')}>
+          Back to Home
+        </SecondaryButton>
+      </ButtonGroup>
+    </Container>
   );
 };
 

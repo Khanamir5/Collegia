@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import ScrollToTop from './Extras/ScrollToTop';
 import './styles/GlobalStyles.css';
@@ -15,6 +15,7 @@ import CampusJobBoard from './components/CampusJobBoard';
 import JobDashboard from './components/JobDashboard';
 import EventManagement from './components/EventManagement';
 import EventDashboard from './components/EventDashboard';
+import UserManagementDashboard from './components/UserManagementDashboard';
 import AIPage from './components/AIPage';
 import UserProfilePage from './components/UserProfilePage';
 import Leaderboard from './components/Leaderboard';
@@ -40,8 +41,14 @@ const isAuthenticated = () => {
   return username !== null;
 };
 
+// Role check for Admin
+const isAdmin = () => {
+  const role = localStorage.getItem('role');
+  return role === 'Admin';
+};
+
 // Custom component to handle conditional rendering
-const Layout = ({ children }) => {
+const Layout = ({ children, showPopup }) => {
   const location = useLocation();
   const isAuthPage = ['/', '/login', '/signup'].includes(location.pathname);
 
@@ -50,27 +57,46 @@ const Layout = ({ children }) => {
       {!isAuthPage && <Navbar />}
       {children}
       {!isAuthPage && <Footer />}
-      {!isAuthPage && <MobileNavigation />}
+      {!isAuthPage && <MobileNavigation showPopup={showPopup} />}
     </>
   );
 };
 
-// PrivateRoute component
+// PrivateRoute component for general authenticated routes
 const PrivateRoute = ({ element }) => {
   return isAuthenticated() ? element : <Navigate to="/login" />;
 };
 
+// AdminRoute component for Admin-only access with popup
+const AdminRoute = ({ element, showPopup }) => {
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" />;
+  }
+  if (!isAdmin()) {
+    showPopup("You don't have access to the Admin Dashboard!");
+    return <Navigate to="/home" />;
+  }
+  return element;
+};
+
 const App = () => {
+  const [popupMessage, setPopupMessage] = useState(null);
+
+  const showPopup = (message) => {
+    setPopupMessage(message);
+    setTimeout(() => setPopupMessage(null), 3000); // Hide after 3 seconds
+  };
+
   return (
     <div className="App">
       <Router>
         <ScrollToTop />
-        <Layout>
+        <Layout showPopup={showPopup}>
           <Routes>
             <Route path="/" element={isAuthenticated() ? <Navigate to="/home" /> : <Login />} />
             <Route path="/login" element={isAuthenticated() ? <Navigate to="/home" /> : <Login />} />
             <Route path="/signup" element={isAuthenticated() ? <Navigate to="/home" /> : <Signup />} />
-            <Route path="/admin" element={<PrivateRoute element={<AdminDashboard />} />} />
+            <Route path="/admin" element={<AdminRoute element={<AdminDashboard />} showPopup={showPopup} />} />
             <Route path="/home" element={<PrivateRoute element={<Home />} />} />
             <Route path="/about" element={<PrivateRoute element={<AboutUsPage />} />} />
             <Route path="/ResearchCollaboration" element={<PrivateRoute element={<ResearchCollaborationPage />} />} />
@@ -81,6 +107,7 @@ const App = () => {
             <Route path="/Tools" element={<PrivateRoute element={<Tools />} />} />
             <Route path="/CampusJobBoard" element={<PrivateRoute element={<CampusJobBoard />} />} />
             <Route path="/JobDashboard" element={<PrivateRoute element={<JobDashboard />} />} />
+            <Route path="/UserManagement" element={<PrivateRoute element={<UserManagementDashboard />} />} />
             <Route path="/EventManagement" element={<PrivateRoute element={<EventManagement />} />} />
             <Route path="/EventDashboard" element={<PrivateRoute element={<EventDashboard />} />} />
             <Route path="/AIPage" element={<PrivateRoute element={<AIPage />} />} />
@@ -99,6 +126,39 @@ const App = () => {
           </Routes>
         </Layout>
       </Router>
+
+      {/* Popup Message */}
+      {popupMessage && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'rgba(255, 0, 0, 0.9)',
+            color: 'white',
+            padding: '10px 20px',
+            borderRadius: '5px',
+            zIndex: 2000,
+            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
+            animation: 'fadeInOut 3s ease-in-out',
+          }}
+        >
+          {popupMessage}
+        </div>
+      )}
+
+      {/* CSS Animation for Popup */}
+      <style>
+        {`
+          @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -20px); }
+            10% { opacity: 1; transform: translate(-50%, 0); }
+            90% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -20px); }
+          }
+        `}
+      </style>
     </div>
   );
 };

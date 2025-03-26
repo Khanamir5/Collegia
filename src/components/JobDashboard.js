@@ -1,6 +1,313 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import styled, { keyframes } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+
+// Animations
+const gradientFlow = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+`;
+
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const pulse = keyframes`
+  0% { box-shadow: 0 0 0 0 rgba(100, 108, 255, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(100, 108, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(100, 108, 255, 0); }
+`;
+
+// Styled Components
+const GlassContainer = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+`;
+
+const Container = styled.div`
+  padding: 2rem;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
+  background-size: 400% 400%;
+  animation: ${gradientFlow} 15s ease infinite;
+  color: #f0f0f0;
+`;
+
+const Header = styled.header`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+`;
+
+const Title = styled.h1`
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #fff, #a5b4fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  line-height: 1.2;
+  @media (max-width: 768px) { font-size: 2.5rem; }
+`;
+
+const Subtitle = styled.p`
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  max-width: 600px;
+`;
+
+const FormContainer = styled(GlassContainer)`
+  padding: 2rem;
+  margin-bottom: 2rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+`;
+
+const FormLabel = styled.label`
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  text-align: left;
+`;
+
+const FormInput = styled.input`
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  &:focus {
+    border-color: #a5b4fc;
+    background: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const FormTextarea = styled.textarea`
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  min-height: 120px;
+  resize: vertical;
+  &:focus {
+    border-color: #a5b4fc;
+    background: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const FormSelect = styled.select`
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  &:focus {
+    border-color: #a5b4fc;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  option {
+    background: #24243e;
+    color: white;
+  }
+`;
+
+const PrimaryButton = styled.button`
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
+  }
+  &:active { transform: translateY(0); }
+`;
+
+const SecondaryButton = styled(PrimaryButton)`
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const DangerButton = styled(PrimaryButton)`
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  &:hover {
+    background: rgba(239, 68, 68, 0.3);
+  }
+`;
+
+const SuccessButton = styled(PrimaryButton)`
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #10b981;
+  &:hover {
+    background: rgba(16, 185, 129, 0.3);
+  }
+`;
+
+const JobGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
+const JobCard = styled(GlassContainer)`
+  padding: 1.5rem;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  &:hover {
+    transform: translateY(-5px);
+    border-color: rgba(165, 180, 252, 0.5);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const JobTitle = styled.h3`
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+  color: white;
+`;
+
+const JobMeta = styled.p`
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0.25rem 0;
+`;
+
+const JobType = styled.span`
+  display: inline-block;
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+`;
+
+const JobDescription = styled.p`
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  flex: 1;
+`;
+
+const JobLink = styled.a`
+  color: #a5b4fc;
+  text-decoration: none;
+  font-size: 0.9rem;
+  word-break: break-all;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const JobActions = styled.div`
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+`;
+
+const EmptyState = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  grid-column: 1 / -1;
+`;
+
+const EmptyIcon = styled.div`
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+`;
+
+const ErrorMessage = styled.p`
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+`;
+
+const SuccessMessage = styled.p`
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+`;
 
 function JobDashboard() {
   const [jobs, setJobs] = useState([]);
@@ -34,7 +341,6 @@ function JobDashboard() {
     try {
       const response = await axios.get('http://localhost:8080/api/jobs');
       setJobs(response.data);
-      console.log('Fetched jobs:', response.data); // Debug log
     } catch (error) {
       console.error('Error fetching jobs:', error);
       setError('Failed to fetch jobs. Please try again.');
@@ -84,29 +390,29 @@ function JobDashboard() {
 
     try {
       if (editId) {
-        console.log('Updating job with ID:', editId, 'Data:', jobData); // Debug log
-        const response = await axios.put(`http://localhost:8080/api/jobs/${editId}`, jobData);
-        console.log('Update response:', response.data); // Debug log
+        await axios.put(`http://localhost:8080/api/jobs/${editId}`, jobData);
         setSuccess('Job updated successfully!');
         setEditId(null);
       } else {
-        console.log('Creating job with Data:', jobData); // Debug log
-        const response = await axios.post('http://localhost:8080/api/jobs', jobData);
-        console.log('Create response:', response.data); // Debug log
+        await axios.post('http://localhost:8080/api/jobs', jobData);
         setSuccess('Job created successfully!');
       }
-      setTitle('');
-      setCompany('');
-      setLocation('');
-      setType('');
-      setDescription('');
-      setPostedDate('');
-      setLink('');
+      resetForm();
       fetchJobs();
     } catch (error) {
-      console.error('Error saving job:', error.response?.data || error.message);
-      setError(error.response?.data || 'Failed to save job. Check console for details.');
+      console.error('Error saving job:', error);
+      setError(error.response?.data || 'Failed to save job. Please try again.');
     }
+  };
+
+  const resetForm = () => {
+    setTitle('');
+    setCompany('');
+    setLocation('');
+    setType('');
+    setDescription('');
+    setPostedDate('');
+    setLink('');
   };
 
   const handleEdit = (job) => {
@@ -120,19 +426,17 @@ function JobDashboard() {
     setEditId(job.id);
     setError('');
     setSuccess('');
-    console.log('Editing job with ID:', job.id); // Debug log
   };
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this job?')) {
       try {
-        console.log('Deleting job with ID:', id); // Debug log
         await axios.delete(`http://localhost:8080/api/jobs/${id}`);
         setSuccess('Job deleted successfully!');
         fetchJobs();
       } catch (error) {
-        console.error('Error deleting job:', error.response?.data || error.message);
-        setError('Failed to delete job. Check console for details.');
+        console.error('Error deleting job:', error);
+        setError('Failed to delete job. Please try again.');
       }
     }
   };
@@ -146,335 +450,171 @@ function JobDashboard() {
   };
 
   return (
-    <div style={{
-      maxWidth: '700px',
-      margin: '50px auto',
-      padding: '20px',
-      textAlign: 'center',
-      fontFamily: 'Arial, sans-serif',
-      backgroundColor: '#f9f9f9',
-      borderRadius: '10px',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
-    }}>
-      <h1 style={{
-        color: '#007bff',
-        marginBottom: '20px',
-        fontSize: '2rem',
-        fontWeight: 'bold'
-      }}>Manage Job Postings</h1>
+    <Container>
+      <Header>
+        <Title>Job Management Dashboard</Title>
+        <Subtitle>Create and manage job postings for your organization</Subtitle>
+      </Header>
 
-      {error && <p style={{
-        color: 'red',
-        marginBottom: '15px',
-        fontSize: '1rem'
-      }}>{error}</p>}
-      {success && <p style={{
-        color: '#28a745',
-        marginBottom: '15px',
-        fontSize: '1rem'
-      }}>{success}</p>}
+      <FormContainer>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
+        {success && <SuccessMessage>{success}</SuccessMessage>}
 
-      <form onSubmit={handleSubmit} style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '15px'
-      }}>
-        <input
-          type="text"
-          placeholder="Job Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '1px solid #ddd',
-            borderRadius: '5px',
-            fontSize: '1rem',
-            outline: 'none',
-            transition: 'border-color 0.3s ease'
-          }}
-          onFocus={(e) => e.target.style.borderColor = '#007bff'}
-          onBlur={(e) => e.target.style.borderColor = '#ddd'}
-        />
-        <input
-          type="text"
-          placeholder="Company"
-          value={company}
-          onChange={(e) => setCompany(e.target.value)}
-          required
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '1px solid #ddd',
-            borderRadius: '5px',
-            fontSize: '1rem',
-            outline: 'none',
-            transition: 'border-color 0.3s ease'
-          }}
-          onFocus={(e) => e.target.style.borderColor = '#007bff'}
-          onBlur={(e) => e.target.style.borderColor = '#ddd'}
-        />
-        <input
-          type="text"
-          placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          required
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '1px solid #ddd',
-            borderRadius: '5px',
-            fontSize: '1rem',
-            outline: 'none',
-            transition: 'border-color 0.3s ease'
-          }}
-          onFocus={(e) => e.target.style.borderColor = '#007bff'}
-          onBlur={(e) => e.target.style.borderColor = '#ddd'}
-        />
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-          required
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '1px solid #ddd',
-            borderRadius: '5px',
-            fontSize: '1rem',
-            outline: 'none',
-            backgroundColor: '#fff',
-            transition: 'border-color 0.3s ease'
-          }}
-          onFocus={(e) => e.target.style.borderColor = '#007bff'}
-          onBlur={(e) => e.target.style.borderColor = '#ddd'}
-        >
-          <option value="">Select Job Type</option>
-          <option value="Full-time">Full-time</option>
-          <option value="Part-time">Part-time</option>
-          <option value="Internship">Internship</option>
-        </select>
-        <textarea
-          placeholder="Job Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-          maxLength={MAX_DESCRIPTION_LENGTH}
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '1px solid #ddd',
-            borderRadius: '5px',
-            fontSize: '1rem',
-            height: '120px',
-            resize: 'vertical',
-            outline: 'none',
-            transition: 'border-color 0.3s ease'
-          }}
-          onFocus={(e) => e.target.style.borderColor = '#007bff'}
-          onBlur={(e) => e.target.style.borderColor = '#ddd'}
-        />
-        <p style={{ margin: '0', color: '#666', fontSize: '0.9rem' }}>
-          {description.length}/{MAX_DESCRIPTION_LENGTH} characters
-        </p>
-        <input
-          type="date"
-          value={postedDate}
-          onChange={(e) => setPostedDate(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '1px solid #ddd',
-            borderRadius: '5px',
-            fontSize: '1rem',
-            outline: 'none',
-            transition: 'border-color 0.3s ease'
-          }}
-          onFocus={(e) => e.target.style.borderColor = '#007bff'}
-          onBlur={(e) => e.target.style.borderColor = '#ddd'}
-        />
-        <input
-          type="url"
-          placeholder="Job Application Link (e.g., https://example.com/apply)"
-          value={link}
-          onChange={(e) => setLink(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '1px solid #ddd',
-            borderRadius: '5px',
-            fontSize: '1rem',
-            outline: 'none',
-            transition: 'border-color 0.3s ease'
-          }}
-          onFocus={(e) => e.target.style.borderColor = '#007bff'}
-          onBlur={(e) => e.target.style.borderColor = '#ddd'}
-        />
-        <button
-          type="submit"
-          style={{
-            padding: '12px 25px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '1rem',
-            fontWeight: 'bold',
-            transition: 'background-color 0.3s ease'
-          }}
-          onMouseOver={(e) => e.target.style.backgroundColor = '#0056b3'}
-          onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}
-        >
-          {editId ? 'Update Job' : 'Create Job'}
-        </button>
-      </form>
+        <form onSubmit={handleSubmit}>
+          <FormGroup>
+            <FormLabel>Job Title*</FormLabel>
+            <FormInput
+              type="text"
+              placeholder="Software Engineer"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+            <FormLabel style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+              {title.length}/{MAX_TITLE_LENGTH} characters
+            </FormLabel>
+          </FormGroup>
 
-      <h2 style={{
-        color: '#007bff',
-        margin: '30px 0 20px',
-        fontSize: '1.5rem',
-        fontWeight: 'bold'
-      }}>Your Job Postings</h2>
+          <FormGroup>
+            <FormLabel>Company*</FormLabel>
+            <FormInput
+              type="text"
+              placeholder="Tech Corp Inc."
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              required
+            />
+            <FormLabel style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+              {company.length}/{MAX_COMPANY_LENGTH} characters
+            </FormLabel>
+          </FormGroup>
+
+          <FormGroup>
+            <FormLabel>Location*</FormLabel>
+            <FormInput
+              type="text"
+              placeholder="San Francisco, CA or Remote"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              required
+            />
+            <FormLabel style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+              {location.length}/{MAX_LOCATION_LENGTH} characters
+            </FormLabel>
+          </FormGroup>
+
+          <FormGroup>
+            <FormLabel>Job Type*</FormLabel>
+            <FormSelect
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              required
+            >
+              <option value="">Select Job Type</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Internship">Internship</option>
+              <option value="Contract">Contract</option>
+              <option value="Freelance">Freelance</option>
+            </FormSelect>
+          </FormGroup>
+
+          <FormGroup>
+            <FormLabel>Description*</FormLabel>
+            <FormTextarea
+              placeholder="Detailed job description, requirements, and benefits..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
+            <FormLabel style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+              {description.length}/{MAX_DESCRIPTION_LENGTH} characters
+            </FormLabel>
+          </FormGroup>
+
+          <FormGroup>
+            <FormLabel>Posted Date</FormLabel>
+            <FormInput
+              type="date"
+              value={postedDate}
+              onChange={(e) => setPostedDate(e.target.value)}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <FormLabel>Application Link</FormLabel>
+            <FormInput
+              type="url"
+              placeholder="https://yourcompany.com/careers/apply"
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+            />
+          </FormGroup>
+
+          <PrimaryButton type="submit" style={{ width: '100%' }}>
+            {editId ? 'Update Job Posting' : 'Create Job Posting'}
+          </PrimaryButton>
+        </form>
+      </FormContainer>
+
+      <Header>
+        <Title>Your Job Postings</Title>
+        <Subtitle>Manage existing job listings</Subtitle>
+      </Header>
+
       {jobs.length === 0 ? (
-        <p style={{ color: '#666', fontSize: '1rem' }}>No jobs yet.</p>
+        <EmptyState>
+          <EmptyIcon>📋</EmptyIcon>
+          <h3>No job postings yet</h3>
+          <p>Create your first job posting using the form above</p>
+        </EmptyState>
       ) : (
-        jobs.map(job => (
-          <div key={job.id} style={{
-            border: '1px solid #ddd',
-            padding: '15px',
-            margin: '10px 0',
-            borderRadius: '5px',
-            backgroundColor: '#fff',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
-            transition: 'box-shadow 0.3s ease'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)'}
-          onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)'}
-          >
-            <h3 style={{ margin: '0 0 10px', color: '#333', fontSize: '1.2rem', fontWeight: 'bold' }}>{job.title}</h3>
-            <p style={{ margin: '5px 0', color: '#666', fontSize: '1rem' }}>Company: {job.company}</p>
-            <p style={{ margin: '5px 0', color: '#666', fontSize: '1rem' }}>Location: {job.location}</p>
-            <p style={{ margin: '5px 0', color: '#28a745', fontSize: '1rem' }}>Type: {job.type}</p>
-            <p style={{ margin: '5px 0', color: '#444', fontSize: '1rem' }}>{job.description}</p>
-            <p style={{ margin: '5px 0', color: '#666', fontSize: '0.9rem' }}>Posted: {job.postedDate}</p>
-            {job.link && (
-              <p style={{ margin: '5px 0', color: '#007bff', fontSize: '0.9rem', wordBreak: 'break-all' }}>
-                Link: <a href={job.link} target="_blank" rel="noopener noreferrer" style={{ color: '#007bff', textDecoration: 'underline' }}>{job.link}</a>
-              </p>
-            )}
-            <div style={{ marginTop: '10px', display: 'flex', gap: '10px', justifyContent: 'center' }}>
-              <button
-                onClick={() => handleEdit(job)}
-                style={{
-                  padding: '8px 15px',
-                  backgroundColor: '#28a745',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                  fontSize: '0.9rem',
-                  transition: 'background-color 0.3s ease'
-                }}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#218838'}
-                onMouseOut={(e) => e.target.style.backgroundColor = '#28a745'}
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleDelete(job.id)}
-                style={{
-                  padding: '8px 15px',
-                  backgroundColor: '#dc3545',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                  fontSize: '0.9rem',
-                  transition: 'background-color 0.3s ease'
-                }}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#c82333'}
-                onMouseOut={(e) => e.target.style.backgroundColor = '#dc3545'}
-              >
-                Delete
-              </button>
-              <button
-                onClick={() => handleApply(job.link)}
-                style={{
-                  padding: '8px 15px',
-                  backgroundColor: '#007bff',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                  fontSize: '0.9rem',
-                  transition: 'background-color 0.3s ease'
-                }}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#0056b3'}
-                onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}
-              >
-                Apply Now
-              </button>
-            </div>
-          </div>
-        ))
+        <JobGrid>
+          {jobs.map(job => (
+            <JobCard key={job.id}>
+              <JobTitle>{job.title}</JobTitle>
+              <JobMeta><strong>Company:</strong> {job.company}</JobMeta>
+              <JobMeta><strong>Location:</strong> {job.location}</JobMeta>
+              <JobType>{job.type}</JobType>
+              <JobDescription>
+                {job.description.length > 200 
+                  ? `${job.description.substring(0, 200)}...` 
+                  : job.description}
+              </JobDescription>
+              <JobMeta><strong>Posted:</strong> {job.postedDate}</JobMeta>
+              {job.link && (
+                <JobMeta>
+                  <strong>Link:</strong> <JobLink href={job.link} target="_blank" rel="noopener noreferrer">{job.link}</JobLink>
+                </JobMeta>
+              )}
+              <JobActions>
+                <SuccessButton onClick={() => handleEdit(job)}>
+                  Edit
+                </SuccessButton>
+                <DangerButton onClick={() => handleDelete(job.id)}>
+                  Delete
+                </DangerButton>
+                <PrimaryButton onClick={() => handleApply(job.link)}>
+                  Apply
+                </PrimaryButton>
+              </JobActions>
+            </JobCard>
+          ))}
+        </JobGrid>
       )}
 
-      <div style={{ marginTop: '30px', display: 'flex', gap: '10px', justifyContent: 'center' }}>
-        <button
-          onClick={() => navigate('/jobs')}
-          style={{
-            padding: '12px 25px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '1rem',
-            transition: 'background-color 0.3s ease'
-          }}
-          onMouseOver={(e) => e.target.style.backgroundColor = '#0056b3'}
-          onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}
-        >
-          View Job Portal
-        </button>
-        <button
-          onClick={() => navigate('/dashboard')}
-          style={{
-            padding: '12px 25px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '1rem',
-            transition: 'background-color 0.3s ease'
-          }}
-          onMouseOver={(e) => e.target.style.backgroundColor = '#0056b3'}
-          onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}
-        >
+      <ButtonGroup>
+        <SecondaryButton onClick={() => navigate('/jobs')}>
+          View Public Job Portal
+        </SecondaryButton>
+        <SecondaryButton onClick={() => navigate('/dashboard')}>
           Manage Blogs
-        </button>
-        <button
-          onClick={() => navigate('/home')}
-          style={{
-            padding: '12px 25px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '1rem',
-            transition: 'background-color 0.3s ease'
-          }}
-          onMouseOver={(e) => e.target.style.backgroundColor = '#0056b3'}
-          onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}
-        >
+        </SecondaryButton>
+        <SecondaryButton onClick={() => navigate('/home')}>
           Back to Home
-        </button>
-      </div>
-    </div>
+        </SecondaryButton>
+      </ButtonGroup>
+    </Container>
   );
 }
 

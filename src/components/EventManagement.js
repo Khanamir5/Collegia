@@ -3,183 +3,249 @@ import axios from 'axios';
 import styled, { keyframes } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-// Keyframes for animations
+// Animations
+const float = keyframes`
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+`;
+
+const gradientFlow = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+`;
+
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 `;
 
 const pulse = keyframes`
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% { box-shadow: 0 0 0 0 rgba(100, 108, 255, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(100, 108, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(100, 108, 255, 0); }
 `;
 
 // Styled Components
-const HeroSection = styled.section`
-  background-image: url('https://images.unsplash.com/photo-1477281765962-ef34e8bb0967?q=80&w=2533&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-  background-size: cover;
-  background-position: bottom;
-  padding: 120px 20px;
-  text-align: center;
-  color: #fff;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 0;
-  }
+const GlassContainer = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 `;
 
-const HeroTitle = styled.h1`
-  font-size: 4rem;
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 1;
-  animation: ${fadeIn} 1s ease-out;
-
-  @media (max-width: 768px) { font-size: 3rem; }
+const Container = styled.div`
+  padding: 2rem;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
+  background-size: 400% 400%;
+  animation: ${gradientFlow} 15s ease infinite;
+  color: #f0f0f0;
 `;
 
-const HeroSubtitle = styled.p`
-  font-size: 1.5rem;
-  margin-bottom: 40px;
-  position: relative;
-  z-index: 1;
-  animation: ${fadeIn} 1.5s ease-out;
-
-  @media (max-width: 768px) { font-size: 1.2rem; }
-`;
-
-const EventContainer = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
-  font-family: 'Arial', sans-serif;
-  color: #333;
-`;
-
-const EventGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-`;
-
-const EventCard = styled.div`
-  background: #2c3e50;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  }
-`;
-
-const EventImage = styled.img`
-  width: 100%;
-  border-radius: 10px;
-  margin-bottom: 15px;
-`;
-
-const EventTitle = styled.h3`
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  color: rgb(255, 255, 255);
-`;
-
-const EventDate = styled.p`
-  font-size: 1rem;
-  color: #7f8c8d;
-  margin-bottom: 10px;
-`;
-
-const EventDescription = styled.p`
-  font-size: 1rem;
-  color: #fff;
-  margin-bottom: 15px;
-`;
-
-const RegisterButton = styled.button`
-  background: #3498db;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s ease;
-
-  &:hover { background: #2980b9; }
-`;
-
-const FilterSection = styled.div`
-  margin-bottom: 40px;
+const Header = styled.header`
   display: flex;
-  justify-content: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+`;
+
+const Title = styled.h1`
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #fff, #a5b4fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  line-height: 1.2;
+  @media (max-width: 768px) { font-size: 2.5rem; }
+`;
+
+const Subtitle = styled.p`
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  max-width: 600px;
+`;
+
+const SearchFilterWrapper = styled(GlassContainer)`
+  display: flex;
+  gap: 1rem;
+  align-items: center;
   flex-wrap: wrap;
+  padding: 1rem;
+  justify-content: center;
 `;
 
 const FilterButton = styled.button`
-  background: ${({ active }) => (active ? '#3498db' : '#ecf0f1')};
-  color: ${({ active }) => (active ? 'white' : '#333')};
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  background: ${({ active }) => (active ? 'rgba(165, 180, 252, 0.2)' : 'rgba(255, 255, 255, 0.1)')};
+  color: ${({ active }) => (active ? '#a5b4fc' : 'rgba(255, 255, 255, 0.8)')};
+  border: ${({ active }) => (active ? '1px solid rgba(165, 180, 252, 0.5)' : '1px solid rgba(255, 255, 255, 0.1)')};
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s ease;
-
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
   &:hover {
-    background: #3498db;
-    color: white;
+    background: rgba(165, 180, 252, 0.2);
+    color: #a5b4fc;
+    border-color: rgba(165, 180, 252, 0.5);
   }
 `;
 
-const CountdownTimer = styled.div`
-  background: #2c3e50;
+const PrimaryButton = styled.button`
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: white;
-  padding: 20px;
-  border-radius: 10px;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
+  }
+  &:active { transform: translateY(0); }
+`;
+
+const SecondaryButton = styled(PrimaryButton)`
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
+const Card = styled(GlassContainer)`
+  padding: 1.5rem;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  animation: ${fadeIn} 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  &:hover {
+    transform: translateY(-5px);
+    border-color: rgba(165, 180, 252, 0.5);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const CardHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+`;
+
+const CardTitle = styled.h3`
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: white;
+  flex: 1;
+`;
+
+const CardCategory = styled.span`
+  background: rgba(165, 180, 252, 0.2);
+  color: #a5b4fc;
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+`;
+
+const CardDescription = styled.p`
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  margin: 0.5rem 0 1.5rem;
+  flex: 1;
+`;
+
+const CardMeta = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: auto;
+`;
+
+const CardImage = styled.img`
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+`;
+
+const CountdownTimer = styled(GlassContainer)`
+  padding: 1.5rem;
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 2rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
 const TimerText = styled.p`
   font-size: 1.2rem;
   margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.8);
 `;
 
 const TimerNumbers = styled.div`
   font-size: 2rem;
   font-weight: bold;
+  background: linear-gradient(90deg, #a5b4fc, #6366f1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 `;
 
-const BackButton = styled.button`
-  background: #3498db;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s ease;
-  margin-top: 20px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+const EmptyState = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  grid-column: 1 / -1;
+`;
 
-  &:hover { background: #2980b9; }
+const EmptyIcon = styled.div`
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
 `;
 
 const categories = ['All', 'Tech', 'Cultural', 'Sports'];
@@ -241,13 +307,11 @@ const EventManagementPage = () => {
   }, [events]);
 
   return (
-    <div>
-      <HeroSection>
-        <HeroTitle>Event Management</HeroTitle>
-        <HeroSubtitle>Discover and register for exciting college events.</HeroSubtitle>
-      </HeroSection>
-
-      <EventContainer>
+    <Container>
+      <Header>
+        <Title>College Events</Title>
+        <Subtitle>Discover and register for exciting college events</Subtitle>
+        
         <CountdownTimer>
           <TimerText>Time until the next event:</TimerText>
           <TimerNumbers>
@@ -255,9 +319,7 @@ const EventManagementPage = () => {
           </TimerNumbers>
         </CountdownTimer>
 
-        {error && <p style={{ color: 'red', textAlign: 'center', marginBottom: '20px' }}>{error}</p>}
-
-        <FilterSection>
+        <SearchFilterWrapper>
           {categories.map((category) => (
             <FilterButton
               key={category}
@@ -267,33 +329,55 @@ const EventManagementPage = () => {
               {category}
             </FilterButton>
           ))}
-        </FilterSection>
+        </SearchFilterWrapper>
+      </Header>
 
-        {loading ? (
-          <p style={{ textAlign: 'center', color: '#333' }}>Loading events...</p>
-        ) : (
-          <EventGrid>
-            {events.length === 0 ? (
-              <p style={{ textAlign: 'center', color: '#333' }}>No events found.</p>
-            ) : (
-              events.map((event) => (
-                <EventCard key={event.id}>
-                  <EventImage src={event.image} alt={event.title} />
-                  <EventTitle>{event.title}</EventTitle>
-                  <EventDate>{event.date}</EventDate>
-                  <EventDescription>{event.description}</EventDescription>
-                  <RegisterButton onClick={() => window.open(event.formLink, '_blank')}>
-                    Register Now
-                  </RegisterButton>
-                </EventCard>
-              ))
-            )}
-          </EventGrid>
-        )}
+      {error && <p style={{ color: '#ef4444', textAlign: 'center', marginBottom: '20px' }}>{error}</p>}
 
-        <BackButton onClick={() => navigate('/home')}>Back to Home</BackButton>
-      </EventContainer>
-    </div>
+      {loading ? (
+        <EmptyState>
+          <EmptyIcon>⏳</EmptyIcon>
+          <h3>Loading events...</h3>
+        </EmptyState>
+      ) : (
+        <Grid>
+          {events.length === 0 ? (
+            <EmptyState>
+              <EmptyIcon>📅</EmptyIcon>
+              <h3>No events found</h3>
+              <p>Try adjusting your filters</p>
+            </EmptyState>
+          ) : (
+            events.map((event) => (
+              <Card key={event.id}>
+                <CardImage src={event.image} alt={event.title} />
+                <CardHeader>
+                  <CardTitle>{event.title}</CardTitle>
+                  <CardCategory>{event.category}</CardCategory>
+                </CardHeader>
+                <CardDescription>{event.description}</CardDescription>
+                <CardMeta>
+                  <span>{event.date}</span>
+                </CardMeta>
+                <PrimaryButton 
+                  onClick={() => window.open(event.formLink, '_blank')}
+                  style={{ marginTop: '1rem' }}
+                >
+                  Register Now
+                </PrimaryButton>
+              </Card>
+            ))
+          )}
+        </Grid>
+      )}
+
+      <SecondaryButton 
+        onClick={() => navigate('/home')}
+        style={{ margin: '2rem auto', display: 'block' }}
+      >
+        Back to Home
+      </SecondaryButton>
+    </Container>
   );
 };
 

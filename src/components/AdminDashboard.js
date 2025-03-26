@@ -203,7 +203,7 @@ const AdminDashboard = () => {
       icon: '👥',
       color: 'rgba(99, 102, 241, 0.2)',
       action: 'Manage Users',
-      path: '/admin/users'
+      path: '/UserManagement'
     },
     { 
       id: 2, 
