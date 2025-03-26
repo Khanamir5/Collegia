@@ -11,7 +11,7 @@ const NavbarContainer = styled.nav`
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background: rgba(12, 12, 12, 0.507);
+  background: rgba(2, 2, 2, 0.93);
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   z-index: 1000;
@@ -327,7 +327,7 @@ const Navbar = () => {
             </ProfileItem>
           </Dropdown>
         </MenuItem>
-        <button onClick={handleLogout} style={{ padding: '10px', background: '#e74c3c', color: 'white', border: 'none', borderRadius: '15px' }}>
+        <button onClick={handleLogout} style={{ padding: '10px', background: 'red', color: 'white', border: 'none', borderRadius: '15px' }}>
           Logout
         </button>
       </Menu>

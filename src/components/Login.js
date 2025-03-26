@@ -15,6 +15,7 @@ function Login() {
       // Hardcoded Admin credentials
       const adminUsername = 'Admin';
       const adminPassword = 'admin123';
+      
 
       if (username === adminUsername && password === adminPassword) {
         localStorage.setItem('username', adminUsername);
@@ -22,9 +23,25 @@ function Login() {
         alert('Admin login successful!');
         navigate('/home');
       } else {
-        alert('Admin login failed! Use Admin/admin123');
+        alert('Admin login failed!');
       }
-    } else {
+    }else if (role === 'User') {
+      // Hardcoded User credentials
+      
+      const userUsername = 'TestUser';
+      const userPassword = 'Test123';
+
+      if (username === userUsername && password === userPassword) {
+        localStorage.setItem('username', userUsername);
+        localStorage.setItem('role', 'User');
+        alert('User login successful!');
+        navigate('/home');
+      } else {
+        alert('User login failed! Use TestUser/Test123');
+      }
+      
+    }
+    else {
       // API Authentication for User role
       try {
         const response = await axios.post('http://localhost:8080/api/auth/login', {
@@ -175,7 +192,7 @@ function Login() {
           </span>
         </p>
 
-        {/* <p
+        <p
           style={{
             textAlign: 'center',
             marginTop: '15px',
@@ -183,8 +200,8 @@ function Login() {
             fontSize: 'clamp(12px, 3vw, 14px)',
           }}
         >
-          Admin: Use Admin/admin123 | User: Use API credentials
-        </p> */}
+          TestUser: Use Testuser/Test123 to login.
+        </p>
       </div>
     </div>
   );

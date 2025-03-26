@@ -35,6 +35,7 @@ const AppContainer = styled.div`
   animation: ${gradientFlow} 15s ease infinite;
   color: #f0f0f0;
   padding: 1rem;
+  
 `;
 
 const GlassCard = styled(motion.div)`
@@ -50,7 +51,7 @@ const GlassCard = styled(motion.div)`
 
 const Header = styled(GlassCard)`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 1.5rem;
   position: sticky;
@@ -59,11 +60,12 @@ const Header = styled(GlassCard)`
 `;
 
 const AppTitle = styled(motion.h1)`
-  font-size: 2rem;
+  font-size: 3rem;
   font-weight: 800;
-  background: linear-gradient(90deg, #a5b4fc, #6366f1);
+  background: linear-gradient(90deg,rgb(208, 215, 248),rgb(139, 141, 247));
   -webkit-background-clip: text;
   background-clip: text;
+  
   -webkit-text-fill-color: transparent;
   margin: 0;
   line-height: 1.2;
@@ -71,7 +73,7 @@ const AppTitle = styled(motion.h1)`
 
 const LayoutGrid = styled.div`
   display: grid;
-  grid-template-columns: 280px 1fr 280px;
+  grid-template-columns: 280px 1fr 380px;
   gap: 1.5rem;
   max-width: 1400px;
   margin: 0 auto;
@@ -120,12 +122,15 @@ const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  
 `;
 
 const CreatePostCard = styled(GlassCard)`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  
+  
 `;
 
 const PostInput = styled.textarea`
@@ -204,6 +209,7 @@ const PrimaryButton = styled(motion.button)`
 
 const FeedContainer = styled.div`
   display: flex;
+  
   flex-direction: column;
   gap: 1.5rem;
 `;
@@ -213,6 +219,7 @@ const PostCard = styled(GlassCard)`
   flex-direction: column;
   gap: 1rem;
   transition: all 0.3s ease;
+  
   
   &:hover {
     transform: translateY(-5px);
@@ -370,6 +377,8 @@ const SuggestionsCard = styled(Sidebar)`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  
+  
 `;
 
 const SectionTitle = styled.h3`
@@ -867,13 +876,7 @@ const SocialNetworkPage = () => {
         >
           Campus Connect
         </AppTitle>
-        <ThemeToggle
-          onClick={toggleTheme}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          {darkMode ? <FiSun /> : <FiMoon />}
-        </ThemeToggle>
+        
       </Header>
 
       {/* Mobile Navigation */}
