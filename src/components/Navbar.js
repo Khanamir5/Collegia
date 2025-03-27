@@ -305,7 +305,7 @@ const Navbar = () => {
         </MenuItem>
 
         <MenuItem>
-          <Link to="#notifications" style={{ marginTop: '-1px', display: 'flex', alignItems: 'center' }} onClick={toggleMenu}>
+          <Link to="/CampusNoticeBoard" style={{ marginTop: '-1px', display: 'flex', alignItems: 'center' }} onClick={toggleMenu}>
             <FaBell style={{ fontSize: '27px', marginLeft: '0px', marginTop: '-10px', color: '#f75c7e', transition: 'color 0.3s ease-in-out' }} />
             <span className="notification-text">Notification</span>
           </Link>

@@ -34,6 +34,8 @@ import AIVideoSummarizer from './components/AIVideoSummarizer';
 import FlashcardGenerator from './components/FlashcardGenerator';
 import StudyPlanner from './components/StudyPlanner';
 import AdminDashboard from './components/AdminDashboard';
+import CollegePlacementBoard from './components/CollegePlacementBoard';
+import CampusNoticeBoard from './components/CampusNoticeBoard';
 
 // Authentication check based on username
 const isAuthenticated = () => {
@@ -106,6 +108,8 @@ const App = () => {
             <Route path="/StudentSocial" element={<PrivateRoute element={<StudentSocialPage />} />} />
             <Route path="/Tools" element={<PrivateRoute element={<Tools />} />} />
             <Route path="/CampusJobBoard" element={<PrivateRoute element={<CampusJobBoard />} />} />
+            <Route path="/CampusNoticeBoard" element={<PrivateRoute element={<CampusNoticeBoard />} />} />
+            <Route path="/CollegePlacementBoard" element={<PrivateRoute element={<CollegePlacementBoard />} />} />
             <Route path="/JobDashboard" element={<PrivateRoute element={<JobDashboard />} />} />
             <Route path="/UserManagement" element={<PrivateRoute element={<UserManagementDashboard />} />} />
             <Route path="/EventManagement" element={<PrivateRoute element={<EventManagement />} />} />

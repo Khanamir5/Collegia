@@ -24,6 +24,8 @@ const navItems = [
       { name: "Events", icon: Calendar, href: "/EventManagement" },
       { name: "Research", icon: BookOpen, href: "/ResearchCollaboration" },
       { name: "Study Materials", icon: FileText, href: "/StudyMaterials" },
+      { name: "Placement Board", icon: FileText, href: "/CollegePlacementBoard" },
+  
       { name: "Tools", icon: Briefcase, href: "/Tools" },
     ],
   },
