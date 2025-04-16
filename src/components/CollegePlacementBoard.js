@@ -336,7 +336,7 @@ const CollegePlacementBoard = () => {
   return (
     <Container>
       <Header>
-        <Title>College Placement Board</Title>
+        <Title>Collegia Placement Board</Title>
         <Subtitle>Track student placements and celebrate success!</Subtitle>
       </Header>
 
